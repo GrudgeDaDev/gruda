@@ -7,7 +7,7 @@ RUN npm install
 
 COPY cloud/main.js ./cloud/ 
 COPY test-back4app.js . 
-COPY .env.example .
+COPY .env .
 
 # Add a new stage to install AI Assistant dependencies
 RUN npm install openai
