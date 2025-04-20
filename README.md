@@ -37,12 +37,17 @@ The cloud code in `cloud/main.js` implements the following features:
 - Parse SDK for web pages like `/launcher`, `/card-minter`.
 - Discord webhooks for notifications.
 - Future NFT/GBuX integration.
+- New Parse Cloud function to fetch data for Season0.
 
 ## Usage
 
 - Web: Use Parse SDK for pages like `/launcher`, `/card-minter`.
 - Discord: Webhooks for notifications.
 - Gruda: Future NFT/GBuX integration.
+
+## Seasons
+
+- Season0: Explore the events and stories of Season0.
 
 ## Contact
 
