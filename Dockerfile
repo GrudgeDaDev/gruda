@@ -1,22 +1,23 @@
+# Use the official node image as a parent image
 FROM node:16-alpine
 
+# Set the working directory
 WORKDIR /app
 
-COPY package.json . 
+# Copy package.json files to the container
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-COPY cloud/main.js ./cloud/ 
-COPY test-back4app.js . 
-COPY .env .
+# If grunt-init is needed for project build
+RUN npm install -g grunt-init
 
-# Add a new stage to install AI Assistant dependencies
-RUN npm install openai
+# Copy the rest of your app's source code
+COPY . .
 
-# Add a new command to run the AI Assistant script
-COPY ai-assistant.js . 
-RUN node ai-assistant.js
+# Build the application
+RUN npm run build
 
-ENV NODE_ENV=production
-
-# Update the CMD to run the AI Assistant script
-CMD ["node", "ai-assistant.js"]
+# Command to run your application
+CMD ["npm", "start"]
