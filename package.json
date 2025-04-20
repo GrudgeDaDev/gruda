@@ -1,0 +1,13 @@
+{
+  "name": "grudge-studio-launcher",
+  "version": "1.0.0",
+  "description": "Backend for Grudge Studio Launcher",
+  "main": "test-back4app.js",
+  "scripts": {
+    "test": "node test-back4app.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "parse": "^4.0.0"
+  }
+}
