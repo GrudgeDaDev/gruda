@@ -13,7 +13,7 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background: #111111 url('https://i.imgur.com/KzcmBtg.png') no-repeat center center fixed;
+            background: #111111 url('images/background.png') no-repeat center center fixed;
             background-size: cover;
             color: #fff;
             min-height: 100vh;
@@ -35,7 +35,7 @@
             width: 95%;
             max-width: 1800px;
             height: 95vh;
-            background: url('https://i.imgur.com/amFdI1I.jpeg') no-repeat center center;
+            background: url('images/codex-background.jpeg') no-repeat center center;
             background-size: cover;
             border: 12px solid #4A2F1A;
             border-radius: 25px;
@@ -157,7 +157,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://i.imgur.com/starry-night.jpg') repeat-x;
+            background: url('images/starry-night.jpg') repeat-x;
             animation: nightSky 10s linear infinite;
             opacity: 0.5;
             z-index: -1;
@@ -275,7 +275,7 @@
             left: 10px;
             width: 30px;
             height: 15px;
-            background: url('https://i.imgur.com/SRoq392.png') center/cover no-repeat;
+            background: url('images/season0-indicator.png') center/cover no-repeat;
             border: 1px solid #D4A017;
             transform: rotate(25deg);
         }
@@ -395,7 +395,7 @@
         }
 
         .pack-front {
-            background: url('https://i.imgur.com/f4PzrgN.jpeg') center/cover no-repeat;
+            background: url('images/pack-front.jpeg') center/cover no-repeat;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -406,7 +406,7 @@
             position: absolute;
             width: 90px;
             height: 90px;
-            background: url('https://i.imgur.com/rLE4XkO.png') center/cover no-repeat;
+            background: url('images/pack-logo.png') center/cover no-repeat;
         }
 
         .pack-back {
@@ -421,7 +421,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://i.imgur.com/starry-night.jpg') repeat-x;
+            background: url('images/starry-night.jpg') repeat-x;
             animation: nightSky 10s linear infinite;
             opacity: 0.5;
             z-index: -1;
@@ -430,7 +430,7 @@
         .buy-pack-image {
             width: 380px;
             height: 570px;
-            background: url('https://i.imgur.com/f4PzrgN.jpeg') center/cover no-repeat;
+            background: url('images/pack-front.jpeg') center/cover no-repeat;
             position: relative;
             border: 14px solid transparent;
             border-image: linear-gradient(45deg, #00FF00, #00FF00) 1;
@@ -448,7 +448,7 @@
             position: absolute;
             width: 180px;
             height: 180px;
-            background: url('https://i.imgur.com/rLE4XkO.png') center/cover no-repeat;
+            background: url('images/pack-logo.png') center/cover no-repeat;
         }
 
         @keyframes spin {
@@ -481,11 +481,11 @@
 
         @keyframes hitAnimation {
             0% {
-                background: url('https://i.imgur.com/QP9cMm4.png') center/cover no-repeat;
+                background: url('images/hit-effect-1.png') center/cover no-repeat;
                 opacity: 1;
             }
             50% {
-                background: url('https://i.imgur.com/pvW3OSi.png') center/cover no-repeat;
+                background: url('images/hit-effect-2.png') center/cover no-repeat;
                 opacity: 0.8;
             }
             100% {
@@ -656,7 +656,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('https://i.imgur.com/starry-night.jpg') repeat-x;
+            background: url('images/starry-night.jpg') repeat-x;
             animation: nightSky 10s linear infinite;
             opacity: 0.5;
             z-index: -1;
@@ -708,7 +708,7 @@
                         <span id="credits-info">Balance: 0 $GBuX</span>
                     </div>
                 </div>
-                <button id="login-btn" class="btn bg-[#D4A017] text-black font-bold py-2.5 px-4" onclick="window.location.href='https://www.grudgeplatform.com/login'">Login with Discord</button>
+                <button id="login-btn" class="btn bg-[#D4A017] text-black font-bold py-2.5 px-4" onclick="window.location.href='https://www.grudgeplatform.com/card-minter-callback'">Login with Discord</button>
             </div>
         </header>
 
@@ -877,7 +877,7 @@
     <script>
         const CLIENT_ID = '1342593452793270302';
         const CLIENT_SECRET = 'dvNMm6xErLdFqkLRsLKSMxVdbCtqisEM';
-        const REDIRECT_URI = 'https://www.grudgeplatform.com/card-minter';
+        const REDIRECT_URI = 'https://www.grudgeplatform.com/card-minter-callback';
         const DB_URL = 'https://database.example.com';
         const DB_KEY = 'your-db-key';
 
@@ -897,76 +897,76 @@
         let draftHistory = []; // For undo/redo
         let currentDraftIndex = -1;
 
-        const grudgeCard = { id: 0, name: "Grudge", cost: 3, attack: 2, health: 2, description: "A basic fighter.", backgroundImage: "https://i.imgur.com/3SkE6VG.png", uid: "grudge" };
+        const grudgeCard = { id: 0, name: "Grudge", cost: 3, attack: 2, health: 2, description: "A basic fighter.", backgroundImage: "images/grudge.png", uid: "grudge" };
         const season0 = [
-        { id: 1, name: "Night Wraith", cost: 4, attack: 4, health: 3, type: "minion", description: "Strikes from the shadows.", backgroundImage: "https://i.imgur.com/PSpj7sO.png", uid: "season0_1" },
-                    { id: 2, name: "Mana Surge", cost: 0, type: "manaStorm", description: "Grants 2 mana this turn.", backgroundImage: "https://i.imgur.com/dU3QrVi.png", uid: "season0_2" },
-                    { id: 3, name: "Stoned Ape", cost: 8, attack: 8, health: 8, taunt: true, type: "minion", description: "Unstoppable celestial force.", backgroundImage: "https://i.imgur.com/iWv48Xl.png", uid: "season0_3" },
-                    { id: 4, name: "Stealth Drone", cost: 1, attack: 1, health: 1, description: "Quick scouting unit cloaked in shadow.", backgroundImage: "https://i.imgur.com/zMFckYB.png", uid: "season0_4" },
-                    { id: 5, name: "Viper Assassin", cost: 3, attack: 4, health: 2, description: "Strikes with venomous precision.", backgroundImage: "https://i.imgur.com/3SkE6VG.png", uid: "season0_5" },
-                    { id: 6, name: "Barrier Sentinel", cost: 5, attack: 0, health: 7, taunt: true, description: "Unyielding defense with Taunt.", backgroundImage: "https://i.imgur.com/klAa6aX.png", uid: "season0_6" },
-                    { id: 7, name: "Swarm Legion", cost: 3, attack: 3, health: 3, description: "Overruns the enemy in numbers.", backgroundImage: "https://i.imgur.com/Wn84v6I.png", uid: "season0_7" },
-                    { id: 8, name: "Quantum Behemoth", cost: 7, attack: 6, health: 4, description: "Devastating energy-infused giant.", backgroundImage: "https://i.imgur.com/Y67jKrU.png", uid: "season0_8" },
-                    { id: 9, name: "Arcane Mystic", cost: 2, attack: 2, health: 3, description: "Casts arcane spells with finesse.", backgroundImage: "https://i.imgur.com/Enu1T7Y.png", uid: "season0_9" },
-                    { id: 10, name: "Overcharged Titan", cost: 8, attack: 7, health: 6, description: "Overwhelming power surge incarnate.", backgroundImage: "https://i.imgur.com/s0cMpSi.png", uid: "season0_10" },
-                    { id: 13, name: "Night Wraith", cost: 4, attack: 4, health: 3, description: "Strikes from the shadows.", backgroundImage: "https://i.imgur.com/PSpj7sO.png", uid: "season0_13" },
-                    { id: 14, name: "Crimson Revenant", cost: 4, attack: 4, health: 3, description: "Strikes with fiery intent.", backgroundImage: "https://i.imgur.com/8YIqCl5.png", uid: "season0_14" },
-                    { id: 15, name: "Emerald Stalker", cost: 4, attack: 4, health: 3, description: "Strikes with emerald fury.", backgroundImage: "https://i.imgur.com/0XcU175.png", uid: "season0_15" },
-                    { id: 16, name: "Thunder Guardian", cost: 5, attack: 3, health: 6, taunt: true, description: "Guards with electric might.", backgroundImage: "https://i.imgur.com/jKE3ClI.png", uid: "season0_16" },
-                    { id: 17, name: "Blaze Warden", cost: 5, attack: 3, health: 6, taunt: true, description: "Guards with fiery resolve.", backgroundImage: "https://i.imgur.com/XJ8Saun.png", uid: "season0_17" },
-                    { id: 18, name: "Frost Protector", cost: 5, attack: 3, health: 6, taunt: true, description: "Guards with icy resilience.", backgroundImage: "https://i.imgur.com/fGDbB5o.png", uid: "season0_18" },
-                    { id: 21, name: "Celestial Warden", cost: 6, attack: 5, health: 5, healAll: 1, description: "Heals all for 1 each turn.", backgroundImage: "https://i.imgur.com/6CXJn5s.png", uid: "season0_21" },
-                    { id: 22, name: "Abyssal Keeper", cost: 6, attack: 5, health: 5, healAll: 1, description: "Heals all with dark energy.", backgroundImage: "https://i.imgur.com/3b2RmGQ.png", uid: "season0_22" },
-                    { id: 23, name: "Storm Cavalier", cost: 4, attack: 4, health: 4, description: "Rides the storm into battle.", backgroundImage: "https://i.imgur.com/nBUKWdy.png", uid: "season0_23" },
-                    { id: 24, name: "Flame Charger", cost: 4, attack: 4, health: 4, description: "Charges with fiery speed.", backgroundImage: "https://i.imgur.com/cep6ytB.png", uid: "season0_24" },
-                    { id: 25, name: "Ra Cal Vin", cost: 4, attack: 4, health: 4, description: "Glides with icy Language.", backgroundImage: "https://i.imgur.com/XbSuPyC.png", uid: "season0_25" },
-                    { id: 26, name: "Void Sorcerer", cost: 5, attack: 3, health: 4, taunt: true, description: "Casts protective dark magic.", backgroundImage: "https://i.imgur.com/2XhqS6d.png", uid: "season0_26" },
-                    { id: 27, name: "Light Mage", cost: 5, attack: 3, health: 4, taunt: true, description: "Shields with radiant magic.", backgroundImage: "https://i.imgur.com/cMLK4Oq.png", uid: "season0_27" },
-                    { id: 30, name: "Spectral Warrior", cost: 5, attack: 5, health: 4, description: "Fights with ghostly strength.", backgroundImage: "https://i.imgur.com/n2b1ugT.png", uid: "season0_30" },
-                    { id: 31, name: "Radiant Paladin", cost: 5, attack: 5, health: 4, description: "Shines with radiant power.", backgroundImage: "https://i.imgur.com/TalRqz3.png", uid: "season0_31" },
-                    { id: 32, name: "Ethereal Phantom", cost: 3, attack: 2, health: 3, description: "Haunts the battlefield.", backgroundImage: "https://i.imgur.com/v0RBTiV.png", uid: "season0_32" },
-                    { id: 33, name: "Crimson Shade", cost: 3, attack: 2, health: 3, description: "Burns with crimson energy.", backgroundImage: "https://i.imgur.com/36iR3J8.png", uid: "season0_33" },
-                    { id: 34, name: "Logs Much", cost: 3, attack: 2, health: 3, description: "Wooden with Steel presence.", backgroundImage: "https://i.imgur.com/PFbnxct.png", uid: "season0_34" },
-                    { id: 35, name: "Abyssal Monolith", cost: 7, attack: 6, health: 6, taunt: true, description: "Dominates with abyssal might.", backgroundImage: "https://i.imgur.com/1VehWYG.png", uid: "season0_35" },
-                    { id: 36, name: "Celestial Serph", cost: 7, attack: 6, health: 6, taunt: true, description: "Protects with celestial power.", backgroundImage: "https://i.imgur.com/GvWB71v.png", uid: "season0_36" },
-                    { id: 37, name: "Thundering Yordy", cost: 6, attack: 5, health: 5, description: "Bats with thunderous force.", backgroundImage: "https://i.imgur.com/UvZsOLQ.png", uid: "season0_37" },
-                    { id: 38, name: "Flame Dragon", cost: 6, attack: 5, health: 5, description: "Burns with fiery wrath.", backgroundImage: "https://i.imgur.com/BocWQdv.png", uid: "season0_38" },
-                    { id: 39, name: "Star Traveler", cost: 6, attack: 5, health: 5, description: "Strikes with void energy.", backgroundImage: "https://i.imgur.com/I3o9UZS.png", uid: "season0_39" },
-                    { id: 51, name: "Luminous Watcher", cost: 3, attack: 2, health: 3, healAll: 1, description: "Heals all for 1 each turn.", backgroundImage: "https://i.imgur.com/eg8FESL.png", uid: "season0_51" },
-                    { id: 52, name: "Vitality Totem", cost: 5, attack: 3, health: 5, healAll: 2, description: "Heals all for 2 each turn.", backgroundImage: "https://i.imgur.com/SAL2oQY.png", uid: "season0_52" },
-                    { id: 53, name: "Alpha Skiff", cost: 2, attack: 1, health: 2, ability: "dealDamage", damage: 2, type: "minion", description: "On play: Deal 2 damage to an enemy.", backgroundImage: "https://i.imgur.com/z1fbkXx.png", uid: "season0_53" },
-                    { id: 54, name: "Beta Cruiser", cost: 4, attack: 3, health: 3, ability: "dealDamage", damage: 5, type: "minion", description: "On play: Deal 5 damage to an enemy.", backgroundImage: "https://i.imgur.com/JuxTEX9.png", uid: "season0_54" },
-                    { id: 55, name: "Omega Dreadnought", cost: 6, attack: 4, health: 5, ability: "boostAllies", boostAttack: 1, type: "minion", description: "On play: Give all allies +1 attack.", backgroundImage: "https://i.imgur.com/Phx6yjU.png", uid: "season0_55" },
-                    { id: 56, name: "A Coward Priest", cost: 1, attack: 1, health: 1, description: "Basic reconnaissance unit.", backgroundImage: "https://i.imgur.com/DHS25YU.jpeg", uid: "season0_56" },
-                    { id: 57, name: "Patrol Frigate", cost: 3, attack: 2, health: 3, description: "Standard patrol vessel.", backgroundImage: "https://i.imgur.com/nJMY8NA.png", uid: "season0_57" },
-                    { id: 58, name: "Ironclad Titan", cost: 5, attack: 4, health: 4, description: "Heavy armored enforcer.", backgroundImage: "https://i.imgur.com/yUzjTDm.png", uid: "season0_58" },
-                    { id: 60, name: "Overlord Mind", cost: 5, attack: 4, health: 4, taunt: true, type: "minion", description: "Taunt.", backgroundImage: "https://i.imgur.com/LspYMpz.png", uid: "season0_60" },
-                    { id: 61, name: "Dragon King", cost: 7, attack: 5, health: 5, type: "minion", description: "Powerful undead leader.", backgroundImage: "https://i.imgur.com/uaeSik8.png", uid: "season0_61" },
-                    { id: 62, name: "Enigmatic Warrior", cost: 4, attack: 3, health: 3, type: "minion", description: "Mysterious combatant.", backgroundImage: "https://i.imgur.com/JwcxWth.png", uid: "season0_62" },
-                    { id: 63, name: "Battle Commander", cost: 3, attack: 2, health: 4, type: "minion", description: "Leads the charge.", backgroundImage: "https://i.imgur.com/ABsno64.png", uid: "season0_63" },
-                    { id: 64, name: "Orcish Sniper", cost: 2, attack: 2, health: 1, type: "minion", description: "Ranged attacker.", backgroundImage: "https://i.imgur.com/nlkfMpI.png", uid: "season0_64" },
-                    { id: 65, name: "Valor Knight", cost: 6, attack: 5, health: 4, type: "minion", description: "Elite fighter.", backgroundImage: "https://i.imgur.com/LjBBzdn.png", uid: "season0_65" },
-                    { id: 66, name: "Starborn Light", cost: 1, attack: 1, health: 1, type: "minion", description: "Summons structures.", backgroundImage: "https://i.imgur.com/iWv48Xl.png", uid: "season0_66" },
-                    { id: 67, name: "Stoned Ape", cost: 8, attack: 8, health: 8, taunt: true, description: "Unstoppable celestial force.", backgroundImage: "https://i.imgur.com/iWv48Xl.png", uid: "season0_67" },
-                    { id: 68, name: "Abyssal Leviathan", cost: 8, attack: 7, health: 9, ability: "dealDamage", damage: 3, type: "minion", description: "Crushes foes with abyssal might.", backgroundImage: "https://i.imgur.com/SbU1dfG.png", uid: "season0_68" },
-                    { id: 11, name: "Plasma Surge", cost: 2, damage: 4, type: "directDamage", description: "Blasts for 4 damage.", backgroundImage: "https://i.imgur.com/MDra3S8.png", uid: "season0_11" },
-                    { id: 12, name: "Fire Barrage", cost: 3, damage: 5, type: "directDamage", description: "Freezes for 5 damage.", backgroundImage: "https://i.imgur.com/lAUM1L7.png", uid: "season0_12" },
-                    { id: 19, name: "Arcane Burst", cost: 3, damage: 6, type: "directDamage", description: "Unleashes arcane energy for 6 damage.", backgroundImage: "https://i.imgur.com/sZEdhnc.png", uid: "season0_19" },
-                    { id: 20, name: "Void Rift", cost: 3, damage: 6, type: "directDamage", description: "Channels void energy for 6 damage.", backgroundImage: "https://i.imgur.com/KjBYZ7L.png", uid: "season0_20" },
-                    { id: 28, name: "Epic Strike", cost: 4, damage: 8, type: "directDamage", description: "Unleashes chaotic energy for 8 damage.", backgroundImage: "https://i.imgur.com/YxGHZ7l.png", uid: "season0_28" },
-                    { id: 29, name: "Chaos Vortrx", cost: 4, damage: 8, type: "directDamage", description: "Strikes with fire and wind for 8 damage.", backgroundImage: "https://i.imgur.com/dramBbf.png", uid: "season0_29" },
-                    { id: 40, name: "Starfire Nova", cost: 5, damage: 10, type: "directDamage", description: "Unleashes starfire for 10 damage.", backgroundImage: "https://i.imgur.com/3cpJ2XF.png", uid: "season0_40" },
-                    { id: 41, name: "Moonfire Wave", cost: 5, damage: 10, type: "directDamage", description: "Strikes with moonfire for 10 damage.", backgroundImage: "https://i.imgur.com/1iicyne.png", uid: "season0_41" },
-                    { id: 42, name: "Flame Pulse", cost: 4, damage: 8, type: "directDamage", description: "Casts an eclipse for 8 damage.", backgroundImage: "https://i.imgur.com/5PSOVVc.png", uid: "season0_42" },
-                    { id: 43, name: "Thunder Strike", cost: 6, damage: 7, type: "directDamage", description: "Strikes for 7 damage.", backgroundImage: "https://i.imgur.com/8DLbQp4.png", uid: "season0_43" },
-                    { id: 44, name: "Void Eruption", cost: 8, damage: 10, type: "directDamage", description: "Obliterates for 10 damage.", backgroundImage: "https://i.imgur.com/KEPxMIp.png", uid: "season0_44" },
-                    { id: 45, name: "Desperate Repair", cost: 2, healing: 4, type: "healing", description: "Repairs for 4 health.", backgroundImage: "https://i.imgur.com/dyC5M5D.png", uid: "season0_45" },
-                    { id: 46, name: "Core Renewal", cost: 4, healing: 6, type: "healing", description: "Restores 6 health.", backgroundImage: "https://i.imgur.com/8fYU7nG.png", uid: "season0_46" },
-                    { id: 47, name: "Vital Infusion", cost: 6, healing: 8, type: "healing", description: "Boosts 8 health.", backgroundImage: "https://i.imgur.com/BmCZ9hn.png", uid: "season0_47" },
-                    { id: 48, name: "Life Cascade", cost: 8, healing: 12, type: "healing", description: "Surges 12 health.", backgroundImage: "https://i.imgur.com/C75RopO.png", uid: "season0_48" },
-                    { id: 49, name: "Mana Surge", cost: 0, type: "manaStorm", description: "Grants 2 mana this turn.", backgroundImage: "https://i.imgur.com/dU3QrVi.png", uid: "season0_49" },
-                    { id: 50, name: "Tactical Insight", cost: 3, type: "drawCard", description: "Draws 2 cards.", backgroundImage: "https://i.imgur.com/LhKeIUk.png", uid: "season0_50" },
-                    { id: 59, name: "Skull Hex", cost: 3, damage: 3, type: "directDamage", description: "Deals 3 damage to an enemy.", backgroundImage: "https://i.imgur.com/XOkb25e.jpg", uid: "season0_59" }
+        { id: 1, name: "Night Wraith", cost: 4, attack: 4, health: 3, type: "minion", description: "Strikes from the shadows.", backgroundImage: "images/night-wraith.png", uid: "season0_1" },
+                    { id: 2, name: "Mana Surge", cost: 0, type: "manaStorm", description: "Grants 2 mana this turn.", backgroundImage: "images/mana-surge.png", uid: "season0_2" },
+                    { id: 3, name: "Stoned Ape", cost: 8, attack: 8, health: 8, taunt: true, type: "minion", description: "Unstoppable celestial force.", backgroundImage: "images/stoned-ape.png", uid: "season0_3" },
+                    { id: 4, name: "Stealth Drone", cost: 1, attack: 1, health: 1, description: "Quick scouting unit cloaked in shadow.", backgroundImage: "images/stealth-drone.png", uid: "season0_4" },
+                    { id: 5, name: "Viper Assassin", cost: 3, attack: 4, health: 2, description: "Strikes with venomous precision.", backgroundImage: "images/viper-assassin.png", uid: "season0_5" },
+                    { id: 6, name: "Barrier Sentinel", cost: 5, attack: 0, health: 7, taunt: true, description: "Unyielding defense with Taunt.", backgroundImage: "images/barrier-sentinel.png", uid: "season0_6" },
+                    { id: 7, name: "Swarm Legion", cost: 3, attack: 3, health: 3, description: "Overruns the enemy in numbers.", backgroundImage: "images/swarm-legion.png", uid: "season0_7" },
+                    { id: 8, name: "Quantum Behemoth", cost: 7, attack: 6, health: 4, description: "Devastating energy-infused giant.", backgroundImage: "images/quantum-behemoth.png", uid: "season0_8" },
+                    { id: 9, name: "Arcane Mystic", cost: 2, attack: 2, health: 3, description: "Casts arcane spells with finesse.", backgroundImage: "images/arcane-mystic.png", uid: "season0_9" },
+                    { id: 10, name: "Overcharged Titan", cost: 8, attack: 7, health: 6, description: "Overwhelming power surge incarnate.", backgroundImage: "images/overcharged-titan.png", uid: "season0_10" },
+                    { id: 13, name: "Night Wraith", cost: 4, attack: 4, health: 3, description: "Strikes from the shadows.", backgroundImage: "images/night-wraith.png", uid: "season0_13" },
+                    { id: 14, name: "Crimson Revenant", cost: 4, attack: 4, health: 3, description: "Strikes with fiery intent.", backgroundImage: "images/crimson-revenant.png", uid: "season0_14" },
+                    { id: 15, name: "Emerald Stalker", cost: 4, attack: 4, health: 3, description: "Strikes with emerald fury.", backgroundImage: "images/emerald-stalker.png", uid: "season0_15" },
+                    { id: 16, name: "Thunder Guardian", cost: 5, attack: 3, health: 6, taunt: true, description: "Guards with electric might.", backgroundImage: "images/thunder-guardian.png", uid: "season0_16" },
+                    { id: 17, name: "Blaze Warden", cost: 5, attack: 3, health: 6, taunt: true, description: "Guards with fiery resolve.", backgroundImage: "images/blaze-warden.png", uid: "season0_17" },
+                    { id: 18, name: "Frost Protector", cost: 5, attack: 3, health: 6, taunt: true, description: "Guards with icy resilience.", backgroundImage: "images/frost-protector.png", uid: "season0_18" },
+                    { id: 21, name: "Celestial Warden", cost: 6, attack: 5, health: 5, healAll: 1, description: "Heals all for 1 each turn.", backgroundImage: "images/celestial-warden.png", uid: "season0_21" },
+                    { id: 22, name: "Abyssal Keeper", cost: 6, attack: 5, health: 5, healAll: 1, description: "Heals all with dark energy.", backgroundImage: "images/abyssal-keeper.png", uid: "season0_22" },
+                    { id: 23, name: "Storm Cavalier", cost: 4, attack: 4, health: 4, description: "Rides the storm into battle.", backgroundImage: "images/storm-cavalier.png", uid: "season0_23" },
+                    { id: 24, name: "Flame Charger", cost: 4, attack: 4, health: 4, description: "Charges with fiery speed.", backgroundImage: "images/flame-charger.png", uid: "season0_24" },
+                    { id: 25, name: "Ra Cal Vin", cost: 4, attack: 4, health: 4, description: "Glides with icy Language.", backgroundImage: "images/ra-cal-vin.png", uid: "season0_25" },
+                    { id: 26, name: "Void Sorcerer", cost: 5, attack: 3, health: 4, taunt: true, description: "Casts protective dark magic.", backgroundImage: "images/void-sorcerer.png", uid: "season0_26" },
+                    { id: 27, name: "Light Mage", cost: 5, attack: 3, health: 4, taunt: true, description: "Shields with radiant magic.", backgroundImage: "images/light-mage.png", uid: "season0_27" },
+                    { id: 30, name: "Spectral Warrior", cost: 5, attack: 5, health: 4, description: "Fights with ghostly strength.", backgroundImage: "images/spectral-warrior.png", uid: "season0_30" },
+                    { id: 31, name: "Radiant Paladin", cost: 5, attack: 5, health: 4, description: "Shines with radiant power.", backgroundImage: "images/radiant-paladin.png", uid: "season0_31" },
+                    { id: 32, name: "Ethereal Phantom", cost: 3, attack: 2, health: 3, description: "Haunts the battlefield.", backgroundImage: "images/ethereal-phantom.png", uid: "season0_32" },
+                    { id: 33, name: "Crimson Shade", cost: 3, attack: 2, health: 3, description: "Burns with crimson energy.", backgroundImage: "images/crimson-shade.png", uid: "season0_33" },
+                    { id: 34, name: "Logs Much", cost: 3, attack: 2, health: 3, description: "Wooden with Steel presence.", backgroundImage: "images/logs-much.png", uid: "season0_34" },
+                    { id: 35, name: "Abyssal Monolith", cost: 7, attack: 6, health: 6, taunt: true, description: "Dominates with abyssal might.", backgroundImage: "images/abyssal-monolith.png", uid: "season0_35" },
+                    { id: 36, name: "Celestial Serph", cost: 7, attack: 6, health: 6, taunt: true, description: "Protects with celestial power.", backgroundImage: "images/celestial-serph.png", uid: "season0_36" },
+                    { id: 37, name: "Thundering Yordy", cost: 6, attack: 5, health: 5, description: "Bats with thunderous force.", backgroundImage: "images/thundering-yordy.png", uid: "season0_37" },
+                    { id: 38, name: "Flame Dragon", cost: 6, attack: 5, health: 5, description: "Burns with fiery wrath.", backgroundImage: "images/flame-dragon.png", uid: "season0_38" },
+                    { id: 39, name: "Star Traveler", cost: 6, attack: 5, health: 5, description: "Strikes with void energy.", backgroundImage: "images/star-traveler.png", uid: "season0_39" },
+                    { id: 51, name: "Luminous Watcher", cost: 3, attack: 2, health: 3, healAll: 1, description: "Heals all for 1 each turn.", backgroundImage: "images/luminous-watcher.png", uid: "season0_51" },
+                    { id: 52, name: "Vitality Totem", cost: 5, attack: 3, health: 5, healAll: 2, description: "Heals all for 2 each turn.", backgroundImage: "images/vitality-totem.png", uid: "season0_52" },
+                    { id: 53, name: "Alpha Skiff", cost: 2, attack: 1, health: 2, ability: "dealDamage", damage: 2, type: "minion", description: "On play: Deal 2 damage to an enemy.", backgroundImage: "images/alpha-skiff.png", uid: "season0_53" },
+                    { id: 54, name: "Beta Cruiser", cost: 4, attack: 3, health: 3, ability: "dealDamage", damage: 5, type: "minion", description: "On play: Deal 5 damage to an enemy.", backgroundImage: "images/beta-cruiser.png", uid: "season0_54" },
+                    { id: 55, name: "Omega Dreadnought", cost: 6, attack: 4, health: 5, ability: "boostAllies", boostAttack: 1, type: "minion", description: "On play: Give all allies +1 attack.", backgroundImage: "images/omega-dreadnought.png", uid: "season0_55" },
+                    { id: 56, name: "A Coward Priest", cost: 1, attack: 1, health: 1, description: "Basic reconnaissance unit.", backgroundImage: "images/a-coward-priest.png", uid: "season0_56" },
+                    { id: 57, name: "Patrol Frigate", cost: 3, attack: 2, health: 3, description: "Standard patrol vessel.", backgroundImage: "images/patrol-frigate.png", uid: "season0_57" },
+                    { id: 58, name: "Ironclad Titan", cost: 5, attack: 4, health: 4, description: "Heavy armored enforcer.", backgroundImage: "images/ironclad-titan.png", uid: "season0_58" },
+                    { id: 60, name: "Overlord Mind", cost: 5, attack: 4, health: 4, taunt: true, type: "minion", description: "Taunt.", backgroundImage: "images/overlord-mind.png", uid: "season0_60" },
+                    { id: 61, name: "Dragon King", cost: 7, attack: 5, health: 5, type: "minion", description: "Powerful undead leader.", backgroundImage: "images/dragon-king.png", uid: "season0_61" },
+                    { id: 62, name: "Enigmatic Warrior", cost: 4, attack: 3, health: 3, type: "minion", description: "Mysterious combatant.", backgroundImage: "images/enigmatic-warrior.png", uid: "season0_62" },
+                    { id: 63, name: "Battle Commander", cost: 3, attack: 2, health: 4, type: "minion", description: "Leads the charge.", backgroundImage: "images/battle-commander.png", uid: "season0_63" },
+                    { id: 64, name: "Orcish Sniper", cost: 2, attack: 2, health: 1, type: "minion", description: "Ranged attacker.", backgroundImage: "images/orcish-sniper.png", uid: "season0_64" },
+                    { id: 65, name: "Valor Knight", cost: 6, attack: 5, health: 4, type: "minion", description: "Elite fighter.", backgroundImage: "images/valor-knight.png", uid: "season0_65" },
+                    { id: 66, name: "Starborn Light", cost: 1, attack: 1, health: 1, type: "minion", description: "Summons structures.", backgroundImage: "images/starborn-light.png", uid: "season0_66" },
+                    { id: 67, name: "Stoned Ape", cost: 8, attack: 8, health: 8, taunt: true, description: "Unstoppable celestial force.", backgroundImage: "images/stoned-ape.png", uid: "season0_67" },
+                    { id: 68, name: "Abyssal Leviathan", cost: 8, attack: 7, health: 9, ability: "dealDamage", damage: 3, type: "minion", description: "Crushes foes with abyssal might.", backgroundImage: "images/abyssal-leviathan.png", uid: "season0_68" },
+                    { id: 11, name: "Plasma Surge", cost: 2, damage: 4, type: "directDamage", description: "Blasts for 4 damage.", backgroundImage: "images/plasma-surge.png", uid: "season0_11" },
+                    { id: 12, name: "Fire Barrage", cost: 3, damage: 5, type: "directDamage", description: "Freezes for 5 damage.", backgroundImage: "images/fire-barrage.png", uid: "season0_12" },
+                    { id: 19, name: "Arcane Burst", cost: 3, damage: 6, type: "directDamage", description: "Unleashes arcane energy for 6 damage.", backgroundImage: "images/arcane-burst.png", uid: "season0_19" },
+                    { id: 20, name: "Void Rift", cost: 3, damage: 6, type: "directDamage", description: "Channels void energy for 6 damage.", backgroundImage: "images/void-rift.png", uid: "season0_20" },
+                    { id: 28, name: "Epic Strike", cost: 4, damage: 8, type: "directDamage", description: "Unleashes chaotic energy for 8 damage.", backgroundImage: "images/epic-strike.png", uid: "season0_28" },
+                    { id: 29, name: "Chaos Vortrx", cost: 4, damage: 8, type: "directDamage", description: "Strikes with fire and wind for 8 damage.", backgroundImage: "images/chaos-vortrx.png", uid: "season0_29" },
+                    { id: 40, name: "Starfire Nova", cost: 5, damage: 10, type: "directDamage", description: "Unleashes starfire for 10 damage.", backgroundImage: "images/starfire-nova.png", uid: "season0_40" },
+                    { id: 41, name: "Moonfire Wave", cost: 5, damage: 10, type: "directDamage", description: "Strikes with moonfire for 10 damage.", backgroundImage: "images/moonfire-wave.png", uid: "season0_41" },
+                    { id: 42, name: "Flame Pulse", cost: 4, damage: 8, type: "directDamage", description: "Casts an eclipse for 8 damage.", backgroundImage: "images/flame-pulse.png", uid: "season0_42" },
+                    { id: 43, name: "Thunder Strike", cost: 6, damage: 7, type: "directDamage", description: "Strikes for 7 damage.", backgroundImage: "images/thunder-strike.png", uid: "season0_43" },
+                    { id: 44, name: "Void Eruption", cost: 8, damage: 10, type: "directDamage", description: "Obliterates for 10 damage.", backgroundImage: "images/void-eruption.png", uid: "season0_44" },
+                    { id: 45, name: "Desperate Repair", cost: 2, healing: 4, type: "healing", description: "Repairs for 4 health.", backgroundImage: "images/desperate-repair.png", uid: "season0_45" },
+                    { id: 46, name: "Core Renewal", cost: 4, healing: 6, type: "healing", description: "Restores 6 health.", backgroundImage: "images/core-renewal.png", uid: "season0_46" },
+                    { id: 47, name: "Vital Infusion", cost: 6, healing: 8, type: "healing", description: "Boosts 8 health.", backgroundImage: "images/vital-infusion.png", uid: "season0_47" },
+                    { id: 48, name: "Life Cascade", cost: 8, healing: 12, type: "healing", description: "Surges 12 health.", backgroundImage: "images/life-cascade.png", uid: "season0_48" },
+                    { id: 49, name: "Mana Surge", cost: 0, type: "manaStorm", description: "Grants 2 mana this turn.", backgroundImage: "images/mana-surge.png", uid: "season0_49" },
+                    { id: 50, name: "Tactical Insight", cost: 3, type: "drawCard", description: "Draws 2 cards.", backgroundImage: "images/tactical-insight.png", uid: "season0_50" },
+                    { id: 59, name: "Skull Hex", cost: 3, damage: 3, type: "directDamage", description: "Deals 3 damage to an enemy.", backgroundImage: "images/skull-hex.png", uid: "season0_59" }
                 ];
 
         function updateUserInfo() {

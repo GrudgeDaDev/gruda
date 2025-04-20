@@ -1,6 +1,8 @@
 require('dotenv').config();
 const Parse = require('parse/node');
 const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 
 Parse.initialize(
   process.env.PARSE_APP_ID,
@@ -36,9 +38,15 @@ Parse.Cloud.define('sendDiscordNotification', async (request) => {
 
 // Future NFT/GBuX integration
 Parse.Cloud.define('mintNFT', async (request) => {
-  const { userId, metadata } = request.params;
+  const { userId, metadata, imageBase64 } = request.params;
+
+  // Save the image to the images directory
+  const imageBuffer = Buffer.from(imageBase64, 'base64');
+  const imagePath = path.join(__dirname, '..', 'images', `${userId}_${Date.now()}.png`);
+  fs.writeFileSync(imagePath, imageBuffer);
+
   // Placeholder for NFT minting logic
-  return `NFT minted for user ${userId} with metadata ${JSON.stringify(metadata)}`;
+  return `NFT minted for user ${userId} with metadata ${JSON.stringify(metadata)} and image saved at ${imagePath}`;
 });
 
 Parse.Cloud.define('transferGBuX', async (request) => {
