@@ -8,4 +8,4 @@ COPY cloud/main.js ./cloud/ COPY test-back4app.js . COPY .env.example .
 
 ENV NODE_ENV=production
 
-CMD ["node", "test-back4app.js"]
+CMD ["node", "index.js"]
