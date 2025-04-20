@@ -95,3 +95,24 @@ Parse.Cloud.define('uploadImage', async (request) => {
 
   return `Image uploaded for user ${userId} and saved at ${imagePath}`;
 });
+
+// Add a new Parse Cloud function to analyze error logs
+Parse.Cloud.define('analyzeErrorLogs', async (request) => {
+  const { errorLogs } = request.params;
+  // Placeholder for error log analysis logic
+  return `Analyzed error logs: ${errorLogs}`;
+});
+
+// Add a new Parse Cloud function to suggest solutions
+Parse.Cloud.define('suggestSolutions', async (request) => {
+  const { errorLogs } = request.params;
+  // Placeholder for suggesting solutions based on error logs
+  return `Suggested solutions for error logs: ${errorLogs}`;
+});
+
+// Add a new Parse Cloud function to create a corrected Dockerfile
+Parse.Cloud.define('createCorrectedDockerfile', async (request) => {
+  const { errorLogs } = request.params;
+  // Placeholder for creating a corrected Dockerfile based on error logs
+  return `Created corrected Dockerfile for error logs: ${errorLogs}`;
+});

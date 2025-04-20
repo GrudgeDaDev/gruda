@@ -9,6 +9,14 @@ COPY cloud/main.js ./cloud/
 COPY test-back4app.js . 
 COPY .env.example .
 
+# Add a new stage to install AI Assistant dependencies
+RUN npm install openai
+
+# Add a new command to run the AI Assistant script
+COPY ai-assistant.js . 
+RUN node ai-assistant.js
+
 ENV NODE_ENV=production
 
-CMD ["node", "index.js"]
+# Update the CMD to run the AI Assistant script
+CMD ["node", "ai-assistant.js"]
