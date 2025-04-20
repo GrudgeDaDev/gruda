@@ -83,3 +83,15 @@ Parse.Cloud.define('getAvailableCards', async (request) => {
 
   return [...season0Cards, ...mintedCards];
 });
+
+// New function to handle image uploads to the images directory
+Parse.Cloud.define('uploadImage', async (request) => {
+  const { userId, imageBase64 } = request.params;
+
+  // Save the image to the images directory
+  const imageBuffer = Buffer.from(imageBase64, 'base64');
+  const imagePath = path.join(__dirname, '..', 'images', `${userId}_${Date.now()}.png`);
+  fs.writeFileSync(imagePath, imageBuffer);
+
+  return `Image uploaded for user ${userId} and saved at ${imagePath}`;
+});
