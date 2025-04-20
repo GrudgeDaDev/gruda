@@ -1,20 +1,11 @@
-# Use node:14 as the base image
-FROM node:14
+FROM node:16-alpine
 
-# Set the working directory to /app
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
-COPY package.json package-lock.json ./
+COPY package.json . RUN npm install
 
-# Run npm install to install dependencies
-RUN npm install
+COPY cloud/main.js ./cloud/ COPY test-back4app.js . COPY .env.example .
 
-# Copy the rest of the application code to the working directory
-COPY . .
+ENV NODE_ENV=production
 
-# Expose port 3000
-EXPOSE 3000
-
-# Set the command to run the application using node test-back4app.js
 CMD ["node", "test-back4app.js"]
