@@ -1,432 +1,97 @@
-// Initialize Parse SDK
-Parse.initialize('gweV5ZdFH1KoB5UjbMWaL1p3ibrWwP60x3h209wN', 'tkhLbN9t0i0z31FTjYQySkrgPNgjoUWbOSQ3FWxd');
-Parse.serverURL = 'https://parseapi.back4app.com/';
-
-// Season 0 Card Data with IDs
-const season0Cards = [
-  { id: '001', name: 'Stealth Drone', type: 'minion', atk: 1, hp: 1, cost: 1, description: 'Quick scouting unit cloaked in shadow.', image: 'https://i.imgur.com/zMFckYB.png' },
-  { id: '002', name: 'A Coward Priest', type: 'minion', atk: 1, hp: 1, cost: 1, description: 'Basic reconnaissance unit.', image: 'https://i.imgur.com/DHS25YU.jpeg' },
-  { id: '003', name: 'Starborn Light', type: 'minion', atk: 1, hp: 1, cost: 1, description: 'Summons structures.', image: 'https://i.imgur.com/AvsiFog.png' },
-  { id: '004', name: 'Arcane Mystic', type: 'minion', atk: 2, hp: 3, cost: 2, description: 'Casts arcane spells with finesse.', image: 'https://i.imgur.com/Enu1T7Y.png' },
-  { id: '005', name: 'Alpha Skiff', type: 'minion', atk: 1, hp: 2, cost: 2, description: 'On play: Deal 2 damage to an enemy.', image: 'https://i.imgur.com/z1fbkXx.png' },
-  { id: '006', name: 'Orcish Sniper', type: 'minion', atk: 2, hp: 1, cost: 2, description: 'Ranged attacker.', image: 'https://i.imgur.com/nlkfMpI.png' },
-  { id: '007', name: 'Mace Assassin', type: 'minion', atk: 4, hp: 2, cost: 3, description: 'Strikes with venomous precision.', image: 'https://i.imgur.com/3SkE6VG.png' },
-  { id: '008', name: 'Swarm Legion', type: 'minion', atk: 3, hp: 3, cost: 3, description: 'Overruns the enemy in numbers.', image: 'https://i.imgur.com/Wn84v6I.png' },
-  { id: '009', name: 'Ethereal Phantom', type: 'minion', atk: 2, hp: 3, cost: 3, description: 'Haunts the battlefield.', image: 'https://i.imgur.com/v0RBTiV.png' },
-  { id: '010', name: 'Crimson Shade', type: 'minion', atk: 2, hp: 3, cost: 3, description: 'Burns with crimson energy.', image: 'https://i.imgur.com/36iR3J8.png' },
-  { id: '011', name: 'Logs Much', type: 'minion', atk: 2, hp: 3, cost: 3, description: 'Wooden with Steel presence.', image: 'https://i.imgur.com/PFbnxct.png' },
-  { id: '012', name: 'Luminous Watcher', type: 'minion', atk: 2, hp: 3, cost: 3, description: 'Heals all for 1 each turn.', image: 'https://i.imgur.com/eg8FESL.png' },
-  { id: '013', name: 'Patrol Frigate', type: 'minion', atk: 2, hp: 3, cost: 3, description: 'Standard patrol vessel.', image: 'https://i.imgur.com/nJMY8NA.png' },
-  { id: '014', name: 'Battle Commander', type: 'minion', atk: 2, hp: 4, cost: 3, description: 'Leads the charge.', image: 'https://i.imgur.com/ABsno64.png' },
-  { id: '015', name: 'Night Wraith', type: 'minion', atk: 4, hp: 3, cost: 4, description: 'Strikes from the shadows.', image: 'https://i.imgur.com/PSpj7sO.png' },
-  { id: '016', name: 'Night Lord', type: 'minion', atk: 4, hp: 3, cost: 4, description: 'Roams from the shadows.', image: 'https://i.imgur.com/qpsLIcS.png' },
-  { id: '017', name: 'Crimson Revenant', type: 'minion', atk: 4, hp: 3, cost: 4, description: 'Strikes with fiery intent.', image: 'https://i.imgur.com/8YIqCl5.png' },
-  { id: '018', name: 'Emerald Stalker', type: 'minion', atk: 4, hp: 3, cost: 4, description: 'Strikes with emerald fury.', image: 'https://i.imgur.com/5t6kGOi.jpeg' },
-  { id: '019', name: 'Storm Cavalier', type: 'minion', atk: 4, hp: 4, cost: 4, description: 'Rides the storm into battle.', image: 'https://i.imgur.com/nBUKWdy.png' },
-  { id: '020', name: 'Flame Charger', type: 'minion', atk: 4, hp: 4, cost: 4, description: 'Charges with fiery speed.', image: 'https://i.imgur.com/cep6ytB.png' },
-  { id: '021', name: 'Ra Cal Vin', type: 'minion', atk: 4, hp: 4, cost: 4, description: 'Glides with icy Language.', image: 'https://i.imgur.com/XbSuPyC.png' },
-  { id: '022', name: 'Beta Cruiser', type: 'minion', atk: 3, hp: 3, cost: 4, description: 'On play: Deal 5 damage to an enemy.', image: 'https://i.imgur.com/JuxTEX9.png' },
-  { id: '023', name: 'Enigmatic Warrior', type: 'minion', atk: 3, hp: 3, cost: 4, description: 'Mysterious combatant.', image: 'https://i.imgur.com/JwcxWth.png' },
-  { id: '024', name: 'Barrier Sentinel', type: 'minion', atk: 0, hp: 7, cost: 5, description: 'Unyielding defense with Taunt.', image: 'https://i.imgur.com/klAa6aX.png' },
-  { id: '025', name: 'Void Sorcerer', type: 'minion', atk: 3, hp: 4, cost: 5, description: 'Casts protective dark magic.', image: 'https://i.imgur.com/2XhqS6d.png' },
-  { id: '026', name: 'Light Mage', type: 'minion', atk: 3, hp: 4, cost: 5, description: 'Shields with radiant magic.', image: 'https://i.imgur.com/cMLK4Oq.png' },
-  { id: '027', name: 'Spectral Warrior', type: 'minion', atk: 5, hp: 4, cost: 5, description: 'Fights with ghostly strength.', image: 'https://i.imgur.com/n2b1ugT.png' },
-  { id: '028', name: 'Radiant Paladin', type: 'minion', atk: 5, hp: 4, cost: 5, description: 'Shines with radiant power.', image: 'https://i.imgur.com/TalRqz3.png' },
-  { id: '029', name: 'Vitality Totem', type: 'minion', atk: 3, hp: 5, cost: 5, description: 'Heals all for 2 each turn.', image: 'https://i.imgur.com/SAL2oQY.png' },
-  { id: '030', name: 'Ironclad Titan', type: 'minion', atk: 4, hp: 4, cost: 5, description: 'Heavy armored enforcer.', image: 'https://i.imgur.com/yUzjTDm.png' },
-  { id: '031', name: 'Overlord Mind', type: 'minion', atk: 4, hp: 4, cost: 5, description: 'Taunt.', image: 'https://i.imgur.com/LspYMpz.png' },
-  { id: '032', name: 'Celestial Warden', type: 'minion', atk: 5, hp: 5, cost: 6, description: 'Heals all for 1 each turn.', image: 'https://i.imgur.com/6CXJn5s.png' },
-  { id: '033', name: 'Abyssal Keeper', type: 'minion', atk: 5, hp: 5, cost: 6, description: 'Heals all with dark energy.', image: 'https://i.imgur.com/3b2RmGQ.png' },
-  { id: '034', name: 'Arcane Missile', type: 'spell', cost: 1, description: 'Deal 3 damage to a random enemy.', image: 'https://i.imgur.com/jQbF07m.png' },
-  { id: '035', name: 'Shadow Strike', type: 'spell', cost: 2, description: 'Deal 4 damage to a target enemy.', image: 'https://i.imgur.com/oPFVuMN.png' },
-  { id: '036', name: 'Healing Wave', type: 'spell', cost: 3, description: 'Restore 6 health to a friendly character.', image: 'https://i.imgur.com/PgLXUx8.png' },
-  { id: '037', name: 'Mind Control', type: 'spell', cost: 8, description: 'Take control of an enemy minion.', image: 'https://i.imgur.com/dC1AKPu.png' },
-  // New Cards
-  { id: '038', name: 'Starship Alpha', type: 'minion', atk: 2, hp: 2, cost: 2, description: 'Stealth. Gains +1 atk in space-themed games.', image: 'https://i.imgur.com/scyPIUs.png' },
-  { id: '039', name: 'Star Hut', type: 'minion', atk: 0, hp: 5, cost: 3, description: 'Taunt. Heals adjacent allies for 1 in Island.', image: 'https://i.imgur.com/TCYVocs.png' },
-  { id: '040', name: 'Engineer Prime', type: 'minion', atk: 4, hp: 4, cost: 6, description: 'Super Rare. On play: Give all allies +2 atk in Warlords.', image: 'https://i.imgur.com/KpHvcmW.mp4' },
-  { id: '041', name: 'Starship Beta', type: 'minion', atk: 3, hp: 3, cost: 4, description: 'Deals +2 damage to structures in RTS.', image: 'https://i.imgur.com/BSurWbZ.png' },
-  { id: '042', name: 'Starship Gamma', type: 'minion', atk: 2, hp: 4, cost: 4, description: 'Heals allies for 1 in Crawl.', image: 'https://i.imgur.com/5PSOVVc.png' },
-  { id: '043', name: 'Star Cruiser', type: 'minion', atk: 6, hp: 5, cost: 7, description: 'On play: Deal 3 damage to all enemies in Battle.', image: 'https://i.imgur.com/Ldfm3An.png' },
-  { id: '044', name: 'Fireball', type: 'spell', cost: 4, description: 'Deal 6 damage to a target. +2 damage in Warlords.', image: 'https://i.imgur.com/V1HCiAI.jpg' },
-  { id: '045', name: 'Undead', type: 'minion', atk: 3, hp: 3, cost: 3, description: 'Grants Undead Hardcore Island character. +1 hp in Island.', image: 'https://i.imgur.com/8YIqCl5.png' },
-  { id: '046', name: 'Human', type: 'minion', atk: 3, hp: 3, cost: 3, description: 'Grants Human Hardcore Island character. +1 atk in Warlords.', image: 'https://i.imgur.com/0XcU175.png' },
-  { id: '047', name: 'Orc', type: 'minion', atk: 4, hp: 2, cost: 3, description: 'Grants Orc Hardcore Island character. Haste in Battle.', image: 'https://i.imgur.com/nlkfMpI.png' },
-  { id: '048', name: 'Elf', type: 'minion', atk: 2, hp: 4, cost: 3, description: 'Grants Elf Hardcore Island character. +1 cost reduction in Crawl.', image: 'https://i.imgur.com/6CXJn5s.png' },
-  { id: '049', name: 'Dwarf', type: 'minion', atk: 3, hp: 3, cost: 3, description: 'Grants Dwarf Hardcore Island character. +2 hp in Tower.', image: 'https://i.imgur.com/nBUKWdy.png' },
-  { id: '050', name: 'Barbarian', type: 'minion', atk: 4, hp: 3, cost: 3, description: 'Grants Barbarian Hardcore Island character. +1 atk in Island.', image: 'https://i.imgur.com/a9H86By.png' }
-];
-
-// Tribe Data
-const tribeData = {
-  silver: {
-    name: 'Iron Will',
-    color: 'text-tribe-silver',
-    cssClass: 'silver-tribe',
-    statBonus: { hp: 1 },
-    description: '+1 extra health over normal',
-    effect: 'If there is a Silver card on the field, gain Taunt on summon.',
-    gameplayText: 'Iron Will: Gain +1 health. If another Silver card is on the field, gain Taunt when summoned.'
-  },
-  red: {
-    name: 'Blood For Conquest',
-    color: 'text-tribe-red',
-    cssClass: 'red-tribe',
-    statBonus: { atk: 1 },
-    description: '+1 extra attack over normal',
-    effect: 'If a Red card is on battlefield and you play another Red, it has Haste.',
-    gameplayText: 'Blood For Conquest: Gain +1 attack. If another Red card is on the battlefield, gain Haste when summoned.'
-  },
-  purple: {
-    name: 'Fabled',
-    color: 'text-tribe-purple',
-    cssClass: 'purple-tribe',
-    statBonus: { cost: -1 },
-    description: 'Cost one less mana than normal',
-    effect: 'If Purple is in your hand, other Purples cost one less (stacking, min 0).',
-    gameplayText: 'Fabled: Costs 1 less mana. If you have another Purple card in your hand, other Purple cards cost 1 less (stacking, no less than 0).'
-  },
-  orange: {
-    name: 'Tribal War',
-    color: 'text-tribe-orange',
-    cssClass: 'orange-tribe',
-    statBonus: { summon: '1/1 Taunt' },
-    description: 'Summon a 1/1 with Taunt when played',
-    effect: 'Give all Orange cards +1 Health on summon if an Orange is on battlefield.',
-    gameplayText: 'Tribal War: Summon a 1/1 with Taunt when played. If another Orange card is on the battlefield, all Orange cards gain +1 Health when summoned.'
-  }
-};
-
-// Special Traits Data
-const specialTraitData = {
-  legendaryFoil: { name: 'Legendary Foil', color: 'text-yellow-400', rarity: 1.5, description: 'Golden foil effect with animations.', cssClass: 'legendary-foil' },
-  rareGlyph: { name: 'Rare Glyph', color: 'text-blue-400', rarity: 3, description: 'Enhances tribe effects.', cssClass: 'rare-glyph' },
-  alternateArt: { name: 'Alternate Art', color: 'text-purple-400', rarity: 3.5, description: 'Unique artistic variation.', cssClass: 'alternate-art' },
-  etherealSignature: { name: 'Ethereal Signature', color: 'text-green-400', rarity: 5, description: 'Minor gameplay bonuses.', cssClass: 'ethereal-signature' }
-};
-
-// Combine Cards
-const allCards = [...season0Cards];
-
-// User Collection
-let userCollection = [];
-
-// Save Cards to Back4app
-async function saveCardsToBack4app() {
-  const Cards = Parse.Object.extend('Cards');
-  for (const card of allCards) {
-    const query = new Parse.Query(Cards);
-    query.equalTo('cardId', card.id);
-    const existing = await query.first();
-    if (!existing) {
-      const cardObject = new Cards();
-      cardObject.set('cardId', card.id);
-      cardObject.set('name', card.name);
-      cardObject.set('type', card.type);
-      cardObject.set('atk', card.atk);
-      cardObject.set('hp', card.hp);
-      cardObject.set('cost', card.cost);
-      cardObject.set('description', card.description);
-      cardObject.set('image', card.image);
-      await cardObject.save();
+{
+  "classes": [
+    {
+      "className": "Cards",
+      "type": "custom",
+      "fields": {
+        "cardId": { "type": "String" },
+        "name": { "type": "String" },
+        "type": { "type": "String" },
+        "atk": { "type": "Number" },
+        "hp": { "type": "Number" },
+        "cost": { "type": "Number" },
+        "description": { "type": "String" },
+        "image": { "type": "String" },
+        "tribe": { "type": "String" },
+        "specialTrait": { "type": "String" },
+        "startingAmount": { "type": "Number" }
+      },
+      "data": [
+        {"cardId": "001", "name": "Stealth Drone", "type": "minion", "atk": 1, "hp": 1, "cost": 1, "description": "Quick scouting unit cloaked in shadow.", "image": "https://i.imgur.com/zMFckYB.png", "startingAmount": 2},
+        {"cardId": "002", "name": "A Coward Priest", "type": "minion", "atk": 1, "hp": 1, "cost": 1, "description": "Basic reconnaissance unit.", "image": "https://i.imgur.com/DHS25YU.jpeg", "startingAmount": 2},
+        {"cardId": "003", "name": "Starborn Light", "type": "minion", "atk": 1, "hp": 1, "cost": 1, "description": "Summons structures.", "image": "https://i.imgur.com/AvsiFog.png", "startingAmount": 2},
+        {"cardId": "004", "name": "Arcane Mystic", "type": "minion", "atk": 2, "hp": 3, "cost": 2, "description": "Casts arcane spells with finesse.", "image": "https://i.imgur.com/Enu1T7Y.png", "startingAmount": 2},
+        {"cardId": "005", "name": "Alpha Skiff", "type": "minion", "atk": 1, "hp": 2, "cost": 2, "description": "On play: Deal 2 damage to an enemy.", "image": "https://i.imgur.com/z1fbkXx.png", "startingAmount": 2},
+        {"cardId": "006", "name": "Orcish Sniper", "type": "minion", "atk": 2, "hp": 1, "cost": 2, "description": "Ranged attacker.", "image": "https://i.imgur.com/nlkfMpI.png", "startingAmount": 2},
+        {"cardId": "007", "name": "Mace Assassin", "type": "minion", "atk": 4, "hp": 2, "cost": 3, "description": "Strikes with venomous precision.", "image": "https://i.imgur.com/3SkE6VG.png", "startingAmount": 2},
+        {"cardId": "008", "name": "Swarm Legion", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Overruns the enemy in numbers.", "image": "https://i.imgur.com/Wn84v6I.png", "startingAmount": 2},
+        {"cardId": "009", "name": "Ethereal Phantom", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Haunts the battlefield.", "image": "https://i.imgur.com/v0RBTiV.png", "startingAmount": 2},
+        {"cardId": "010", "name": "Crimson Shade", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Burns with crimson energy.", "image": "https://i.imgur.com/36iR3J8.png", "startingAmount": 2},
+        {"cardId": "011", "name": "Logs Much", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Wooden with Steel presence.", "image": "https://i.imgur.com/PFbnxct.png", "startingAmount": 2},
+        {"cardId": "012", "name": "Luminous Watcher", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Heals all for 1 each turn.", "image": "https://i.imgur.com/eg8FESL.png", "startingAmount": 2},
+        {"cardId": "013", "name": "Patrol Frigate", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Standard patrol vessel.", "image": "https://i.imgur.com/nJMY8NA.png", "startingAmount": 2},
+        {"cardId": "014", "name": "Battle Commander", "type": "minion", "atk": 2, "hp": 4, "cost": 3, "description": "Leads the charge.", "image": "https://i.imgur.com/ABsno64.png", "startingAmount": 2},
+        {"cardId": "015", "name": "Night Wraith", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Strikes from the shadows.", "image": "https://i.imgur.com/PSpj7sO.png", "startingAmount": 1},
+        {"cardId": "016", "name": "Night Lord", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Roams from the shadows.", "image": "https://i.imgur.com/qpsLIcS.png", "startingAmount": 1},
+        {"cardId": "017", "name": "Crimson Revenant", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Strikes with fiery intent.", "image": "https://i.imgur.com/8YIqCl5.png", "startingAmount": 1},
+        {"cardId": "018", "name": "Emerald Stalker", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Strikes with emerald fury.", "image": "https://i.imgur.com/5t6kGOi.jpeg", "startingAmount": 1},
+        {"cardId": "019", "name": "Storm Cavalier", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Rides the storm into battle.", "image": "https://i.imgur.com/nBUKWdy.png", "startingAmount": 1},
+        {"cardId": "020", "name": "Flame Charger", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Charges with fiery speed.", "image": "https://i.imgur.com/cep6ytB.png", "startingAmount": 1},
+        {"cardId": "021", "name": "Ra Cal Vin", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Glides with icy Language.", "image": "https://i.imgur.com/XbSuPyC.png", "startingAmount": 1},
+        {"cardId": "022", "name": "Beta Cruiser", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "On play: Deal 5 damage to an enemy.", "image": "https://i.imgur.com/JuxTEX9.png", "startingAmount": 1},
+        {"cardId": "023", "name": "Enigmatic Warrior", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Mysterious combatant.", "image": "https://i.imgur.com/JwcxWth.png", "startingAmount": 1},
+        {"cardId": "024", "name": "Barrier Sentinel", "type": "minion", "atk": 0, "hp": 7, "cost": 5, "description": "Unyielding defense with Taunt.", "image": "https://i.imgur.com/klAa6aX.png", "startingAmount": 1},
+        {"cardId": "025", "name": "Void Sorcerer", "type": "minion", "atk": 3, "hp": 4, "cost": 5, "description": "Casts protective dark magic.", "image": "https://i.imgur.com/2XhqS6d.png", "startingAmount": 1},
+        {"cardId": "026", "name": "Light Mage", "type": "minion", "atk": 3, "hp": 4, "cost": 5, "description": "Shields with radiant magic.", "image": "https://i.imgur.com/cMLK4Oq.png", "startingAmount": 1},
+        {"cardId": "027", "name": "Spectral Warrior", "type": "minion", "atk": 5, "hp": 4, "cost": 5, "description": "Fights with ghostly strength.", "image": "https://i.imgur.com/n2b1ugT.png", "startingAmount": 1},
+        {"cardId": "028", "name": "Radiant Paladin", "type": "minion", "atk": 5, "hp": 4, "cost": 5, "description": "Shines with radiant power.", "image": "https://i.imgur.com/TalRqz3.png", "startingAmount": 1},
+        {"cardId": "029", "name": "Vitality Totem", "type": "minion", "atk": 3, "hp": 5, "cost": 5, "description": "Heals all for 2 each turn.", "image": "https://i.imgur.com/SAL2oQY.png", "startingAmount": 1},
+        {"cardId": "030", "name": "Ironclad Titan", "type": "minion", "atk": 4, "hp": 4, "cost": 5, "description": "Heavy armored enforcer.", "image": "https://i.imgur.com/yUzjTDm.png", "startingAmount": 1},
+        {"cardId": "031", "name": "Overlord Mind", "type": "minion", "atk": 4, "hp": 4, "cost": 5, "description": "Taunt.", "image": "https://i.imgur.com/LspYMpz.png", "startingAmount": 1},
+        {"cardId": "032", "name": "Celestial Warden", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Heals all for 1 each turn.", "image": "https://i.imgur.com/6CXJn5s.png", "startingAmount": 0},
+        {"cardId": "033", "name": "Abyssal Keeper", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Heals all with dark energy.", "image": "https://i.imgur.com/3b2RmGQ.png", "startingAmount": 0},
+        {"cardId": "034", "name": "Arcane Missile", "type": "spell", "cost": 1, "description": "Deal 3 damage to a random enemy.", "image": "https://i.imgur.com/jQbF07m.png", "startingAmount": 1},
+        {"cardId": "035", "name": "Shadow Strike", "type": "spell", "cost": 2, "description": "Deal 4 damage to a target enemy.", "image": "https://i.imgur.com/oPFVuMN.png", "startingAmount": 1},
+        {"cardId": "036", "name": "Healing Wave", "type": "spell", "cost": 3, "description": "Restore 6 health to a friendly character.", "image": "https://i.imgur.com/PgLXUx8.png", "startingAmount": 1},
+        {"cardId": "037", "name": "Mind Control", "type": "spell", "cost": 8, "description": "Take control of an enemy minion.", "image": "https://i.imgur.com/dC1AKPu.png", "startingAmount": 0},
+        {"cardId": "038", "name": "Starship Alpha", "type": "minion", "atk": 2, "hp": 2, "cost": 2, "description": "Stealth. Gains +1 atk in space-themed games.", "image": "https://i.imgur.com/scyPIUs.png", "startingAmount": 1},
+        {"cardId": "039", "name": "Star Hut", "type": "minion", "atk": 0, "hp": 5, "cost": 3, "description": "Taunt. Heals adjacent allies for 1 in Island.", "image": "https://i.imgur.com/TCYVocs.png", "startingAmount": 1},
+        {"cardId": "040", "name": "Engineer Prime", "type": "minion", "atk": 4, "hp": 4, "cost": 6, "description": "Super Rare. On play: Give all allies +2 atk in Warlords.", "image": "https://i.imgur.com/KpHvcmW.mp4", "startingAmount": 0},
+        {"cardId": "041", "name": "Starship Beta", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Deals +2 damage to structures in RTS.", "image": "https://i.imgur.com/BSurWbZ.png", "startingAmount": 1},
+        {"cardId": "042", "name": "Starship Gamma", "type": "minion", "atk": 2, "hp": 4, "cost": 4, "description": "Heals allies for 1 in Crawl.", "image": "https://i.imgur.com/5PSOVVc.png", "startingAmount": 1},
+        {"cardId": "043", "name": "Star Cruiser", "type": "minion", "atk": 6, "hp": 5, "cost": 7, "description": "On play: Deal 3 damage to all enemies in Battle.", "image": "https://i.imgur.com/Ldfm3An.png", "startingAmount": 0},
+        {"cardId": "044", "name": "Fireball", "type": "spell", "cost": 4, "description": "Deal 6 damage to a target. +2 damage in Warlords.", "image": "https://i.imgur.com/V1HCiAI.jpg", "startingAmount": 1},
+        {"cardId": "045", "name": "Undead", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Grants Undead Hardcore Island character. +1 hp in Island.", "image": "https://i.imgur.com/8YIqCl5.png", "startingAmount": 0},
+        {"cardId": "046", "name": "Human", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Grants Human Hardcore Island character. +1 atk in Warlords.", "image": "https://i.imgur.com/0XcU175.png", "startingAmount": 0},
+        {"cardId": "047", "name": "Orc", "type": "minion", "atk": 4, "hp": 2, "cost": 3, "description": "Grants Orc Hardcore Island character. Haste in Battle.", "image": "https://i.imgur.com/nlkfMpI.png", "startingAmount": 0},
+        {"cardId": "048", "name": "Elf", "type": "minion", "atk": 2, "hp": 4, "cost": 3, "description": "Grants Elf Hardcore Island character. +1 cost reduction in Crawl.", "image": "https://i.imgur.com/6CXJn5s.png", "startingAmount": 0},
+        {"cardId": "049", "name": "Dwarf", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Grants Dwarf Hardcore Island character. +2 hp in Tower.", "image": "https://i.imgur.com/nBUKWdy.png", "startingAmount": 0},
+        {"cardId": "050", "name": "Barbarian", "type": "minion", "atk": 4, "hp": 3, "cost": 3, "description": "Grants Barbarian Hardcore Island character. +1 atk in Island.", "image": "https://i.imgur.com/a9H86By.png", "startingAmount": 0}
+      ]
+    },
+    {
+      "className": "CardSignatures",
+      "type": "custom",
+      "fields": {
+        "cardId": { "type": "String" },
+        "hasEtherealSignature": { "type": "Boolean" },
+        "signatureOwner": { "type": "String" }
+      },
+      "data": []
+    },
+    {
+      "className": "Season0MintTracker",
+      "type": "custom",
+      "fields": {
+        "totalMinted": { "type": "Number" },
+        "seasonClosed": { "type": "Boolean" }
+      },
+      "data": [
+        {
+          "totalMinted": 0,
+          "seasonClosed": false
+        }
+      ]
     }
-  }
+  ]
 }
-
-// Load Cards from Back4app
-async function loadCardsFromBack4app() {
-  const Cards = Parse.Object.extend('Cards');
-  const query = new Parse.Query(Cards);
-  const results = await query.find();
-  return results.map(card => ({
-    id: card.get('cardId'),
-    name: card.get('name'),
-    type: card.get('type'),
-    atk: card.get('atk'),
-    hp: card.get('hp'),
-    cost: card.get('cost'),
-    description: card.get('description'),
-    image: card.get('image')
-  }));
-}
-
-// Tab Navigation
-document.querySelectorAll('.tab-btn').forEach(button => {
-  button.addEventListener('click', () => {
-    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.classList.remove('border-grudge-accent');
-      btn.classList.add('border-transparent');
-    });
-    const tabId = button.getAttribute('data-tab');
-    document.getElementById(`${tabId}-tab`).classList.remove('hidden');
-    button.classList.remove('border-transparent');
-    button.classList.add('border-grudge-accent');
-  });
-});
-
-// Rarity Chart
-document.getElementById('rarity-chart-btn').addEventListener('click', () => {
-  document.getElementById('rarity-chart-ui').classList.toggle('hidden');
-});
-
-// Card Detail Modal
-function openCardDetail(card) {
-  const modal = document.getElementById('card-detail-modal');
-  document.getElementById('modal-card-name').textContent = card.name;
-  const fgImage = document.getElementById('modal-card-fg');
-  fgImage.src = card.image;
-  document.getElementById('modal-season0-stamp').classList.remove('hidden');
-  document.getElementById('modal-card-atk').textContent = card.atk !== undefined ? card.atk : 'N/A';
-  document.getElementById('modal-card-hp').textContent = card.hp !== undefined ? card.hp : 'N/A';
-  document.getElementById('modal-card-cost').textContent = card.cost;
-  document.getElementById('modal-card-type').textContent = card.type;
-  document.getElementById('modal-card-desc').textContent = card.description;
-  const tribeSection = document.getElementById('modal-tribe-section');
-  if (card.tribe) {
-    tribeSection.classList.remove('hidden');
-    document.getElementById('modal-tribe-name').textContent = tribeData[card.tribe].name;
-    document.getElementById('modal-tribe-name').className = `font-medium ${tribeData[card.tribe].color}`;
-    document.getElementById('modal-tribe-info').className = `bg-grudge-primary bg-opacity-20 p-3 rounded ${tribeData[card.tribe].cssClass}`;
-    document.getElementById('modal-tribe-effect').textContent = tribeData[card.tribe].gameplayText;
-  } else {
-    tribeSection.classList.add('hidden');
-  }
-  const cardContainer = document.getElementById('modal-card-container');
-  cardContainer.className = 'w-64 h-80 bg-grudge-primary rounded-lg relative overflow-hidden';
-  if (card.tribe) {
-    cardContainer.classList.add(tribeData[card.tribe].cssClass);
-  }
-  modal.classList.remove('hidden');
-}
-
-document.getElementById('close-modal-btn').addEventListener('click', () => {
-  document.getElementById('card-detail-modal').classList.add('hidden');
-});
-
-// Load Cards
-function loadCards(filter = 'all') {
-  const container = document.getElementById('card-container');
-  container.innerHTML = '';
-  let filteredCards;
-  switch (filter) {
-    case 'minions': filteredCards = allCards.filter(card => card.type === 'minion'); break;
-    case 'spells': filteredCards = allCards.filter(card => card.type === 'spell'); break;
-    case 'silver': filteredCards = allCards.filter(card => card.tribe === 'silver'); break;
-    case 'red': filteredCards = allCards.filter(card => card.tribe === 'red'); break;
-    case 'purple': filteredCards = allCards.filter(card => card.tribe === 'purple'); break;
-    case 'orange': filteredCards = allCards.filter(card => card.tribe === 'orange'); break;
-    case 'owned': filteredCards = userCollection; break;
-    default: filteredCards = allCards;
-  }
-  filteredCards.forEach(card => {
-    const cardElement = document.createElement('div');
-    let cardClass = 'bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden cursor-pointer transform transition hover:scale-105';
-    if (card.tribe) cardClass += ` ${tribeData[card.tribe].cssClass}`;
-    cardElement.className = cardClass;
-    const costClass = card.tribe === 'purple' ? 'purple-mana' : 'bg-grudge-primary';
-    cardElement.innerHTML = `
-      <div class="relative">
-        <div class="card-image-container aspect-[3/4]">
-          <div class="mythril-bg animate-mythril-sparkle"></div>
-          <img src="${card.image}" alt="${card.name}" class="card-foreground">
-          <img src="https://i.imgur.com/SRoq392.png" alt="Season0 Stamp" class="season0-stamp">
-          <div class="absolute bottom-1 right-1 text-xs font-bold text-white bg-grudge-primary bg-opacity-70 px-1 rounded">Season0 Rare Skin</div>
-        </div>
-        <div class="absolute top-0 left-0 ${costClass} w-8 h-8 flex items-center justify-center font-bold rounded-br-lg">${card.cost}</div>
-      </div>
-      <div class="p-3">
-        <h3 class="font-bold mb-1">${card.name} ${card.tribe ? `<span class="text-xs ${tribeData[card.tribe].color}">(${tribeData[card.tribe].name})</span>` : ''}</h3>
-        <div class="flex justify-between text-sm">
-          <span>${card.type}</span>
-          ${card.type === 'minion' ? `<span>${card.atk}/${card.hp}</span>` : ''}
-        </div>
-      </div>
-    `;
-    cardElement.addEventListener('click', () => openCardDetail(card));
-    container.appendChild(cardElement);
-  });
-}
-
-// Assign Tribe
-function assignTribe(card) {
-  const tribes = Object.keys(tribeData);
-  const tribe = tribes[Math.floor(Math.random() * tribes.length)];
-  const tribedCard = { ...card, tribe };
-  if (tribe === 'silver' && tribedCard.hp !== undefined) {
-    tribedCard.hp += tribeData.silver.statBonus.hp;
-    tribedCard.description += ` Iron Will: +1 Health.`;
-  } else if (tribe === 'red' && tribedCard.atk !== undefined) {
-    tribedCard.atk += tribeData.red.statBonus.atk;
-    tribedCard.description += ` Blood For Conquest: +1 Attack.`;
-  } else if (tribe === 'purple') {
-    tribedCard.originalCost = tribedCard.cost;
-    tribedCard.cost = Math.max(0, tribedCard.cost + tribeData.purple.statBonus.cost);
-    tribedCard.description += ` Fabled: Costs 1 less.`;
-  } else if (tribe === 'orange') {
-    tribedCard.description += ` Tribal War: Summons a 1/1.`;
-  }
-  return tribedCard;
-}
-
-// Assign Special Trait
-function assignSpecialTrait(card) {
-  const roll = Math.random() * 100;
-  let cumulative = 0;
-  const traitedCard = { ...card };
-  for (const traitKey in specialTraitData) {
-    const trait = specialTraitData[traitKey];
-    cumulative += trait.rarity;
-    if (roll <= cumulative) {
-      traitedCard.specialTrait = traitKey;
-      traitedCard.description += ` [${trait.name}]`;
-      return traitedCard;
-    }
-  }
-  return traitedCard;
-}
-
-// Card Pack Opening
-document.getElementById('open-pack-btn').addEventListener('click', () => {
-  if (!document.getElementById('post-login').classList.contains('hidden')) {
-    openCardPack();
-  } else {
-    alert('Please login to open card packs');
-  }
-});
-
-function openCardPack() {
-  const packModal = document.getElementById('pack-opening-modal');
-  const packCards = document.querySelectorAll('#pack-container > div');
-  const closeBtn = document.getElementById('close-pack-btn');
-  let revealedCount = 0;
-  packCards.forEach(card => {
-    card.innerHTML = '';
-    card.className = 'w-32 h-48 bg-grudge-primary rounded-lg cursor-pointer transform transition hover:scale-105';
-  });
-  closeBtn.classList.add('hidden');
-  packModal.classList.remove('hidden');
-  const packCardData = [];
-  for (let i = 0; i < 5; i++) {
-    const cardPool = Math.random() < 0.8 ? season0Cards.filter(c => c.type === 'minion') : season0Cards.filter(c => c.type === 'spell');
-    let card = { ...cardPool[Math.floor(Math.random() * cardPool.length)] };
-    card = assignTribe(card);
-    card = assignSpecialTrait(card);
-    packCardData.push(card);
-  }
-  packCards.forEach((cardElement, index) => {
-    cardElement.addEventListener('click', function revealCard() {
-      const card = packCardData[index];
-      if (this.classList.contains('bg-grudge-primary')) {
-        this.classList.remove('bg-grudge-primary');
-        if (card.tribe) this.classList.add(tribeData[card.tribe].cssClass);
-        const costClass = card.tribe === 'purple' ? 'purple-mana' : 'bg-grudge-primary';
-        this.innerHTML = `
-          <div class="relative h-full">
-            <div class="card-image-container w-full h-full">
-              <div class="mythril-bg animate-mythril-sparkle"></div>
-              <img src="${card.image}" alt="${card.name}" class="card-foreground">
-              <img src="https://i.imgur.com/SRoq392.png" alt="Season0 Stamp" class="season0-stamp">
-            </div>
-            <div class="absolute top-0 left-0 ${costClass} w-6 h-6 flex items-center justify-center text-sm font-bold rounded-br-lg">${card.cost}</div>
-            <div class="absolute bottom-0 w-full bg-black bg-opacity-70 p-1">
-              <div class="text-xs font-bold">${card.name}</div>
-              ${card.tribe ? `<div class="text-xs ${tribeData[card.tribe].color}">${tribeData[card.tribe].name}</div>` : ''}
-            </div>
-          </div>
-        `;
-        userCollection.push(card);
-        revealedCount++;
-        if (revealedCount === 5) closeBtn.classList.remove('hidden');
-        this.removeEventListener('click', revealCard);
-      }
-    });
-  });
-}
-
-document.getElementById('close-pack-btn').addEventListener('click', () => {
-  document.getElementById('pack-opening-modal').classList.add('hidden');
-  if (document.getElementById('card-filter').value === 'owned') loadCards('owned');
-});
-
-// Discord Login Simulation
-document.getElementById('discord-login-btn').addEventListener('click', () => {
-  simulateLogin();
-});
-
-async function simulateLogin() {
-  const username = "GrudgePlayer";
-  document.getElementById('pre-login').classList.add('hidden');
-  document.getElementById('post-login').classList.remove('hidden');
-  document.getElementById('username-display').textContent = username;
-  document.getElementById('avatar-initial').textContent = username[0];
-  if (!localStorage.getItem('grudgeWallet')) {
-    const walletAddress = '0x' + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('');
-    localStorage.setItem('grudgeWallet', walletAddress);
-  }
-  addStarterCards();
-  const UserCards = Parse.Object.extend('UserCards');
-  const query = new Parse.Query(UserCards);
-  query.equalTo('username', username);
-  const results = await query.find();
-  userCollection = results.map(card => ({
-    id: card.get('cardId'),
-    name: card.get('name'),
-    type: card.get('type'),
-    atk: card.get('atk'),
-    hp: card.get('hp'),
-    cost: card.get('cost'),
-    description: card.get('description'),
-    image: card.get('image'),
-    tribe: card.get('tribe')
-  }));
-}
-
-// Logout
-document.getElementById('logout-btn').addEventListener('click', () => {
-  document.getElementById('pre-login').classList.remove('hidden');
-  document.getElementById('post-login').classList.add('hidden');
-  userCollection = [];
-});
-
-// Add Starter Cards
-async function addStarterCards() {
-  userCollection = [];
-  const starterCardIds = ['001', '002', '003', '004', '006'];
-  const UserCards = Parse.Object.extend('UserCards');
-  for (const id of starterCardIds) {
-    const card = allCards.find(c => c.id === id);
-    if (card) {
-      const tribedCard = assignTribe({ ...card });
-      userCollection.push(tribedCard);
-      const cardObject = new UserCards();
-      cardObject.set('username', 'GrudgePlayer');
-      cardObject.set('cardId', tribedCard.id);
-      cardObject.set('name', tribedCard.name);
-      cardObject.set('type', tribedCard.type);
-      cardObject.set('atk', tribedCard.atk);
-      cardObject.set('hp', tribedCard.hp);
-      cardObject.set('cost', tribedCard.cost);
-      cardObject.set('description', tribedCard.description);
-      cardObject.set('image', tribedCard.image);
-      cardObject.set('tribe', tribedCard.tribe);
-      await cardObject.save();
-    }
-  }
-}
-
-// Initialize
-window.onload = async function() {
-  await saveCardsToBack4app();
-  allCards.length = 0;
-  allCards.push(...await loadCardsFromBack4app());
-  let demoTribedCards = [];
-  allCards.forEach((card, index) => {
-    if (index % 4 === 0) demoTribedCards.push(assignTribe({ ...card }));
-    else demoTribedCards.push({ ...card });
-  });
-  allCards.length = 0;
-  demoTribedCards.forEach(card => allCards.push(card));
-  loadCards();
-  if (localStorage.getItem('grudgeWallet')) simulateLogin();
-};

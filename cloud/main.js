@@ -53,3 +53,25 @@ Parse.Cloud.define('getSeason0Data', async (request) => {
   const results = await query.find();
   return results;
 });
+
+// Add logic to restrict available cards to only season0 cards unless minted by a player with GBuX
+Parse.Cloud.define('getAvailableCards', async (request) => {
+  const { userId } = request.params;
+  const userQuery = new Parse.Query('User');
+  userQuery.equalTo('objectId', userId);
+  const user = await userQuery.first();
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  const cardQuery = new Parse.Query('Cards');
+  cardQuery.equalTo('season', 'season0');
+  const season0Cards = await cardQuery.find();
+
+  const mintedCardQuery = new Parse.Query('MintedCards');
+  mintedCardQuery.equalTo('userId', userId);
+  const mintedCards = await mintedCardQuery.find();
+
+  return [...season0Cards, ...mintedCards];
+});
