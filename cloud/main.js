@@ -46,3 +46,10 @@ Parse.Cloud.define('transferGBuX', async (request) => {
   // Placeholder for GBuX transfer logic
   return `Transferred ${amount} GBuX from ${fromUserId} to ${toUserId}`;
 });
+
+// New Parse Cloud function to fetch data for Season0
+Parse.Cloud.define('getSeason0Data', async (request) => {
+  const query = new Parse.Query('Season0Data');
+  const results = await query.find();
+  return results;
+});

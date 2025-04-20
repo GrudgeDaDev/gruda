@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grudge Paragon Diary - Main</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        grudge: {
+                            primary: '#4F2362', // dark purple
+                            secondary: '#AB3E16', // burnt orange
+                            accent: '#FFD700', // gold
+                            dark: '#1E1E24', // near black
+                            light: '#F2F2F2', // off-white
+                        },
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="bg-grudge-dark text-grudge-light">
+    <header class="p-4 bg-grudge-primary text-center">
+        <h1 class="text-4xl font-bold">Grudge Paragon Diary</h1>
+    </header>
+    <main class="p-4">
+        <section class="mb-4">
+            <h2 class="text-2xl font-semibold">Welcome to the Grudge Paragon Diary</h2>
+            <p>Explore the different seasons and events of the Grudge Paragon universe.</p>
+        </section>
+        <section class="mb-4">
+            <h2 class="text-2xl font-semibold">Season0</h2>
+            <p>Discover the events and stories of Season0.</p>
+            <a href="Season0.html" class="text-grudge-accent underline">Go to Season0</a>
+        </section>
+    </main>
+    <footer class="p-4 bg-grudge-primary text-center">
+        <p>&copy; 2023 Grudge Paragon. All rights reserved.</p>
+    </footer>
+    <script>
+        // JavaScript code for interactive features
+        document.addEventListener('DOMContentLoaded', () => {
+            // Example: Simulate user login
+            const simulateLogin = () => {
+                const user = {
+                    username: 'grudgeUser',
+                    wallet: '0x1234567890abcdef',
+                };
+                localStorage.setItem('grudgeWallet', JSON.stringify(user));
+                console.log('User logged in:', user);
+            };
+
+            // Example: Load cards for demo
+            const loadCards = () => {
+                const allCards = [
+                    { name: 'Card1', type: 'normal' },
+                    { name: 'Card2', type: 'normal' },
+                    { name: 'Card3', type: 'tribe' },
+                ];
+                console.log('Loaded cards:', allCards);
+            };
+
+            // Simulate loading cards and user login
+            loadCards();
+            if (!localStorage.getItem('grudgeWallet')) {
+                simulateLogin();
+            }
+        });
+    </script>
+</body>
+</html>
