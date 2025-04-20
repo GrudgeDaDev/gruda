@@ -1,0 +1,50 @@
+{
+  "classes": [
+    {
+      "className": "RaceCharacters",
+      "type": "custom",
+      "fields": {
+        "race": { "type": "String" },
+        "variant": { "type": "String" },
+        "baseAtk": { "type": "Number" },
+        "baseHp": { "type": "Number" },
+        "description": { "type": "String" },
+        "image": { "type": "String" },
+        "linkedCardId": { "type": "String" }
+      },
+      "data": [
+        {"race": "Human", "variant": "Base", "baseAtk": 3, "baseHp": 3, "description": "A versatile warrior skilled in both offense and defense.", "image": "https://i.imgur.com/5qO1lGZ.png", "linkedCardId": "046"},
+        {"race": "Orc", "variant": "Base", "baseAtk": 4, "baseHp": 2, "description": "A fierce orc fighter, favoring brute strength.", "image": "https://i.imgur.com/EA1g8SP.png", "linkedCardId": "047"},
+        {"race": "Barbarian", "variant": "Base", "baseAtk": 4, "baseHp": 3, "description": "A wild barbarian, unleashing raw power.", "image": "https://i.imgur.com/xw2LaIg.png", "linkedCardId": "050"},
+        {"race": "Dwarf", "variant": "Base", "baseAtk": 3, "baseHp": 4, "description": "A sturdy dwarf, armored and ready.", "image": "https://i.imgur.com/aAeCnY2.png", "linkedCardId": "049"},
+        {"race": "Undead", "variant": "Base", "baseAtk": 3, "baseHp": 3, "description": "A skeletal undead soldier, enduring with a mace.", "image": "https://i.imgur.com/Colscvx.png", "linkedCardId": "045"},
+        {"race": "Elf", "variant": "Base", "baseAtk": 2, "baseHp": 4, "description": "An agile elf, swift and precise.", "image": "https://i.imgur.com/BhzbLOo.png", "linkedCardId": "048"},
+        {"race": "Human", "variant": "NB Human Wizard", "baseAtk": 3, "baseHp": 3, "description": "Human wizard casting powerful spells.", "image": "https://i.imgur.com/0XcU175.png", "linkedCardId": "046"},
+        {"race": "Human", "variant": "Human Archer NB", "baseAtk": 3, "baseHp": 2, "description": "Human archer with deadly aim.", "image": "https://i.imgur.com/jKE3ClI.png", "linkedCardId": "046"},
+        {"race": "Human", "variant": "Human Heavy", "baseAtk": 4, "baseHp": 5, "description": "Heavily armored human warrior.", "image": "https://i.imgur.com/UT8Yfo2.png", "linkedCardId": "046"},
+        {"race": "Human", "variant": "Human Upgrade", "baseAtk": 4, "baseHp": 4, "description": "Upgraded human with enhanced armor.", "image": "https://i.imgur.com/9lhozCz.png", "linkedCardId": "046"},
+        {"race": "Human", "variant": "Faitherbearer", "baseAtk": 5, "baseHp": 5, "description": "Bearer of faith with divine strength.", "image": "https://i.imgur.com/ENXGMbn.jpg", "linkedCardId": "046"},
+        {"race": "Orc", "variant": "Orc NB", "baseAtk": 2, "baseHp": 2, "description": "Stealthy orc scout.", "image": "https://i.imgur.com/zMFckYB.png", "linkedCardId": "047"},
+        {"race": "Orc", "variant": "Orc Archer NB", "baseAtk": 3, "baseHp": 2, "description": "Orc archer with a heavy bow.", "image": "https://i.imgur.com/nlkfMpI.png", "linkedCardId": "047"},
+        {"race": "Orc", "variant": "Orc Heavy", "baseAtk": 5, "baseHp": 4, "description": "Heavy orc with a massive axe.", "image": "https://i.imgur.com/cep6ytB.png", "linkedCardId": "047"},
+        {"race": "Orc", "variant": "Small Troll", "baseAtk": 3, "baseHp": 3, "description": "Small troll with regenerative powers.", "image": "https://i.imgur.com/R5AKvO4.png", "linkedCardId": "047"},
+        {"race": "Barbarian", "variant": "Barbarian Mace", "baseAtk": 4, "baseHp": 2, "description": "Barbarian wielding a heavy mace.", "image": "https://i.imgur.com/3SkE6VG.png", "linkedCardId": "050"},
+        {"race": "Barbarian", "variant": "WareTree", "baseAtk": 3, "baseHp": 6, "description": "Living tree that attacks with roots.", "image": "https://i.imgur.com/gA5V2vd.png", "linkedCardId": "050"},
+        {"race": "Dwarf", "variant": "Dwarf", "baseAtk": 3, "baseHp": 5, "description": "Sturdy dwarf with a hammer.", "image": "https://i.imgur.com/Wn84v6I.png", "linkedCardId": "049"},
+        {"race": "Dwarf", "variant": "Dwarf Knight NB", "baseAtk": 4, "baseHp": 5, "description": "Heavily armored dwarf knight.", "image": "https://i.imgur.com/TalRqz3.png", "linkedCardId": "049"},
+        {"race": "Dwarf", "variant": "Dwarf Heavy", "baseAtk": 4, "baseHp": 6, "description": "Heavy dwarf with a warhammer.", "image": "https://i.imgur.com/oGautmG.png", "linkedCardId": "049"},
+        {"race": "Dwarf", "variant": "Dwarf NB", "baseAtk": 3, "baseHp": 4, "description": "Armored dwarf with a shield.", "image": "https://i.imgur.com/nBUKWdy.png", "linkedCardId": "049"},
+        {"race": "Undead", "variant": "Skeleton NB", "baseAtk": 2, "baseHp": 3, "description": "Swift skeletal fighter with a mace.", "image": "https://i.imgur.com/Dh99XuH.png", "linkedCardId": "045"},
+        {"race": "Undead", "variant": "Scourge Warrior", "baseAtk": 4, "baseHp": 3, "description": "Dark warrior with a cursed blade.", "image": "https://i.imgur.com/NFjvmxO.png", "linkedCardId": "045"},
+        {"race": "Undead", "variant": "NB Undead", "baseAtk": 3, "baseHp": 3, "description": "Undead soldier with enduring spirit.", "image": "https://i.imgur.com/8YIqCl5.png", "linkedCardId": "045"},
+        {"race": "Undead", "variant": "Undead NB", "baseAtk": 2, "baseHp": 4, "description": "Undead warrior with a shield.", "image": "https://i.imgur.com/XJ8Saun.png", "linkedCardId": "045"},
+        {"race": "Undead", "variant": "NB Undead Archer", "baseAtk": 3, "baseHp": 2, "description": "Undead archer with ghostly arrows.", "image": "https://i.imgur.com/fGDbB5o.png", "linkedCardId": "045"},
+        {"race": "Undead", "variant": "Undead Heavy", "baseAtk": 4, "baseHp": 5, "description": "Undead giant with a spiked club.", "image": "https://i.imgur.com/9Prc8Md.png", "linkedCardId": "045"},
+        {"race": "Undead", "variant": "Scourge Familiar", "baseAtk": 2, "baseHp": 2, "description": "Dark familiar that boosts spells.", "image": "https://i.imgur.com/FcwHTwA.png", "linkedCardId": "045"},
+        {"race": "Elf", "variant": "Elf Archer", "baseAtk": 3, "baseHp": 2, "description": "Precise elf archer with a bow.", "image": "https://i.imgur.com/Enu1T7Y.png", "linkedCardId": "048"},
+        {"race": "Elf", "variant": "Priest NB", "baseAtk": 2, "baseHp": 4, "description": "Heals allies with divine light.", "image": "https://i.imgur.com/6CXJn5s.png", "linkedCardId": "048"},
+        {"race": "Elf", "variant": "Paladin NB", "baseAtk": 5, "baseHp": 5, "description": "Protects with holy power.", "image": "https://i.imgur.com/3b2RmGQ.png", "linkedCardId": "048"}
+      ]
+    }
+  ]
+}
