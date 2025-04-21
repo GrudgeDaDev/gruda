@@ -10,6 +10,9 @@ COPY package.json package-lock.json* ./
 # Install all dependencies (including devDependencies for Grunt)
 RUN npm ci
 
+# Install Grunt and Grunt CLI globally
+RUN npm install -g grunt grunt-cli
+
 # Copy source files
 COPY . .
 
@@ -29,7 +32,7 @@ COPY package.json package-lock.json* ./
 RUN npm ci --production
 
 # Copy built files from builder stage
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /cloud/dist ./dist
 COPY server.js ./
 COPY cloud/main.js ./cloud/
 COPY test-back4app.js ./
