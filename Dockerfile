@@ -32,7 +32,7 @@ COPY package.json package-lock.json* ./
 RUN npm ci --production
 
 # Copy built files from builder stage
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /cloud/dist ./dist
 COPY server.js ./
 COPY cloud/main.js ./cloud/
 COPY test-back4app.js ./
