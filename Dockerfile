@@ -10,6 +10,9 @@ COPY package.json package-lock.json* ./
 # Install all dependencies (including devDependencies for Grunt)
 RUN npm ci
 
+# Install Grunt and Grunt CLI globally
+RUN npm install -g grunt grunt-cli
+
 # Copy source files
 COPY . .
 

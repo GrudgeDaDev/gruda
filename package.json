@@ -4,11 +4,16 @@
   "description": "Backend for Grudge Studio Launcher",
   "main": "test-back4app.js",
   "scripts": {
-    "test": "node test-back4app.js"
+    "test": "node test-back4app.js",
+    "build": "grunt"
   },
   "dependencies": {
     "dotenv": "^16.0.0",
     "parse": "^4.0.0",
     "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "grunt": "^1.5.3",
+    "grunt-cli": "^1.4.3"
   }
 }

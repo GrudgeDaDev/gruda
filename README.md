@@ -10,7 +10,8 @@ Backend for grudgeplatform.com, powering PvP games, Discord integration, Gruda c
 4. Test Database: Run `node test-back4app.js` (see Test Script).
 5. Deploy Cloud Code: Upload `cloud/main.js` in Back4app (see Cloud Code).
 6. Create Images Directory: Create a directory named `images` in the root of the project.
-7. Launch App: Follow the instructions below to launch the app and log in with OAuth.
+7. Install Grunt: `npm install grunt grunt-cli --save-dev`
+8. Launch App: Follow the instructions below to launch the app and log in with OAuth.
 
 ## Environment Variables
 
@@ -58,6 +59,16 @@ The cloud code in `cloud/main.js` implements the following features:
 3. Log in with your Discord account.
 4. After logging in, you will be redirected to `https://www.grudgeplatform.com/card-minter`.
 5. You can now open and buy cards, with an active database and ways to earn GBuX.
+
+## Building the Project
+
+To build the project, run the following command:
+
+```
+npm run build
+```
+
+This will use Grunt to minify JavaScript and CSS files.
 
 ## Contact
 
