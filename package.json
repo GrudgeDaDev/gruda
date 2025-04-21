@@ -8,9 +8,9 @@
     "build": "grunt"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^1.8.4",
     "dotenv": "^16.0.0",
-    "parse": "^4.0.0"
+    "parse": "^6.1.1"
   },
   "devDependencies": {
     "grunt": "^1.5.3",
