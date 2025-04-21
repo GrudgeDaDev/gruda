@@ -2,7 +2,7 @@
 FROM node:18-alpine AS builder
 
 # Set working directory
-WORKDIR /app
+WORKDIR /cloud
 
 # Copy package.json and package-lock.json for reproducible builds
 COPY package.json package-lock.json* ./
