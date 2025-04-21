@@ -28,6 +28,9 @@ jobs:
       - name: Run Grunt build
         run: npx grunt
 
+      - name: Run Grunt build 
+        run: npx grunt
+
       - name: Run tests
         run: npm test
         continue-on-error: true # Allow CI to pass if no tests are configured
