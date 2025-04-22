@@ -1,10 +1,10 @@
-name: Grudge Codex CI/CD with Grunt
+name: Grudge Codex CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   release:
     types: [created]
 
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up main.js 18.x
+      - name: Set up Node.js 18.x
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
@@ -25,15 +25,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Grunt build
-        run: npx grunt
-
-      - name: Run Grunt build 
-        run: npx grunt
+      - name: Build frontend and backend
+        run: npx grunt build
+        env:
+          NODE_ENV: production
 
       - name: Run tests
         run: npm test
         continue-on-error: true # Allow CI to pass if no tests are configured
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            dist/
+            server/
+            contracts/
+            scripts/
+            package.json
+            package-lock.json
+          retention-days: 1
 
   deploy-contract:
     needs: build
@@ -60,10 +72,10 @@ jobs:
           ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
 
       - name: Verify contract on Etherscan
-        run: npx hardhat verify --network sepolia $(cat artifacts/contracts/GRUDA.sol/GRUDA.json | jq -r '.address')
+        run: npx hardhat verify --network sepolia $(jq -r '.address' artifacts/contracts/GRUDA.sol/GRUDA.json)
         env:
           ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
-        continue-on-error: true # Optional, in case verification fails
+        continue-on-error: true # Allow continuation if verification fails
 
   deploy-frontend:
     needs: build
@@ -73,6 +85,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
       - name: Set up Node.js 18.x
         uses: actions/setup-node@v4
         with:
@@ -81,12 +99,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Install dependencies
-        run: npm install grunt-contrib-uglify --save-dev
-
-      - name: Build frontend
-        run: npx grunt
 
       - name: Deploy to Netlify
         run: npx netlify-cli deploy --prod --dir=dist
@@ -102,6 +114,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
       - name: Set up Node.js 18.x
         uses: actions/setup-node@v4
         with:
@@ -111,16 +129,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build backend
-        run: npx grunt
-
       - name: Deploy to Render
-        uses: rendercom/deploy-render@v1
-        with:
-          service-id: ${{ secrets.RENDER_SERVICE_ID }}
-          api-key: ${{ secrets.RENDER_API_KEY }}
-          deploy-hook: ${{ secrets.RENDER_DEPLOY_HOOK }}
-          wait-for-success: true
+        run: |
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
 
 permissions:
   contents: write
