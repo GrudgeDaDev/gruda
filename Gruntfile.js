@@ -1,34 +1,39 @@
 module.exports = function(grunt) {
-  // Project configuration
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    // Task configuration
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+    copy: {
+      frontend: {
+        files: [
+          { expand: true, cwd: 'src/', src: ['*.html', 'cards.json'], dest: 'dist/' }
+        ]
       },
-      build: {
-        src: 'src/<%= pkg.name %>.js',
-        dest: 'build/<%= pkg.name %>.min.js'
+      backend: {
+        files: [
+          { expand: true, cwd: 'server/', src: ['**/*.js'], dest: 'dist/server/' }
+        ]
+      }
+    },
+    uglify: {
+      backend: {
+        files: {
+          'dist/server/server.min.js': ['server/server.js']
+        }
       }
     },
     cssmin: {
-      target: {
-        files: [{
-          expand: true,
-          cwd: 'src/css',
-          src: ['*.css', '!*.min.css'],
-          dest: 'dist/css',
-          ext: '.min.css'
-        }]
+      frontend: {
+        files: {
+          'dist/styles.min.css': ['src/styles/*.css']
+        }
       }
     }
   });
 
-  // Load the plugins
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
-  // Default task(s)
-  grunt.registerTask('default', ['uglify', 'cssmin']);
+  grunt.registerTask('build:frontend', ['copy:frontend', 'cssmin:frontend']);
+  grunt.registerTask('build:backend', ['copy:backend', 'uglify:backend']);
+  grunt.registerTask('build', ['build:frontend', 'build:backend']);
 };
