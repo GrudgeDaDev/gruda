@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/parse@3.5.1/dist/parse.min.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -872,6 +873,8 @@
         </div>
 
         <button id="play-game-btn" class="absolute bottom-5 right-5 bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded btn text-xl">Play Game</button>
+        <button id="find-game-btn" class="absolute bottom-5 left-5 bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded btn text-xl">Find Game</button>
+        <div id="matchmaking-status" class="absolute bottom-20 left-5 text-lg text-[#ADD8E6]"></div>
     </div>
 
     <script>
@@ -1577,18 +1580,6 @@
             saveDraft(getCurrentDraft());
         });
 
-        function getCurrentDraft() {
-            return {
-                name: document.getElementById('card-name').value.trim(),
-                attack: parseInt(document.getElementById('attack').value),
-                health: parseInt(document.getElementById('health').value),
-                taunt: document.getElementById('taunt').checked,
-                healAll: document.getElementById('healAll').checked ? 1 : 0,
-                theme: document.getElementById('card-theme').value,
-                uid: crypto.randomUUID()
-            };
-        }
-
         document.getElementById('search-bar').addEventListener('input', () => {
             renderLibrary(document.querySelector('.sub-tab-button.active').dataset.subTab, libraryPage);
         });
@@ -1698,6 +1689,47 @@
             applyDraft();
             updateUserInfo();
             await loadUserCards();
+        });
+
+        document.getElementById('find-game-btn').addEventListener('click', async () => {
+            const statusMessage = document.getElementById('matchmaking-status');
+            statusMessage.textContent = "Looking for opponents...";
+            statusMessage.classList.remove('hidden', 'text-red-500', 'text-green-500');
+            statusMessage.classList.add('text-gray-500');
+
+            try {
+                const currentUser = Parse.User.current();
+                if (!currentUser) {
+                    throw new Error("You must be logged in to join a PvP match");
+                }
+
+                const result = await Parse.Cloud.run("joinPvPLobby");
+                statusMessage.textContent = result.message + " (Lobby ID: " + result.lobbyId + ")";
+                statusMessage.classList.remove('text-gray-500', 'text-red-500');
+                statusMessage.classList.add('text-green-500');
+
+                if (result.message.includes("Joined an existing lobby")) {
+                    setTimeout(async () => {
+                        statusMessage.textContent = "Match found! Preparing game...";
+                        // Call the enterGameServer cloud function
+                        const serverResult = await Parse.Cloud.run("enterGameServer");
+                        statusMessage.textContent = "Assigned to server: " + serverResult.serverId;
+                        statusMessage.classList.remove('text-gray-500', 'text-red-500');
+                        statusMessage.classList.add('text-green-500');
+                        // Redirect to the game page with the lobby ID and server ID
+                        window.location.href = "https://grudgeplatform.com/nexus?lobbyId=" + result.lobbyId + "&serverId=" + serverResult.serverId + "&player=" + (result.isPlayer1 ? "1" : "2");
+                    }, 1500);
+                } else {
+                    setTimeout(() => {
+                        statusMessage.textContent = "Waiting for opponents. Try again or wait in queue.";
+                    }, 3000);
+                }
+            } catch (error) {
+                console.error("Error joining PvP lobby:", error);
+                statusMessage.textContent = "Error: " + (error.message || "Failed to join match");
+                statusMessage.classList.remove('text-gray-500', 'text-green-500');
+                statusMessage.classList.add('text-red-500');
+            }
         });
     </script>
 </body>

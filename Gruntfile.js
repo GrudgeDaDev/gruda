@@ -36,4 +36,5 @@ module.exports = function(grunt) {
   grunt.registerTask('build:frontend', ['copy:frontend', 'cssmin:frontend']);
   grunt.registerTask('build:backend', ['copy:backend', 'uglify:backend']);
   grunt.registerTask('build', ['build:frontend', 'build:backend']);
+  grunt.registerTask('default', ['build']);
 };
