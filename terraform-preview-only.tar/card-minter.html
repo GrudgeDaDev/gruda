@@ -749,7 +749,7 @@
             <button class="tab-button active" data-tab="library">Library</button>
             <button class="tab-button" data-tab="create-card">Create Card</button>
             <button class="tab-button" data-tab="deck-builder">Deck Builder</button>
-            <button class="tab-button" data-tab="nexus-deck">Nexus Deck</button>
+            <button class="tab-button" data-tab="nexus-deck">PvP</button>
             <button class="tab-button" data-tab="packs">Packs (<span id="pack-count">5</span>)</button>
         </div>
 
@@ -773,10 +773,10 @@
 
         <!-- Create Card Tab -->
         <div class="tab-content" id="create-card">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 h-full">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
                 <div class="bg-gray-800 bg-opacity-95 rounded-lg p-5 border-5 border-[#4A2F1A] flex flex-col justify-between items-center h-full">
                     <div id="card-preview-container" class="flex justify-center items-center h-4/5 w-full">
-                        <p class="text-gray-400 text-center text-xl">Your card will appear here once minted</p>
+                        <divd class="flex flex-col w-full h-full">
                     </div>
                     <div class="flex flex-col gap-2 w-full">
                         <button id="undo-btn" class="btn bg-[#D4A017] text-black font-bold py-1.5 px-3 rounded hidden">Undo</button>
@@ -797,19 +797,19 @@
                             </label>
                             <label class="block text-gray-300 mb-2 text-xl">Upload Image <span class="text-red-500">*</span></label>
                             <div class="image-upload" id="image-upload"><span class="text-gray-400 text-xl">Click to upload</span></div>
-                            <input type="file" id="card-image" accept="image/*" class="hidden" required>
-                        </div>
-                        <div>
+                            <input type="file" id="card-image" accept="image/*" class="hidden" required aria-label="Upload card image">
+                            </div>
+                            <div>
                             <label class="block text-gray-300 mb-2 text-xl">Card Name <span class="text-red-500">*</span></label>
                             <input type="text" id="card-name" class="input-field w-full" placeholder="Enter card name" required>
                         </div>
                         <div>
                             <label class="block text-gray-300 mb-2 text-xl">Attack <span id="attack-value" class="text-xl">1</span></label>
-                            <input type="range" id="attack" min="1" max="10" value="1" class="w-full">
+                            <input type="range" id="attack" min="1" max="10" value="1" class="w-full" title="Attack Value" aria-label="Attack Value">
                         </div>
                         <div>
                             <label class="block text-gray-300 mb-2 text-xl">Health <span id="health-value" class="text-xl">1</span></label>
-                            <input type="range" id="health" min="1" max="10" value="1" class="w-full">
+                            <input type="range" id="health" min="1" max="10" value="1" class="w-full" title="Health Value" aria-label="Health Value">
                         </div>
                         <div>
                             <label class="block text-gray-300 mb-2 text-xl">Special Abilities</label>
@@ -852,15 +852,265 @@
             </div>
         </div>
 
-        <!-- Nexus Deck Tab -->
+        <!-- PvP Tab -->
         <div class="tab-content" id="nexus-deck">
-            <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center text-shadow-[0_0_12px_#D4A017]">Nexus Deck</h2>
-            <div class="flex justify-center gap-5">
-                <div id="deck-1-card" class="card-display cursor-pointer"></div>
-                <div id="deck-2-card" class="card-display cursor-pointer"></div>
-                <div id="deck-3-card" class="card-display cursor-pointer"></div>
+            <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center text-shadow-[0_0_12px_#D4A017]">PvP Arena</h2>
+            
+            <!-- Game Mode Selection -->
+            <div class="flex justify-center gap-5 mb-8">
+            <button class="game-mode-btn active" data-mode="nexus">Nexus Nemesis</button>
+            <button class="game-mode-btn" data-mode="island">Grudge Island</button>
+            </div>
+
+            <!-- Heads Up Tables -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Table 1 -->
+            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                <h3 class="text-xl text-[#D4A017] mb-3">Table 1</h3>
+                <div class="flex justify-between items-center">
+                <div class="seat" id="table1-seat1">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                <div class="text-xl text-[#D4A017]">VS</div>
+                <div class="seat" id="table1-seat2">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                </div>
+                <button class="sit-btn mt-3 w-full" data-table="1">Take Seat</button>
+            </div>
+
+            <!-- Table 2 -->
+            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                <h3 class="text-xl text-[#D4A017] mb-3">Table 2</h3>
+                <div class="flex justify-between items-center">
+                <div class="seat" id="table2-seat1">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                <div class="text-xl text-[#D4A017]">VS</div>
+                <div class="seat" id="table2-seat2">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                </div>
+                <button class="sit-btn mt-3 w-full" data-table="2">Take Seat</button>
+            </div>
+
+            <!-- Table 3 -->
+            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                <h3 class="text-xl text-[#D4A017] mb-3">Table 3</h3>
+                <div class="flex justify-between items-center">
+                <div class="seat" id="table3-seat1">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                <div class="text-xl text-[#D4A017]">VS</div>
+                <div class="seat" id="table3-seat2">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                </div>
+                <button class="sit-btn mt-3 w-full" data-table="3">Take Seat</button>
+            </div>
+
+            <!-- Table 4 -->
+            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                <h3 class="text-xl text-[#D4A017] mb-3">Table 4</h3>
+                <div class="flex justify-between items-center">
+                <div class="seat" id="table4-seat1">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                <div class="text-xl text-[#D4A017]">VS</div>
+                <div class="seat" id="table4-seat2">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                </div>
+                <button class="sit-btn mt-3 w-full" data-table="4">Take Seat</button>
+            </div>
+
+            <!-- Table 5 -->
+            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                <h3 class="text-xl text-[#D4A017] mb-3">Table 5</h3>
+                <div class="flex justify-between items-center">
+                <div class="seat" id="table5-seat1">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                <div class="text-xl text-[#D4A017]">VS</div>
+                <div class="seat" id="table5-seat2">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                </div>
+                <button class="sit-btn mt-3 w-full" data-table="5">Take Seat</button>
+            </div>
+            <!-- Table 6 -->
+            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                <h3 class="text-xl text-[#D4A017] mb-3">Table 6</h3>
+                <div class="flex justify-between items-center">
+                <div class="seat" id="table6-seat1">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                <div class="text-xl text-[#D4A017]">VS</div>
+                <div class="seat" id="table6-seat2">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                </div>
+                <button class="sit-btn mt-3 w-full" data-table="6">Take Seat</button>
+            </div>
+
+            <!-- Table 7 -->
+            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                <h3 class="text-xl text-[#D4A017] mb-3">Table 7</h3>
+                <div class="flex justify-between items-center">
+                <div class="seat" id="table7-seat1">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                <div class="text-xl text-[#D4A017]">VS</div>
+                <div class="seat" id="table7-seat2">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                </div>
+                <button class="sit-btn mt-3 w-full" data-table="7">Take Seat</button>
+            </div>
+
+            <!-- Table 8 -->
+            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                <h3 class="text-xl text-[#D4A017] mb-3">Table 8</h3>
+                <div class="flex justify-between items-center">
+                <div class="seat" id="table8-seat1">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                <div class="text-xl text-[#D4A017]">VS</div>
+                <div class="seat" id="table8-seat2">
+                    <div class="avatar-placeholder">Empty</div>
+                </div>
+                </div>
+                <button class="sit-btn mt-3 w-full" data-table="8">Take Seat</button>
+            </div>
+            </div>
+
+            <!-- Selected Deck Display -->
+            <div class="flex justify-center gap-5 mb-8">
+            <div id="deck-1-card" class="card-display cursor-pointer"></div>
+            <div id="deck-2-card" class="card-display cursor-pointer"></div>
+            <div id="deck-3-card" class="card-display cursor-pointer"></div>
+            </div>
+
+            <!-- Server Status -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="server-status bg-gray-800 bg-opacity-90 p-3 rounded-lg text-center">
+                <div class="text-[#D4A017]">Server 1</div>
+                <div class="status-indicator"></div>
+                <div class="player-count">Players: 0/2</div>
+            </div>
+            <div class="server-status bg-gray-800 bg-opacity-90 p-3 rounded-lg text-center">
+                <div class="text-[#D4A017]">Server 2</div>
+                <div class="status-indicator"></div>
+                <div class="player-count">Players: 0/2</div>
+            </div>
+            <div class="server-status bg-gray-800 bg-opacity-90 p-3 rounded-lg text-center">
+                <div class="text-[#D4A017]">Server 3</div>
+                <div class="status-indicator"></div>
+                <div class="player-count">Players: 0/2</div>
+            </div>
+            <div class="server-status bg-gray-800 bg-opacity-90 p-3 rounded-lg text-center">
+                <div class="text-[#D4A017]">Server 4</div>
+                <div class="status-indicator"></div>
+                <div class="player-count">Players: 0/2</div>
+            </div>
+            </div>
+
+            <!-- Quick Match Button -->
+            <div class="text-center">
+            <button id="find-game-btn" class="btn bg-[#D4A017] text-black font-bold py-3 px-8 text-xl rounded">
+                Find Game
+            </button>
+            <div id="matchmaking-status" class="mt-3 text-[#ADD8E6] hidden">
+                Searching for opponent... <span class="animate-pulse">⌛</span>
+            </div>
             </div>
         </div>
+
+        <style>
+            .game-mode-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(74, 47, 26, 0.9);
+            border: 3px solid #D4A017;
+            border-radius: 8px;
+            color: #fff;
+            transition: all 0.3s ease;
+            }
+
+            .game-mode-btn.active {
+            background: #D4A017;
+            color: #000;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #D4A017;
+            }
+
+            .table-container {
+            transition: all 0.3s ease;
+            }
+
+            .table-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(212, 160, 23, 0.3);
+            }
+
+            .seat {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #D4A017;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            transition: all 0.3s ease;
+            }
+
+            .seat.occupied {
+            background: rgba(0, 255, 0, 0.2);
+            border-color: #00ff00;
+            }
+
+            .sit-btn {
+            background: rgba(74, 47, 26, 0.9);
+            border: 2px solid #D4A017;
+            color: #fff;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            }
+
+            .sit-btn:hover {
+            background: #D4A017;
+            color: #000;
+            }
+
+            .server-status {
+            border: 1px solid #D4A017;
+            }
+
+            .status-indicator {
+            width: 12px;
+            height: 12px;
+            background: #00ff00;
+            border-radius: 50%;
+            margin: 0.5rem auto;
+            }
+
+            .status-indicator.busy {
+            background: #ff0000;
+            }
+
+            #find-game-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px #D4A017;
+            }
+
+            @keyframes searchPulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+            }
+        </style>
 
         <!-- Packs Tab -->
         <div class="tab-content" id="packs">
@@ -899,75 +1149,107 @@
 
         const grudgeCard = { id: 0, name: "Grudge", cost: 3, attack: 2, health: 2, description: "A basic fighter.", backgroundImage: "https://i.imgur.com/3SkE6VG.png", uid: "grudge" };
         const season0 = [
-        { id: 1, name: "Night Wraith", cost: 4, attack: 4, health: 3, type: "minion", description: "Strikes from the shadows.", backgroundImage: "https://i.imgur.com/PSpj7sO.png", uid: "season0_1" },
-                    { id: 2, name: "Mana Surge", cost: 0, type: "manaStorm", description: "Grants 2 mana this turn.", backgroundImage: "https://i.imgur.com/dU3QrVi.png", uid: "season0_2" },
-                    { id: 3, name: "Stoned Ape", cost: 8, attack: 8, health: 8, taunt: true, type: "minion", description: "Unstoppable celestial force.", backgroundImage: "https://i.imgur.com/iWv48Xl.png", uid: "season0_3" },
-                    { id: 4, name: "Stealth Drone", cost: 1, attack: 1, health: 1, description: "Quick scouting unit cloaked in shadow.", backgroundImage: "https://i.imgur.com/zMFckYB.png", uid: "season0_4" },
-                    { id: 5, name: "Viper Assassin", cost: 3, attack: 4, health: 2, description: "Strikes with venomous precision.", backgroundImage: "https://i.imgur.com/3SkE6VG.png", uid: "season0_5" },
-                    { id: 6, name: "Barrier Sentinel", cost: 5, attack: 0, health: 7, taunt: true, description: "Unyielding defense with Taunt.", backgroundImage: "https://i.imgur.com/klAa6aX.png", uid: "season0_6" },
-                    { id: 7, name: "Swarm Legion", cost: 3, attack: 3, health: 3, description: "Overruns the enemy in numbers.", backgroundImage: "https://i.imgur.com/Wn84v6I.png", uid: "season0_7" },
-                    { id: 8, name: "Quantum Behemoth", cost: 7, attack: 6, health: 4, description: "Devastating energy-infused giant.", backgroundImage: "https://i.imgur.com/Y67jKrU.png", uid: "season0_8" },
-                    { id: 9, name: "Arcane Mystic", cost: 2, attack: 2, health: 3, description: "Casts arcane spells with finesse.", backgroundImage: "https://i.imgur.com/Enu1T7Y.png", uid: "season0_9" },
-                    { id: 10, name: "Overcharged Titan", cost: 8, attack: 7, health: 6, description: "Overwhelming power surge incarnate.", backgroundImage: "https://i.imgur.com/s0cMpSi.png", uid: "season0_10" },
-                    { id: 13, name: "Night Wraith", cost: 4, attack: 4, health: 3, description: "Strikes from the shadows.", backgroundImage: "https://i.imgur.com/PSpj7sO.png", uid: "season0_13" },
-                    { id: 14, name: "Crimson Revenant", cost: 4, attack: 4, health: 3, description: "Strikes with fiery intent.", backgroundImage: "https://i.imgur.com/8YIqCl5.png", uid: "season0_14" },
-                    { id: 15, name: "Emerald Stalker", cost: 4, attack: 4, health: 3, description: "Strikes with emerald fury.", backgroundImage: "https://i.imgur.com/0XcU175.png", uid: "season0_15" },
-                    { id: 16, name: "Thunder Guardian", cost: 5, attack: 3, health: 6, taunt: true, description: "Guards with electric might.", backgroundImage: "https://i.imgur.com/jKE3ClI.png", uid: "season0_16" },
-                    { id: 17, name: "Blaze Warden", cost: 5, attack: 3, health: 6, taunt: true, description: "Guards with fiery resolve.", backgroundImage: "https://i.imgur.com/XJ8Saun.png", uid: "season0_17" },
-                    { id: 18, name: "Frost Protector", cost: 5, attack: 3, health: 6, taunt: true, description: "Guards with icy resilience.", backgroundImage: "https://i.imgur.com/fGDbB5o.png", uid: "season0_18" },
-                    { id: 21, name: "Celestial Warden", cost: 6, attack: 5, health: 5, healAll: 1, description: "Heals all for 1 each turn.", backgroundImage: "https://i.imgur.com/6CXJn5s.png", uid: "season0_21" },
-                    { id: 22, name: "Abyssal Keeper", cost: 6, attack: 5, health: 5, healAll: 1, description: "Heals all with dark energy.", backgroundImage: "https://i.imgur.com/3b2RmGQ.png", uid: "season0_22" },
-                    { id: 23, name: "Storm Cavalier", cost: 4, attack: 4, health: 4, description: "Rides the storm into battle.", backgroundImage: "https://i.imgur.com/nBUKWdy.png", uid: "season0_23" },
-                    { id: 24, name: "Flame Charger", cost: 4, attack: 4, health: 4, description: "Charges with fiery speed.", backgroundImage: "https://i.imgur.com/cep6ytB.png", uid: "season0_24" },
-                    { id: 25, name: "Ra Cal Vin", cost: 4, attack: 4, health: 4, description: "Glides with icy Language.", backgroundImage: "https://i.imgur.com/XbSuPyC.png", uid: "season0_25" },
-                    { id: 26, name: "Void Sorcerer", cost: 5, attack: 3, health: 4, taunt: true, description: "Casts protective dark magic.", backgroundImage: "https://i.imgur.com/2XhqS6d.png", uid: "season0_26" },
-                    { id: 27, name: "Light Mage", cost: 5, attack: 3, health: 4, taunt: true, description: "Shields with radiant magic.", backgroundImage: "https://i.imgur.com/cMLK4Oq.png", uid: "season0_27" },
-                    { id: 30, name: "Spectral Warrior", cost: 5, attack: 5, health: 4, description: "Fights with ghostly strength.", backgroundImage: "https://i.imgur.com/n2b1ugT.png", uid: "season0_30" },
-                    { id: 31, name: "Radiant Paladin", cost: 5, attack: 5, health: 4, description: "Shines with radiant power.", backgroundImage: "https://i.imgur.com/TalRqz3.png", uid: "season0_31" },
-                    { id: 32, name: "Ethereal Phantom", cost: 3, attack: 2, health: 3, description: "Haunts the battlefield.", backgroundImage: "https://i.imgur.com/v0RBTiV.png", uid: "season0_32" },
-                    { id: 33, name: "Crimson Shade", cost: 3, attack: 2, health: 3, description: "Burns with crimson energy.", backgroundImage: "https://i.imgur.com/36iR3J8.png", uid: "season0_33" },
-                    { id: 34, name: "Logs Much", cost: 3, attack: 2, health: 3, description: "Wooden with Steel presence.", backgroundImage: "https://i.imgur.com/PFbnxct.png", uid: "season0_34" },
-                    { id: 35, name: "Abyssal Monolith", cost: 7, attack: 6, health: 6, taunt: true, description: "Dominates with abyssal might.", backgroundImage: "https://i.imgur.com/1VehWYG.png", uid: "season0_35" },
-                    { id: 36, name: "Celestial Serph", cost: 7, attack: 6, health: 6, taunt: true, description: "Protects with celestial power.", backgroundImage: "https://i.imgur.com/GvWB71v.png", uid: "season0_36" },
-                    { id: 37, name: "Thundering Yordy", cost: 6, attack: 5, health: 5, description: "Bats with thunderous force.", backgroundImage: "https://i.imgur.com/UvZsOLQ.png", uid: "season0_37" },
-                    { id: 38, name: "Flame Dragon", cost: 6, attack: 5, health: 5, description: "Burns with fiery wrath.", backgroundImage: "https://i.imgur.com/BocWQdv.png", uid: "season0_38" },
-                    { id: 39, name: "Star Traveler", cost: 6, attack: 5, health: 5, description: "Strikes with void energy.", backgroundImage: "https://i.imgur.com/I3o9UZS.png", uid: "season0_39" },
-                    { id: 51, name: "Luminous Watcher", cost: 3, attack: 2, health: 3, healAll: 1, description: "Heals all for 1 each turn.", backgroundImage: "https://i.imgur.com/eg8FESL.png", uid: "season0_51" },
-                    { id: 52, name: "Vitality Totem", cost: 5, attack: 3, health: 5, healAll: 2, description: "Heals all for 2 each turn.", backgroundImage: "https://i.imgur.com/SAL2oQY.png", uid: "season0_52" },
-                    { id: 53, name: "Alpha Skiff", cost: 2, attack: 1, health: 2, ability: "dealDamage", damage: 2, type: "minion", description: "On play: Deal 2 damage to an enemy.", backgroundImage: "https://i.imgur.com/z1fbkXx.png", uid: "season0_53" },
-                    { id: 54, name: "Beta Cruiser", cost: 4, attack: 3, health: 3, ability: "dealDamage", damage: 5, type: "minion", description: "On play: Deal 5 damage to an enemy.", backgroundImage: "https://i.imgur.com/JuxTEX9.png", uid: "season0_54" },
-                    { id: 55, name: "Omega Dreadnought", cost: 6, attack: 4, health: 5, ability: "boostAllies", boostAttack: 1, type: "minion", description: "On play: Give all allies +1 attack.", backgroundImage: "https://i.imgur.com/Phx6yjU.png", uid: "season0_55" },
-                    { id: 56, name: "A Coward Priest", cost: 1, attack: 1, health: 1, description: "Basic reconnaissance unit.", backgroundImage: "https://i.imgur.com/DHS25YU.jpeg", uid: "season0_56" },
-                    { id: 57, name: "Patrol Frigate", cost: 3, attack: 2, health: 3, description: "Standard patrol vessel.", backgroundImage: "https://i.imgur.com/nJMY8NA.png", uid: "season0_57" },
-                    { id: 58, name: "Ironclad Titan", cost: 5, attack: 4, health: 4, description: "Heavy armored enforcer.", backgroundImage: "https://i.imgur.com/yUzjTDm.png", uid: "season0_58" },
-                    { id: 60, name: "Overlord Mind", cost: 5, attack: 4, health: 4, taunt: true, type: "minion", description: "Taunt.", backgroundImage: "https://i.imgur.com/LspYMpz.png", uid: "season0_60" },
-                    { id: 61, name: "Dragon King", cost: 7, attack: 5, health: 5, type: "minion", description: "Powerful undead leader.", backgroundImage: "https://i.imgur.com/uaeSik8.png", uid: "season0_61" },
-                    { id: 62, name: "Enigmatic Warrior", cost: 4, attack: 3, health: 3, type: "minion", description: "Mysterious combatant.", backgroundImage: "https://i.imgur.com/JwcxWth.png", uid: "season0_62" },
-                    { id: 63, name: "Battle Commander", cost: 3, attack: 2, health: 4, type: "minion", description: "Leads the charge.", backgroundImage: "https://i.imgur.com/ABsno64.png", uid: "season0_63" },
-                    { id: 64, name: "Orcish Sniper", cost: 2, attack: 2, health: 1, type: "minion", description: "Ranged attacker.", backgroundImage: "https://i.imgur.com/nlkfMpI.png", uid: "season0_64" },
-                    { id: 65, name: "Valor Knight", cost: 6, attack: 5, health: 4, type: "minion", description: "Elite fighter.", backgroundImage: "https://i.imgur.com/LjBBzdn.png", uid: "season0_65" },
-                    { id: 66, name: "Starborn Light", cost: 1, attack: 1, health: 1, type: "minion", description: "Summons structures.", backgroundImage: "https://i.imgur.com/iWv48Xl.png", uid: "season0_66" },
-                    { id: 67, name: "Stoned Ape", cost: 8, attack: 8, health: 8, taunt: true, description: "Unstoppable celestial force.", backgroundImage: "https://i.imgur.com/iWv48Xl.png", uid: "season0_67" },
-                    { id: 68, name: "Abyssal Leviathan", cost: 8, attack: 7, health: 9, ability: "dealDamage", damage: 3, type: "minion", description: "Crushes foes with abyssal might.", backgroundImage: "https://i.imgur.com/SbU1dfG.png", uid: "season0_68" },
-                    { id: 11, name: "Plasma Surge", cost: 2, damage: 4, type: "directDamage", description: "Blasts for 4 damage.", backgroundImage: "https://i.imgur.com/MDra3S8.png", uid: "season0_11" },
-                    { id: 12, name: "Fire Barrage", cost: 3, damage: 5, type: "directDamage", description: "Freezes for 5 damage.", backgroundImage: "https://i.imgur.com/lAUM1L7.png", uid: "season0_12" },
-                    { id: 19, name: "Arcane Burst", cost: 3, damage: 6, type: "directDamage", description: "Unleashes arcane energy for 6 damage.", backgroundImage: "https://i.imgur.com/sZEdhnc.png", uid: "season0_19" },
-                    { id: 20, name: "Void Rift", cost: 3, damage: 6, type: "directDamage", description: "Channels void energy for 6 damage.", backgroundImage: "https://i.imgur.com/KjBYZ7L.png", uid: "season0_20" },
-                    { id: 28, name: "Epic Strike", cost: 4, damage: 8, type: "directDamage", description: "Unleashes chaotic energy for 8 damage.", backgroundImage: "https://i.imgur.com/YxGHZ7l.png", uid: "season0_28" },
-                    { id: 29, name: "Chaos Vortrx", cost: 4, damage: 8, type: "directDamage", description: "Strikes with fire and wind for 8 damage.", backgroundImage: "https://i.imgur.com/dramBbf.png", uid: "season0_29" },
-                    { id: 40, name: "Starfire Nova", cost: 5, damage: 10, type: "directDamage", description: "Unleashes starfire for 10 damage.", backgroundImage: "https://i.imgur.com/3cpJ2XF.png", uid: "season0_40" },
-                    { id: 41, name: "Moonfire Wave", cost: 5, damage: 10, type: "directDamage", description: "Strikes with moonfire for 10 damage.", backgroundImage: "https://i.imgur.com/1iicyne.png", uid: "season0_41" },
-                    { id: 42, name: "Flame Pulse", cost: 4, damage: 8, type: "directDamage", description: "Casts an eclipse for 8 damage.", backgroundImage: "https://i.imgur.com/5PSOVVc.png", uid: "season0_42" },
-                    { id: 43, name: "Thunder Strike", cost: 6, damage: 7, type: "directDamage", description: "Strikes for 7 damage.", backgroundImage: "https://i.imgur.com/8DLbQp4.png", uid: "season0_43" },
-                    { id: 44, name: "Void Eruption", cost: 8, damage: 10, type: "directDamage", description: "Obliterates for 10 damage.", backgroundImage: "https://i.imgur.com/KEPxMIp.png", uid: "season0_44" },
-                    { id: 45, name: "Desperate Repair", cost: 2, healing: 4, type: "healing", description: "Repairs for 4 health.", backgroundImage: "https://i.imgur.com/dyC5M5D.png", uid: "season0_45" },
-                    { id: 46, name: "Core Renewal", cost: 4, healing: 6, type: "healing", description: "Restores 6 health.", backgroundImage: "https://i.imgur.com/8fYU7nG.png", uid: "season0_46" },
-                    { id: 47, name: "Vital Infusion", cost: 6, healing: 8, type: "healing", description: "Boosts 8 health.", backgroundImage: "https://i.imgur.com/BmCZ9hn.png", uid: "season0_47" },
-                    { id: 48, name: "Life Cascade", cost: 8, healing: 12, type: "healing", description: "Surges 12 health.", backgroundImage: "https://i.imgur.com/C75RopO.png", uid: "season0_48" },
-                    { id: 49, name: "Mana Surge", cost: 0, type: "manaStorm", description: "Grants 2 mana this turn.", backgroundImage: "https://i.imgur.com/dU3QrVi.png", uid: "season0_49" },
-                    { id: 50, name: "Tactical Insight", cost: 3, type: "drawCard", description: "Draws 2 cards.", backgroundImage: "https://i.imgur.com/LhKeIUk.png", uid: "season0_50" },
-                    { id: 59, name: "Skull Hex", cost: 3, damage: 3, type: "directDamage", description: "Deals 3 damage to an enemy.", backgroundImage: "https://i.imgur.com/XOkb25e.jpg", uid: "season0_59" }
-                ];
+        {"cardId": "001", "name": "Stealth Drone", "type": "minion", "atk": 1, "hp": 1, "cost": 1, "description": "Quick scouting unit cloaked in shadow.", "image": "https://i.imgur.com/zMFckYB.png", "startingAmount": 2},
+        {"cardId": "002", "name": "A Coward Priest", "type": "minion", "atk": 1, "hp": 1, "cost": 1, "description": "Basic reconnaissance unit.", "image": "https://i.imgur.com/DHS25YU.jpeg", "startingAmount": 2},
+        {"cardId": "003", "name": "Starborn Light", "type": "minion", "atk": 1, "hp": 1, "cost": 1, "description": "Summons structures.", "image": "https://i.imgur.com/AvsiFog.png", "startingAmount": 2},
+        {"cardId": "004", "name": "Arcane Mystic", "type": "minion", "atk": 2, "hp": 3, "cost": 2, "description": "Casts arcane spells with finesse.", "image": "https://i.imgur.com/Enu1T7Y.png", "startingAmount": 2},
+        {"cardId": "005", "name": "Alpha Skiff", "type": "minion", "atk": 1, "hp": 2, "cost": 2, "description": "On play: Deal 2 damage to an enemy.", "image": "https://i.imgur.com/z1fbkXx.png", "startingAmount": 2},
+        {"cardId": "006", "name": "Orcish Sniper", "type": "minion", "atk": 2, "hp": 1, "cost": 2, "description": "Ranged attacker.", "image": "https://i.imgur.com/nlkfMpI.png", "startingAmount": 2},
+        {"cardId": "007", "name": "Mace Assassin", "type": "minion", "atk": 4, "hp": 2, "cost": 3, "description": "Strikes with venomous precision.", "image": "https://i.imgur.com/3SkE6VG.png", "startingAmount": 2},
+        {"cardId": "008", "name": "Swarm Legion", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Overruns the enemy in numbers.", "image": "https://i.imgur.com/Wn84v6I.png", "startingAmount": 2},
+        {"cardId": "009", "name": "Ethereal Phantom", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Haunts the battlefield.", "image": "https://i.imgur.com/v0RBTiV.png", "startingAmount": 2},
+        {"cardId": "010", "name": "Crimson Shade", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Burns with crimson energy.", "image": "https://i.imgur.com/36iR3J8.png", "startingAmount": 2},
+        {"cardId": "011", "name": "Logs Much", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Wooden with Steel presence.", "image": "https://i.imgur.com/PFbnxct.png", "startingAmount": 2},
+        {"cardId": "012", "name": "Luminous Watcher", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Heals all for 1 each turn.", "image": "https://i.imgur.com/eg8FESL.png", "startingAmount": 2},
+        {"cardId": "013", "name": "Patrol Frigate", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Standard patrol vessel.", "image": "https://i.imgur.com/nJMY8NA.png", "startingAmount": 2},
+        {"cardId": "014", "name": "Battle Commander", "type": "minion", "atk": 2, "hp": 4, "cost": 3, "description": "Leads the charge.", "image": "https://i.imgur.com/ABsno64.png", "startingAmount": 2},
+        {"cardId": "015", "name": "Night Wraith", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Strikes from the shadows.", "image": "https://i.imgur.com/PSpj7sO.png", "startingAmount": 1},
+        {"cardId": "016", "name": "Night Lord", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Roams from the shadows.", "image": "https://i.imgur.com/qpsLIcS.png", "startingAmount": 1},
+        {"cardId": "017", "name": "Crimson Revenant", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Strikes with fiery intent.", "image": "https://i.imgur.com/8YIqCl5.png", "startingAmount": 1},
+        {"cardId": "018", "name": "Emerald Stalker", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Strikes with emerald fury.", "image": "https://i.imgur.com/5t6kGOi.jpeg", "startingAmount": 1},
+        {"cardId": "019", "name": "Storm Cavalier", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Rides the storm into battle.", "image": "https://i.imgur.com/nBUKWdy.png", "startingAmount": 1},
+        {"cardId": "020", "name": "Flame Charger", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Charges with fiery speed.", "image": "https://i.imgur.com/cep6ytB.png", "startingAmount": 1},
+        {"cardId": "021", "name": "Ra Cal Vin", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Glides with icy Language.", "image": "https://i.imgur.com/XbSuPyC.png", "startingAmount": 1},
+        {"cardId": "022", "name": "Beta Cruiser", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "On play: Deal 5 damage to an enemy.", "image": "https://i.imgur.com/JuxTEX9.png", "startingAmount": 1},
+        {"cardId": "023", "name": "Enigmatic Warrior", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Mysterious combatant.", "image": "https://i.imgur.com/JwcxWth.png", "startingAmount": 1},
+        {"cardId": "024", "name": "Barrier Sentinel", "type": "minion", "atk": 0, "hp": 7, "cost": 5, "description": "Unyielding defense with Taunt.", "image": "https://i.imgur.com/klAa6aX.png", "startingAmount": 1},
+        {"cardId": "025", "name": "Void Sorcerer", "type": "minion", "atk": 3, "hp": 4, "cost": 5, "description": "Casts protective dark magic.", "image": "https://i.imgur.com/2XhqS6d.png", "startingAmount": 1},
+        {"cardId": "026", "name": "Light Mage", "type": "minion", "atk": 3, "hp": 4, "cost": 5, "description": "Shields with radiant magic.", "image": "https://i.imgur.com/cMLK4Oq.png", "startingAmount": 1},
+        {"cardId": "027", "name": "Spectral Warrior", "type": "minion", "atk": 5, "hp": 4, "cost": 5, "description": "Fights with ghostly strength.", "image": "https://i.imgur.com/n2b1ugT.png", "startingAmount": 1},
+        {"cardId": "028", "name": "Radiant Paladin", "type": "minion", "atk": 5, "hp": 4, "cost": 5, "description": "Shines with radiant power.", "image": "https://i.imgur.com/TalRqz3.png", "startingAmount": 1},
+        {"cardId": "029", "name": "Vitality Totem", "type": "minion", "atk": 3, "hp": 5, "cost": 5, "description": "Heals all for 2 each turn.", "image": "https://i.imgur.com/SAL2oQY.png", "startingAmount": 1},
+        {"cardId": "030", "name": "Ironclad Titan", "type": "minion", "atk": 4, "hp": 4, "cost": 5, "description": "Heavy armored enforcer.", "image": "https://i.imgur.com/yUzjTDm.png", "startingAmount": 1},
+        {"cardId": "031", "name": "Overlord Mind", "type": "minion", "atk": 4, "hp": 4, "cost": 5, "description": "Taunt.", "image": "https://i.imgur.com/LspYMpz.png", "startingAmount": 1},
+        {"cardId": "032", "name": "Celestial Warden", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Heals all for 1 each turn.", "image": "https://i.imgur.com/6CXJn5s.png", "startingAmount": 0},
+        {"cardId": "033", "name": "Abyssal Keeper", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Heals all with dark energy.", "image": "https://i.imgur.com/3b2RmGQ.png", "startingAmount": 0},
+        {"cardId": "034", "name": "Arcane Missile", "type": "spell", "cost": 1, "description": "Deal 3 damage to a random enemy.", "image": "https://i.imgur.com/jQbF07m.png", "startingAmount": 1},
+        {"cardId": "035", "name": "Shadow Strike", "type": "spell", "cost": 2, "description": "Deal 4 damage to a target enemy.", "image": "https://i.imgur.com/oPFVuMN.png", "startingAmount": 1},
+        {"cardId": "036", "name": "Healing Wave", "type": "spell", "cost": 3, "description": "Restore 6 health to a friendly character.", "image": "https://i.imgur.com/PgLXUx8.png", "startingAmount": 1},
+        {"cardId": "037", "name": "Mind Control", "type": "spell", "cost": 8, "description": "Take control of an enemy minion.", "image": "https://i.imgur.com/dC1AKPu.png", "startingAmount": 0},
+        {"cardId": "038", "name": "Starship Alpha", "type": "minion", "atk": 2, "hp": 2, "cost": 2, "description": "Stealth. Gains +1 atk in space-themed games.", "image": "https://i.imgur.com/scyPIUs.png", "startingAmount": 1},
+        {"cardId": "039", "name": "Star Hut", "type": "minion", "atk": 0, "hp": 5, "cost": 3, "description": "Taunt. Heals adjacent allies for 1 in Island.", "image": "https://i.imgur.com/TCYVocs.png", "startingAmount": 1},
+        {"cardId": "040", "name": "Engineer Prime", "type": "minion", "atk": 4, "hp": 4, "cost": 6, "description": "Super Rare. On play: Give all allies +2 atk in Warlords.", "image": "https://i.imgur.com/KpHvcmW.mp4", "startingAmount": 0},
+        {"cardId": "041", "name": "Starship Beta", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Deals +2 damage to structures in RTS.", "image": "https://i.imgur.com/BSurWbZ.png", "startingAmount": 1},
+        {"cardId": "042", "name": "Starship Gamma", "type": "minion", "atk": 2, "hp": 4, "cost": 4, "description": "Heals allies for 1 in Crawl.", "image": "https://i.imgur.com/5PSOVVc.png", "startingAmount": 1},
+        {"cardId": "043", "name": "Star Cruiser", "type": "minion", "atk": 6, "hp": 5, "cost": 7, "description": "On play: Deal 3 damage to all enemies in Battle.", "image": "https://i.imgur.com/Ldfm3An.png", "startingAmount": 0},
+        {"cardId": "044", "name": "Fireball", "type": "spell", "cost": 4, "description": "Deal 6 damage to a target. +2 damage in Warlords.", "image": "https://i.imgur.com/V1HCiAI.jpg", "startingAmount": 1},
+        {"cardId": "045", "name": "Undead", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Grants Undead Hardcore Island character. +1 hp in Island.", "image": "https://i.imgur.com/8YIqCl5.png", "startingAmount": 0},
+        {"cardId": "046", "name": "Human", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Grants Human Hardcore Island character. +1 atk in Warlords.", "image": "https://i.imgur.com/0XcU175.png", "startingAmount": 0},
+        {"cardId": "047", "name": "Orc", "type": "minion", "atk": 4, "hp": 2, "cost": 3, "description": "Grants Orc Hardcore Island character. Haste in Battle.", "image": "https://i.imgur.com/nlkfMpI.png", "startingAmount": 0},
+        {"cardId": "048", "name": "Elf", "type": "minion", "atk": 2, "hp": 4, "cost": 3, "description": "Grants Elf Hardcore Island character. +1 cost reduction in Crawl.", "image": "https://i.imgur.com/6CXJn5s.png", "startingAmount": 0},
+        {"cardId": "049", "name": "Dwarf", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Grants Dwarf Hardcore Island character. +2 hp in Tower.", "image": "https://i.imgur.com/nBUKWdy.png", "startingAmount": 0},
+        {"cardId": "050", "name": "Barbarian", "type": "minion", "atk": 4, "hp": 3, "cost": 3, "description": "Grants Barbarian Hardcore Island character. +1 atk in Island.", "image": "https://i.imgur.com/a9H86By.png", "startingAmount": 0},
+        {"cardId": "051", "name": "Skeleton NB", "type": "minion", "atk": 2, "hp": 3, "cost": 2, "description": "Swift skeletal fighter with a mace.", "image": "https://i.imgur.com/Dh99XuH.png", "startingAmount": 2},
+        {"cardId": "052", "name": "Scourge Warrior", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Dark warrior with a cursed blade.", "image": "https://i.imgur.com/NFjvmxO.png", "startingAmount": 1},
+        {"cardId": "053", "name": "Orc NB", "type": "minion", "atk": 2, "hp": 2, "cost": 2, "description": "Stealthy orc scout.", "image": "https://i.imgur.com/zMFckYB.png", "startingAmount": 2},
+        {"cardId": "054", "name": "Barbarian Mace", "type": "minion", "atk": 4, "hp": 2, "cost": 3, "description": "Barbarian wielding a heavy mace.", "image": "https://i.imgur.com/3SkE6VG.png", "startingAmount": 2},
+        {"cardId": "055", "name": "Human NB", "type": "minion", "atk": 3, "hp": 4, "cost": 4, "description": "Versatile human defender with a shield.", "image": "https://i.imgur.com/klAa6aX.png", "startingAmount": 1},
+        {"cardId": "056", "name": "Dwarf", "type": "minion", "atk": 3, "hp": 5, "cost": 4, "description": "Sturdy dwarf with a hammer.", "image": "https://i.imgur.com/Wn84v6I.png", "startingAmount": 1},
+        {"cardId": "057", "name": "Elf Archer", "type": "minion", "atk": 3, "hp": 2, "cost": 3, "description": "Precise elf archer with a bow.", "image": "https://i.imgur.com/Enu1T7Y.png", "startingAmount": 2},
+        {"cardId": "058", "name": "Knight", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Armored knight with a greatsword.", "image": "https://i.imgur.com/s0cMpSi.png", "startingAmount": 0},
+        {"cardId": "059", "name": "Dwarf Knight NB", "type": "minion", "atk": 4, "hp": 5, "cost": 5, "description": "Heavily armored dwarf knight.", "image": "https://i.imgur.com/TalRqz3.png", "startingAmount": 1},
+        {"cardId": "060", "name": "Yorda", "type": "minion", "atk": 5, "hp": 4, "cost": 6, "description": "Bats with thunderous force.", "image": "https://i.imgur.com/UvZsOLQ.png", "startingAmount": 0},
+        {"cardId": "061", "name": "Magician NB", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Casts arcane spells with a staff.", "image": "https://i.imgur.com/PSpj7sO.png", "startingAmount": 1},
+        {"cardId": "062", "name": "Calvin", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Glides with icy magic.", "image": "https://i.imgur.com/XbSuPyC.png", "startingAmount": 1},
+        {"cardId": "063", "name": "NB Undead", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Undead soldier with enduring spirit.", "image": "https://i.imgur.com/8YIqCl5.png", "startingAmount": 1},
+        {"cardId": "064", "name": "NB Human Wizard", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Human wizard casting powerful spells.", "image": "https://i.imgur.com/0XcU175.png", "startingAmount": 1},
+        {"cardId": "065", "name": "Human Archer NB", "type": "minion", "atk": 3, "hp": 2, "cost": 3, "description": "Human archer with deadly aim.", "image": "https://i.imgur.com/jKE3ClI.png", "startingAmount": 2},
+        {"cardId": "066", "name": "Undead NB", "type": "minion", "atk": 2, "hp": 4, "cost": 3, "description": "Undead warrior with a shield.", "image": "https://i.imgur.com/XJ8Saun.png", "startingAmount": 2},
+        {"cardId": "067", "name": "NB Undead Archer", "type": "minion", "atk": 3, "hp": 2, "cost": 3, "description": "Undead archer with ghostly arrows.", "image": "https://i.imgur.com/fGDbB5o.png", "startingAmount": 2},
+        {"cardId": "068", "name": "Barrel Weapon", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Explosive barrel used as a weapon.", "image": "https://i.imgur.com/PFbnxct.png", "startingAmount": 2},
+        {"cardId": "069", "name": "Orc Archer NB", "type": "minion", "atk": 3, "hp": 2, "cost": 3, "description": "Orc archer with a heavy bow.", "image": "https://i.imgur.com/nlkfMpI.png", "startingAmount": 2},
+        {"cardId": "070", "name": "Priest NB", "type": "minion", "atk": 2, "hp": 4, "cost": 4, "description": "Heals allies with divine light.", "image": "https://i.imgur.com/6CXJn5s.png", "startingAmount": 1},
+        {"cardId": "071", "name": "Paladin NB", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Protects with holy power.", "image": "https://i.imgur.com/3b2RmGQ.png", "startingAmount": 0},
+        {"cardId": "072", "name": "Orc Heavy", "type": "minion", "atk": 5, "hp": 4, "cost": 5, "description": "Heavy orc with a massive axe.", "image": "https://i.imgur.com/cep6ytB.png", "startingAmount": 1},
+        {"cardId": "073", "name": "Human Heavy", "type": "minion", "atk": 4, "hp": 5, "cost": 5, "description": "Heavily armored human warrior.", "image": "https://i.imgur.com/UT8Yfo2.png", "startingAmount": 1},
+        {"cardId": "074", "name": "Undead Heavy", "type": "minion", "atk": 4, "hp": 5, "cost": 5, "description": "Undead giant with a spiked club.", "image": "https://i.imgur.com/9Prc8Md.png", "startingAmount": 1},
+        {"cardId": "075", "name": "WareTree", "type": "minion", "atk": 3, "hp": 6, "cost": 5, "description": "Living tree that attacks with roots.", "image": "https://i.imgur.com/gA5V2vd.png", "startingAmount": 1},
+        {"cardId": "076", "name": "Small Troll", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Small troll with regenerative powers.", "image": "https://i.imgur.com/R5AKvO4.png", "startingAmount": 2},
+        {"cardId": "077", "name": "Human Upgrade", "type": "minion", "atk": 4, "hp": 4, "cost": 5, "description": "Upgraded human with enhanced armor.", "image": "https://i.imgur.com/9lhozCz.png", "startingAmount": 1},
+        {"cardId": "078", "name": "Dwarf Heavy", "type": "minion", "atk": 4, "hp": 6, "cost": 5, "description": "Heavy dwarf with a warhammer.", "image": "https://i.imgur.com/oGautmG.png", "startingAmount": 1},
+        {"cardId": "079", "name": "Scourge Familiar", "type": "minion", "atk": 2, "hp": 2, "cost": 2, "description": "Dark familiar that boosts spells.", "image": "https://i.imgur.com/FcwHTwA.png", "startingAmount": 2},
+        {"cardId": "080", "name": "Faitherbearer", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Bearer of faith with divine strength.", "image": "https://i.imgur.com/ENXGMbn.jpg", "startingAmount": 0},
+        {"cardId": "081", "name": "Explosion 2", "type": "spell", "cost": 5, "description": "Deal 8 damage to a target and 2 to adjacent enemies.", "image": "https://i.imgur.com/vUfG5PJ.png", "startingAmount": 1},
+        {"cardId": "082", "name": "Explosion 1", "type": "spell", "cost": 3, "description": "Deal 5 damage to a target and 1 to adjacent enemies.", "image": "https://i.imgur.com/lAUM1L7.png", "startingAmount": 1},
+        {"cardId": "083", "name": "Spell Ball", "type": "spell", "cost": 2, "description": "Deal 3 damage to a random enemy and draw a card.", "image": "https://i.imgur.com/1iicyne.png", "startingAmount": 1},
+        {"cardId": "084", "name": "Fire Swirl", "type": "spell", "cost": 4, "description": "Deal 4 damage to all enemies.", "image": "https://i.imgur.com/dramBbf.png", "startingAmount": 1},
+        {"cardId": "085", "name": "Fire Ball", "type": "spell", "cost": 4, "description": "Deal 6 damage to a target.", "image": "https://i.imgur.com/KfE0K3N.png", "startingAmount": 1},
+        {"cardId": "086", "name": "Purple Swipe", "type": "spell", "cost": 3, "description": "Deal 4 damage and reduce target atk by 1.", "image": "https://i.imgur.com/X4uVLBC.png", "startingAmount": 1},
+        {"cardId": "087", "name": "Sword", "type": "spell", "cost": 2, "description": "Give a minion +2 atk this turn.", "image": "https://i.imgur.com/u95mHRc.png", "startingAmount": 1},
+        {"cardId": "088", "name": "Pick Axe Efforts", "type": "spell", "cost": 3, "description": "Deal 3 damage and gain 2 armor.", "image": "https://i.imgur.com/OaIxVfq.png", "startingAmount": 1},
+        {"cardId": "089", "name": "Book", "type": "spell", "cost": 1, "description": "Draw 2 cards.", "image": "https://i.imgur.com/LhKeIUk.png", "startingAmount": 1},
+        {"cardId": "090", "name": "Light", "type": "spell", "cost": 2, "description": "Restore 4 health to a friendly character.", "image": "https://i.imgur.com/8fYU7nG.png", "startingAmount": 1},
+        {"cardId": "091", "name": "Light 2", "type": "spell", "cost": 3, "description": "Restore 6 health to a friendly character.", "image": "https://i.imgur.com/FGmWArp.png", "startingAmount": 1},
+        {"cardId": "092", "name": "Arcane", "type": "spell", "cost": 5, "description": "Deal 5 damage to a target and stun it.", "image": "https://i.imgur.com/dU3QrVi.png", "startingAmount": 1},
+        {"cardId": "093", "name": "Mystic Green", "type": "spell", "cost": 4, "description": "Restore 5 health to all friendly characters.", "image": "https://i.imgur.com/ra2S7o0.png", "startingAmount": 1},
+        {"cardId": "094", "name": "Red Skull Magic", "type": "spell", "cost": 6, "description": "Deal 6 damage to a target and summon a 2/2 skull.", "image": "https://i.imgur.com/KjBYZ7L.png", "startingAmount": 0},
+        {"cardId": "095", "name": "Green Skull Magic", "type": "spell", "cost": 6, "description": "Deal 5 damage to a target and heal for 5.", "image": "https://i.imgur.com/dWpBsru.png", "startingAmount": 0},
+        {"cardId": "096", "name": "Small Building", "type": "minion", "atk": 0, "hp": 5, "cost": 3, "description": "Taunt. Defensive structure for RTS.", "image": "https://i.imgur.com/LouhX6b.png", "startingAmount": 1},
+        {"cardId": "097", "name": "Summoning Tower", "type": "minion", "atk": 2, "hp": 4, "cost": 4, "description": "On play: Summon a 1/1 spirit in Crawl.", "image": "https://i.imgur.com/aBeF0N8.png", "startingAmount": 1},
+        {"cardId": "098", "name": "Armory", "type": "minion", "atk": 0, "hp": 6, "cost": 5, "description": "Taunt. Gives +1 atk to summoned minions in RTS.", "image": "https://i.imgur.com/4TFvg1K.png", "startingAmount": 1},
+        {"cardId": "099", "name": "Hero Hall", "type": "minion", "atk": 0, "hp": 7, "cost": 6, "description": "Taunt. Boosts hero atk by 2 in Warlords.", "image": "https://i.imgur.com/H0EAefW.png", "startingAmount": 0},
+        {"cardId": "100", "name": "Tower", "type": "minion", "atk": 0, "hp": 8, "cost": 7, "description": "Taunt. Defensive structure for RTS.", "image": "https://i.imgur.com/4TFvg1K.png", "startingAmount": 0},
+    ];
 
         function updateUserInfo() {
             const userInfoEl = document.getElementById('username-display');
@@ -1688,7 +1970,7 @@
                             localStorage.setItem('credits', credits);
                         }
                     }
-                } catch (error) {
+                } catch (error) {s
                     console.error('Error during OAuth:', error);
                 }
                 window.history.replaceState({}, document.title, window.location.pathname);

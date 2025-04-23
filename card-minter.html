@@ -24,7 +24,7 @@
         }
 
         .bg-overlay {
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 85);
             position: fixed;
             inset: 0;
             z-index: -1;
@@ -1410,7 +1410,7 @@
                         <div class="season0-indicator"></div>
                         <div class="card-info">
                             <div class="card-name">${deck.name}</div>
-                            <div class="stats">${deck.attack !== undefined ? `${deck.attack}/${deck.health}` : 'Special'}</div>
+                            <div class="stats">${deck.attack !== undefined ? ${deck.attack}/${deck.health} : 'Special'}</div>
                             <div class="description">${deck.description}</div>
                         </div>
                     `;
@@ -1479,7 +1479,7 @@
                             <div class="season0-indicator"></div>
                             <div class="card-info">
                                 <div class="card-name">${randomCard.name}</div>
-                                <div class="stats">${randomCard.attack !== undefined ? `${randomCard.attack}/${randomCard.health}` : 'Special'}</div>
+                                <div class="stats">${randomCard.attack !== undefined ? ${randomCard.attack}/${randomCard.health} : 'Special'}</div>
                                 <div class="description">${randomCard.description}</div>
                             </div>
                         </div>
@@ -1511,7 +1511,7 @@
                 <div class="season0-indicator"></div>
                 <div class="card-info">
                     <div class="card-name">${!user.id || !ownedCards.includes(card.id) ? 'Unknown' : `${card.name} (Owner ${ownerName})`}</div>
-                    <div class="stats">${card.attack !== undefined ? `${card.attack}/${card.health}${card.taunt ? ' (Taunt)' : ''}${card.healAll ? ` (Heal ${card.healAll})` : ''}` : card.damage ? `Dmg: ${card.damage}` : card.healing ? `Heal: ${card.healing}` : 'Special'}</div>
+                    <div class="stats">${card.attack !== undefined ? ${card.attack}/${card.health}${card.taunt ? ' (Taunt)' : ''}${card.healAll ? ` (Heal ${card.healAll})` : ''} : card.damage ? `Dmg: ${card.damage}` : card.healing ? `Heal: ${card.healing}` : 'Special'}</div>
                     <div class="description">${!user.id || !ownedCards.includes(card.id) ? 'Unknown card details.' : card.description}</div>
                 </div>
             `;
@@ -1543,7 +1543,7 @@
                 preview.querySelector('.cost').textContent = card.cost;
                 preview.querySelector('.season0-indicator').style.display = 'block';
                 preview.querySelector('.card-name').textContent = !user.id || !ownedCards.includes(card.id) ? 'name' : `${card.name} (Owner ${user.username})`;
-                preview.querySelector('.stats').textContent = card.attack !== undefined ? `${card.attack}/${card.health}${card.taunt ? ' (Taunt)' : ''}${card.healAll ? ` (Heal ${card.healAll})` : ''}` : card.damage ? `Dmg: ${card.damage}` : card.healing ? `Heal: ${card.healing}` : 'Special';
+                preview.querySelector('.stats').textContent = card.attack !== undefined ? ${card.attack}/${card.health}${card.taunt ? ' (Taunt)' : ''}${card.healAll ? ` (Heal ${card.healAll})` : ''} : card.damage ? `Dmg: ${card.damage}` : card.healing ? `Heal: ${card.healing}` : 'Special';
                 preview.querySelector('.description').textContent = !user.id || !ownedCards.includes(card.id) ? 'description' : card.description;
                 preview.style.display = 'block';
             });
