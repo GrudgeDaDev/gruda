@@ -32,5 +32,14 @@ async function testGetSeason0Data() {
   }
 }
 
+async function testGetSeason0Data() {
+  try {
+    const results = await Parse.Cloud.run('getSeason0Data');
+    console.log('Season0 data fetched:', results);
+  } catch (error) {
+    console.error('Error while fetching Season0 data:', error);
+  }
+}
+
 testDatabase();
 testGetSeason0Data();
