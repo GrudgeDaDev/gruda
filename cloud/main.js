@@ -1,70 +1,52 @@
-// Cloud Function to join a lobby
-Parse.Cloud.define("joinLobby", async (request) => {
-    const user = request.user;
-    if (!user) {
-        throw "User must be logged in";
-    }
+Parse.Cloud.define("joinPvPLobby", async (request) => {
+    const playerId = request.user.id;
+    const query = new Parse.Query("GameLobby");
 
-    // Find an available lobby or create a new one
-    const Lobby = Parse.Object.extend("GameLobby");
-    const query = new Parse.Query(Lobby);
+    // Search for an open lobby with available slots
     query.equalTo("status", "waiting");
-    query.ascending("createdAt");
+    query.limit(1);
     const lobby = await query.first();
 
-    if (!lobby) {
-        // Create a new lobby
-        const newLobby = new Lobby();
-        newLobby.set("status", "waiting");
-        newLobby.set("maxPlayers", 2); // For 1v1 PvP
-        newLobby.set("players", [user]);
-        await newLobby.save();
-        return { lobbyId: newLobby.id };
-    } else {
-        // Add player to existing lobby
-        const players = lobby.get("players");
-        if (players.length < lobby.get("maxPlayers")) {
-            players.push(user);
-            lobby.set("players", players);
-            await lobby.save();
-
-            // Check if lobby is full
-            if (players.length === lobby.get("maxPlayers")) {
-                // Start the game
-                await Parse.Cloud.run("startGame", { lobbyId: lobby.id });
+    if (lobby) {
+        lobby.add("players", playerId);
+        if (lobby.get("players").length === 2) {
+            lobby.set("status", "active");
+            // Assign server here
+            const serverQuery = new Parse.Query("GameServer");
+            serverQuery.equalTo("status", "available");
+            serverQuery.equalTo("serverType", "heads-up");
+            const server = await serverQuery.first();
+            if (server) {
+                server.set("status", "busy");
+                await server.save();
             }
-            return { lobbyId: lobby.id };
-        } else {
-            throw "Lobby is full";
         }
+        await lobby.save();
+        return { message: "Joined an existing lobby", lobbyId: lobby.id };
+    } else {
+        // Create a new lobby
+        const newLobby = new Parse.Object("GameLobby");
+        newLobby.set("players", [playerId]);
+        newLobby.set("status", "waiting");
+        await newLobby.save();
+        return { message: "Created a new lobby", lobbyId: newLobby.id };
     }
 });
 
-// Cloud Function to start the game
-Parse.Cloud.define("startGame", async (request) => {
-    const lobbyId = request.params.lobbyId;
-    const Lobby = Parse.Object.extend("GameLobby");
-    const lobby = await new Parse.Query(Lobby).get(lobbyId);
+Parse.Cloud.define("enterGameServer", async (request) => {
+    const playerId = request.user.id;
+    const query = new Parse.Query("GameServer");
 
-    if (lobby.get("status") !== "waiting") {
-        return; // Game already started or invalid state
+    // Search for an available server
+    query.equalTo("status", "available");
+    query.equalTo("serverType", "heads-up"); // or "island" for island games
+    const server = await query.first();
+
+    if (server) {
+        server.set("status", "busy");
+        await server.save();
+        return { message: "Assigned to server", serverId: server.get("serverId") };
+    } else {
+        throw `No available servers at this time. Please wait or try joining an island game.`;
     }
-
-    // Create a new Game object
-    const Game = Parse.Object.extend("Game");
-    const game = new Game();
-    game.set("players", lobby.get("players"));
-    game.set("currentTurn", 0); // Index of current player
-    // Add other game state properties as needed
-    await game.save();
-
-    // Update lobby status
-    lobby.set("status", "started");
-    lobby.set("game", game);
-    await lobby.save();
-
-    // Optionally, use Live Queries to notify players
-    // Clients should subscribe to changes in Game or Lobby classes
-
-    return { gameId: game.id };
 });

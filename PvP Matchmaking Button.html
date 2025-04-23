@@ -83,10 +83,15 @@
                     
                     // If lobby is active (matched with opponent), redirect to game  
                     if (result.message.includes("Joined an existing lobby")) {  
-                        setTimeout(() => {  
+                        setTimeout(async () => {  
                             statusMessage.textContent = "Match found! Preparing game...";  
-                            // Redirect to the game page with the lobby ID
-                            window.location.href = "https://grudgeplatform.com/nexus?lobbyId=" + result.lobbyId + "&player=" + (result.isPlayer1 ? "1" : "2");
+                            // Call the enterGameServer cloud function
+                            const serverResult = await Parse.Cloud.run("enterGameServer");
+                            statusMessage.textContent = "Assigned to server: " + serverResult.serverId;
+                            statusMessage.classList.remove('text-gray-500', 'text-red-500');
+                            statusMessage.classList.add('text-green-500');
+                            // Redirect to the game page with the lobby ID and server ID
+                            window.location.href = "https://grudgeplatform.com/nexus?lobbyId=" + result.lobbyId + "&serverId=" + serverResult.serverId + "&player=" + (result.isPlayer1 ? "1" : "2");
                         }, 1500);  
                     } else {  
                         // Reset button after 3 seconds if we're still waiting  
