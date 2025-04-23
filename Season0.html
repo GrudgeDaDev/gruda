@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grudge Paragon Diary - Season0</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/parse@3.5.1/dist/parse.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -23,8 +22,7 @@
                             red: '#FF4136',
                             purple: '#8A2BE2',
                             orange: '#FF851B'
-                        },
-                        ethereal: '#10b981' // Ethereal Signature glow
+                        }
                     },
                     animation: {
                         'glow': 'glow 2s ease-in-out infinite alternate',
@@ -33,43 +31,36 @@
                         'red-glow': 'redGlow 3s ease-in-out infinite alternate',
                         'purple-glow': 'purpleGlow 3s ease-in-out infinite alternate',
                         'orange-glow': 'orangeGlow 3s ease-in-out infinite alternate',
-                        'ethereal-glow': 'etherealGlow 4s infinite alternate',
                         'mythril-sparkle': 'mythrilSparkle 4s ease-in-out infinite alternate',
                         'rainbow-text': 'rainbowText 6s linear infinite',
                         'float': 'float 3s ease-in-out infinite',
-                        'pulse': 'pulse 3s infinite ease-in-out',
-                        'flip': 'flip 1s ease-in-out'
                     },
                     keyframes: {
                         glow: {
                             '0%': { boxShadow: '0 0 5px #4F2362' },
-                            '100%': { boxShadow: '0 0 20px #AB3E16, 0 0 35px #FFD700' }
+                            '100%': { boxShadow: '0 0 20px #AB3E16, 0 0 35px #FFD700' },
                         },
                         season0Glow: {
                             '0%': { boxShadow: '0 0 5px #FFD700' },
                             '33%': { boxShadow: '0 0 12px #FFD700, 0 0 20px #4F2362' },
                             '66%': { boxShadow: '0 0 18px #4F2362, 0 0 25px #AB3E16' },
-                            '100%': { boxShadow: '0 0 25px #AB3E16, 0 0 40px #FFD700' }
+                            '100%': { boxShadow: '0 0 25px #AB3E16, 0 0 40px #FFD700' },
                         },
                         silverGlow: {
                             '0%': { boxShadow: '0 0 5px #C0C0C0' },
-                            '100%': { boxShadow: '0 0 20px #C0C0C0, 0 0 30px #FFFFFF' }
+                            '100%': { boxShadow: '0 0 20px #C0C0C0, 0 0 30px #FFFFFF' },
                         },
                         redGlow: {
                             '0%': { boxShadow: '0 0 5px #FF4136' },
-                            '100%': { boxShadow: '0 0 20px #FF4136, 0 0 30px #FF0000' }
+                            '100%': { boxShadow: '0 0 20px #FF4136, 0 0 30px #FF0000' },
                         },
                         purpleGlow: {
                             '0%': { boxShadow: '0 0 5px #8A2BE2' },
-                            '100%': { boxShadow: '0 0 20px #8A2BE2, 0 0 30px #4B0082' }
+                            '100%': { boxShadow: '0 0 20px #8A2BE2, 0 0 30px #4B0082' },
                         },
                         orangeGlow: {
                             '0%': { boxShadow: '0 0 5px #FF851B' },
-                            '100%': { boxShadow: '0 0 20px #FF851B, 0 0 30px #FF6600' }
-                        },
-                        etherealGlow: {
-                            '0%': { boxShadow: '0 0 5px #10b981, 0 0 10px #10b981' },
-                            '100%': { boxShadow: '0 0 15px #10b981, 0 0 25px #10b981' }
+                            '100%': { boxShadow: '0 0 20px #FF851B, 0 0 30px #FF6600' },
                         },
                         mythrilSparkle: {
                             '0%': { 
@@ -97,14 +88,6 @@
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-5px)' }
-                        },
-                        pulse: {
-                            '0%, 100%': { opacity: 0.8 },
-                            '50%': { opacity: 0.4 }
-                        },
-                        flip: {
-                            '0%': { transform: 'rotateY(0deg)' },
-                            '100%': { transform: 'rotateY(180deg)' }
                         }
                     }
                 }
@@ -112,29 +95,14 @@
         }
     </script>
     <style>
-        body {
-            background: linear-gradient(135deg, #1E1E24 0%, #2A1B3D 50%, #1E1E24 100%);
-            background-size: 400% 400%;
-            animation: backgroundShift 15s ease infinite;
+        @keyframes sparkle {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 200%; }
         }
-        @keyframes backgroundShift {
+        @keyframes mythrilBg {
             0% { background-position: 0% 0%; }
             50% { background-position: 100% 100%; }
             100% { background-position: 0% 0%; }
-        }
-        .particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: #FFD700;
-            opacity: 0.5;
-            border-radius: 50%;
-            animation: floatParticle 10s infinite linear;
-        }
-        @keyframes floatParticle {
-            0% { transform: translateY(0) translateX(0); opacity: 0.5; }
-            50% { opacity: 0.8; }
-            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
         }
         .season0-card {
             position: relative;
@@ -152,24 +120,6 @@
             z-index: -1;
             animation: sparkle 3s linear infinite;
             border-radius: 0.5rem;
-        }
-        .ethereal-signature {
-            position: relative;
-            border: 2px solid #10b981;
-            box-shadow: 0 0 15px #10b981;
-        }
-        .ethereal-signature::before {
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: -5px;
-            right: -5px;
-            bottom: -5px;
-            border: 1px solid rgba(16, 185, 129, 0.5);
-            border-radius: 12px;
-            animation: pulse 3s infinite ease-in-out;
-            pointer-events: none;
-            z-index: 1;
         }
         .silver-tribe {
             position: relative;
@@ -247,6 +197,17 @@
             position: relative;
             overflow: hidden;
         }
+        .card-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
         .mythril-bg {
             position: absolute;
             top: 0;
@@ -255,6 +216,8 @@
             bottom: 0;
             width: 100%;
             height: 100%;
+            object-fit: cover;
+            z-index: 0;
             background: linear-gradient(135deg, 
                 rgba(156, 206, 255, 0.7), 
                 rgba(110, 180, 255, 0.8),
@@ -265,15 +228,6 @@
             background-size: 400% 400%;
             animation: mythrilBg 8s ease infinite;
             filter: drop-shadow(0 0 8px rgba(140, 210, 255, 0.8));
-        }
-        @keyframes sparkle {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 200% 200%; }
-        }
-        @keyframes mythrilBg {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
         }
         .card-foreground {
             position: relative;
@@ -319,7 +273,7 @@
             pointer-events: auto;
         }
         .rarity-chart {
-            background: linear-gradient(135deg, #2A1B3D, #1E1E24);
+            background-color: rgba(30, 30, 36, 0.95);
             border: 2px solid #4F2362;
             border-radius: 1rem;
             padding: 2rem;
@@ -329,46 +283,24 @@
             overflow-y: auto;
             box-shadow: 0 0 30px rgba(79, 35, 98, 0.7), 0 0 15px rgba(171, 62, 22, 0.7);
         }
-        .tooltip {
-            position: absolute;
-            background: #2A1B3D;
-            border: 1px solid #FFD700;
-            border-radius: 5px;
-            padding: 5px 10px;
-            color: #F2F2F2;
-            font-size: 12px;
-            z-index: 1000;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
     </style>
 </head>
-<body class="bg-grudge-dark text-grudge-light min-h-screen font-sans relative overflow-hidden">
-    <!-- Particle Background -->
-    <div class="absolute inset-0 pointer-events-none">
-        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
-        <div class="particle" style="left: 30%; animation-delay: 2s;"></div>
-        <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
-        <div class="particle" style="left: 70%; animation-delay: 6s;"></div>
-        <div class="particle" style="left: 90%; animation-delay: 8s;"></div>
-    </div>
-
-    <div id="app" class="min-h-screen flex flex-col relative z-10">
+<body class="bg-grudge-dark text-grudge-light min-h-screen font-sans">
+    <div id="app" class="min-h-screen flex flex-col">
         <!-- Top Navigation Bar -->
         <nav class="bg-grudge-primary px-4 py-2 shadow-lg">
             <div class="container mx-auto flex justify-between items-center">
                 <div class="flex items-center">
-                    <h1 class="text-3xl font-bold text-grudge-accent mr-2 animate-glow">Grudge Paragon Diary</h1>
-                    <span class="text-sm bg-grudge-accent text-grudge-primary px-2 py-1 rounded animate-pulse">Season 0</span>
+                    <h1 class="text-3xl font-bold text-grudge-accent mr-2">Grudge Paragon Diary</h1>
+                    <span class="text-sm bg-grudge-accent text-grudge-primary px-2 py-1 rounded">Season 0</span>
                 </div>
                 
                 <div id="login-area" class="flex items-center gap-4">
                     <!-- Before login -->
                     <div id="pre-login" class="flex items-center">
-                        <button id="discord-login-btn" class="bg-[#5865F2] hover:bg-[#4752C4] text-white px-4 py-2 rounded flex items-center gap-2 animate-float">
+                        <button id="discord-login-btn" class="bg-[#5865F2] hover:bg-[#4752C4] text-white px-4 py-2 rounded flex items-center gap-2">
                             <svg width="24" height="24" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.504 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="white"/>
+                                <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="white"/>
                             </svg>
                             Login with Discord
                         </button>
@@ -384,7 +316,7 @@
                                     <span id="gruda-balance" class="text-xs text-green-400">0 GRUDA</span>
                                 </div>
                             </div>
-                            <div id="user-avatar" class="w-10 h-10 rounded-full bg-grudge-secondary flex items-center justify-center animate-pulse">
+                            <div id="user-avatar" class="w-10 h-10 rounded-full bg-grudge-secondary flex items-center justify-center">
                                 <span id="avatar-initial" class="text-lg font-bold">?</span>
                             </div>
                             <div class="relative group">
@@ -410,13 +342,13 @@
         <main class="flex-grow container mx-auto p-4">
             <!-- Tabs Navigation -->
             <div class="mb-6 border-b border-grudge-primary">
-                <div class="flex space-x-4 flex-wrap">
-                    <button class="tab-btn py-2 px-4 font-medium border-b-2 border-grudge-accent animate-glow" data-tab="season0">Season 0 Cards</button>
-                    <button class="tab-btn py-2 px-4 font-medium border-b-2 border-transparent hover:border-grudge-secondary animate-float" data-tab="games">Games</button>
-                    <button class="tab-btn py-2 px-4 font-medium border-b-2 border-transparent hover:border-grudge-secondary animate-float" data-tab="servers">Servers</button>
-                    <button class="tab-btn py-2 px-4 font-medium border-b-2 border-transparent hover:border-grudge-secondary animate-float" data-tab="assets">Asset Library</button>
-                    <button class="tab-btn py-2 px-4 font-medium border-b-2 border-transparent hover:border-grudge-secondary animate-float" data-tab="auction">Auction House</button>
-                    <button class="tab-btn py-2 px-4 font-medium border-b-2 border-transparent hover:border-grudge-secondary animate-float" data-tab="academy">Academy</button>
+                <div class="flex space-x-4">
+                    <button class="tab-btn py-2 px-4 font-medium border-b-2 border-grudge-accent" data-tab="season0">Season 0 Cards</button>
+                    <button class="tab-btn py-2 px-4 font-medium border-b-2 border-transparent hover:border-grudge-secondary" data-tab="games">Games</button>
+                    <button class="tab-btn py-2 px-4 font-medium border-b-2 border-transparent hover:border-grudge-secondary" data-tab="servers">Servers</button>
+                    <button class="tab-btn py-2 px-4 font-medium border-b-2 border-transparent hover:border-grudge-secondary" data-tab="assets">Asset Library</button>
+                    <button class="tab-btn py-2 px-4 font-medium border-b-2 border-transparent hover:border-grudge-secondary" data-tab="auction">Auction House</button>
+                    <button class="tab-btn py-2 px-4 font-medium border-b-2 border-transparent hover:border-grudge-secondary" data-tab="academy">Academy</button>
                 </div>
             </div>
 
@@ -424,17 +356,14 @@
             <div id="tab-content">
                 <!-- Season 0 Cards Tab -->
                 <div id="season0-tab" class="tab-content">
-                    <div class="flex justify-between mb-6 flex-wrap gap-4">
-                        <h2 class="text-2xl font-bold text-grudge-accent animate-glow">Season 0 Collection</h2>
-                        <div class="flex space-x-4 items-center">
-                            <input type="text" id="card-search" placeholder="Search cards..." class="bg-grudge-dark border border-grudge-primary rounded px-3 py-2 text-grudge-light">
+                    <div class="flex justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-grudge-accent">Season 0 Collection</h2>
+                        <div class="flex space-x-4">
                             <button id="open-pack-btn" class="bg-grudge-primary hover:bg-opacity-80 px-4 py-2 rounded animate-glow">Open Card Pack</button>
-                            <select id="card-filter" class="bg-grudge-dark border border-grudge-primary rounded px-2 py-2 text-grudge-light">
+                            <select id="card-filter" class="bg-grudge-dark border border-grudge-primary rounded px-2">
                                 <option value="all">All Cards</option>
                                 <option value="minions">Minions</option>
                                 <option value="spells">Spells</option>
-                                <option value="ships">Ships</option>
-                                <option value="uniques">Uniques</option>
                                 <option value="silver">Iron Will (Silver)</option>
                                 <option value="red">Blood For Conquest (Red)</option>
                                 <option value="purple">Fabled (Purple)</option>
@@ -450,33 +379,28 @@
                     </div>
 
                     <!-- Fortune Favor Guide -->
-                    <div class="bg-grudge-dark border border-grudge-primary rounded-lg p-6 mb-6">
-                        <h3 class="text-xl font-bold text-grudge-accent mb-4 animate-glow">Season 0 Fortune Favor Tribes</h3>
-                        <p class="text-gray-300 mb-4">Each card in Season 0 belongs to one of four tribes, each with unique effects that can shape your strategy. Master these synergies to dominate your opponents!</p>
+                    <div class="bg-grudge-dark border border-grudge-primary rounded-lg p-4 mb-6">
+                        <h3 class="text-xl font-bold text-grudge-accent mb-2">Season 0 Fortune Favor Tribes</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-                            <div class="bg-grudge-dark border border-tribe-silver rounded-lg p-4 silver-tribe animate-silver-glow">
+                            <div class="bg-grudge-dark border border-tribe-silver rounded-lg p-3 silver-tribe">
                                 <h4 class="font-bold text-tribe-silver">Iron Will</h4>
                                 <p class="text-sm mb-2">+1 extra health over normal</p>
                                 <p class="text-xs text-gray-400">Tribe Effect: If there is a Silver card on the field, gain Taunt on summon.</p>
-                                <p class="text-xs text-grudge-accent mt-2">Strategy: Use Iron Will cards to create a defensive wall, protecting your key units.</p>
                             </div>
-                            <div class="bg-grudge-dark border border-tribe-red rounded-lg p-4 red-tribe animate-red-glow">
+                            <div class="bg-grudge-dark border border-tribe-red rounded-lg p-3 red-tribe">
                                 <h4 class="font-bold text-tribe-red">Blood For Conquest</h4>
                                 <p class="text-sm mb-2">+1 extra attack over normal</p>
                                 <p class="text-xs text-gray-400">Tribe Effect: If a Red card is on battlefield and you play another Red, it has Haste.</p>
-                                <p class="text-xs text-grudge-accent mt-2">Strategy: Swarm the board with Red cards to overwhelm enemies with fast attacks.</p>
                             </div>
-                            <div class="bg-grudge-dark border border-tribe-purple rounded-lg p-4 purple-tribe animate-purple-glow">
+                            <div class="bg-grudge-dark border border-tribe-purple rounded-lg p-3 purple-tribe">
                                 <h4 class="font-bold text-tribe-purple">Fabled</h4>
                                 <p class="text-sm mb-2">Cost one less mana than normal</p>
                                 <p class="text-xs text-gray-400">Tribe Effect: If Purple is in your hand, other Purples cost one less (stacking, min 0).</p>
-                                <p class="text-xs text-grudge-accent mt-2">Strategy: Play Purple cards early to gain tempo and set up powerful combos.</p>
                             </div>
-                            <div class="bg-grudge-dark border border-tribe-orange rounded-lg p-4 orange-tribe animate-orange-glow">
+                            <div class="bg-grudge-dark border border-tribe-orange rounded-lg p-3 orange-tribe">
                                 <h4 class="font-bold text-tribe-orange">Tribal War</h4>
                                 <p class="text-sm mb-2">Summon a 1/1 with Taunt when played</p>
                                 <p class="text-xs text-gray-400">Tribe Effect: Give all Orange cards +1 Health on summon if an Orange is on battlefield.</p>
-                                <p class="text-xs text-grudge-accent mt-2">Strategy: Build an army of minions with Orange cards to control the board.</p>
                             </div>
                         </div>
                     </div>
@@ -488,13 +412,13 @@
 
                 <!-- Games Tab -->
                 <div id="games-tab" class="tab-content hidden">
-                    <h2 class="text-2xl font-bold text-grudge-accent mb-6 animate-glow">Grudge Games</h2>
+                    <h2 class="text-2xl font-bold text-grudge-accent mb-6">Grudge Games</h2>
                     
                     <div class="mb-8">
                         <h3 class="text-xl font-semibold text-grudge-accent mb-4">Featured Games</h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <a href="https://www.grudgeplatform.com/crown" target="_blank" class="group">
-                                <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden transform transition hover:scale-105 animate-float">
+                                <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden transform transition hover:scale-105">
                                     <div class="aspect-video bg-grudge-primary"></div>
                                     <div class="p-4">
                                         <h4 class="text-lg font-bold text-grudge-accent group-hover:text-white">Crown</h4>
@@ -507,7 +431,7 @@
                                 </div>
                             </a>
                             <a href="https://www.grudgeplatform.com/battle" target="_blank" class="group">
-                                <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden transform transition hover:scale-105 animate-float">
+                                <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden transform transition hover:scale-105">
                                     <div class="aspect-video bg-grudge-primary"></div>
                                     <div class="p-4">
                                         <h4 class="text-lg font-bold text-grudge-accent group-hover:text-white">Battle</h4>
@@ -520,7 +444,7 @@
                                 </div>
                             </a>
                             <a href="https://www.grudgeplatform.com/crawl" target="_blank" class="group">
-                                <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden transform transition hover:scale-105 animate-float">
+                                <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden transform transition hover:scale-105">
                                     <div class="aspect-video bg-grudge-primary"></div>
                                     <div class="p-4">
                                         <h4 class="text-lg font-bold text-grudge-accent group-hover:text-white">Crawl</h4>
@@ -538,30 +462,30 @@
                     <div>
                         <h3 class="text-xl font-semibold text-grudge-accent mb-4">All Games</h3>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            <a href="https://www.grudgeplatform.com/crown" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary animate-float">Crown</a>
-                            <a href="https://www.grudgeplatform.com/battle" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary animate-float">Battle</a>
-                            <a href="https://www.grudgeplatform.com/crawl" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary animate-float">Crawl</a>
-                            <a href="https://www.grudgeplatform.com/star" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary animate-float">Star</a>
-                            <a href="https://www.grudgeplatform.com/nexus" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary animate-float">Nexus</a>
-                            <a href="https://www.grudgeplatform.com/actic" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary animate-float">Actic</a>
-                            <a href="https://www.grudgeplatform.com/tower" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary animate-float">Tower</a>
-                            <a href="https://www.grudgeplatform.com/school" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary animate-float">School</a>
+                            <a href="https://www.grudgeplatform.com/crown" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary">Crown</a>
+                            <a href="https://www.grudgeplatform.com/battle" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary">Battle</a>
+                            <a href="https://www.grudgeplatform.com/crawl" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary">Crawl</a>
+                            <a href="https://www.grudgeplatform.com/star" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary">Star</a>
+                            <a href="https://www.grudgeplatform.com/nexus" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary">Nexus</a>
+                            <a href="https://www.grudgeplatform.com/actic" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary">Actic</a>
+                            <a href="https://www.grudgeplatform.com/tower" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary">Tower</a>
+                            <a href="https://www.grudgeplatform.com/school" target="_blank" class="bg-grudge-dark border border-grudge-primary p-4 rounded-lg hover:bg-grudge-primary">School</a>
                         </div>
                     </div>
                 </div>
 
                 <!-- Servers Tab -->
                 <div id="servers-tab" class="tab-content hidden">
-                    <h2 class="text-2xl font-bold text-grudge-accent mb-6 animate-glow">Game Servers</h2>
+                    <h2 class="text-2xl font-bold text-grudge-accent mb-6">Game Servers</h2>
                     
                     <div class="mb-6">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-xl font-semibold text-grudge-accent">Your Servers</h3>
-                            <button id="create-server-btn" class="bg-grudge-primary hover:bg-opacity-80 px-4 py-2 rounded animate-glow">Create Server</button>
+                            <button id="create-server-btn" class="bg-grudge-primary hover:bg-opacity-80 px-4 py-2 rounded">Create Server</button>
                         </div>
                         
                         <div id="user-servers" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg p-4 animate-float">
+                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg p-4">
                                 <div class="flex justify-between items-center mb-2">
                                     <h4 class="font-bold text-grudge-accent">My Battle Arena</h4>
                                     <span class="text-xs bg-green-800 text-green-200 px-2 py-1 rounded">Online</span>
@@ -578,7 +502,7 @@
                     <div>
                         <h3 class="text-xl font-semibold text-grudge-accent mb-4">Public Servers</h3>
                         <div id="public-servers" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg p-4 animate-float">
+                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg p-4">
                                 <div class="flex justify-between items-center mb-2">
                                     <h4 class="font-bold">Official Crown Tournament</h4>
                                     <span class="text-xs bg-green-800 text-green-200 px-2 py-1 rounded">Online</span>
@@ -589,7 +513,7 @@
                                     <button class="text-sm bg-grudge-primary px-3 py-1 rounded">Join</button>
                                 </div>
                             </div>
-                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg p-4 animate-float">
+                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg p-4">
                                 <div class="flex justify-between items-center mb-2">
                                     <h4 class="font-bold">Crawl Co-op Adventure</h4>
                                     <span class="text-xs bg-green-800 text-green-200 px-2 py-1 rounded">Online</span>
@@ -606,7 +530,7 @@
 
                 <!-- Asset Library Tab -->
                 <div id="assets-tab" class="tab-content hidden">
-                    <h2 class="text-2xl font-bold text-grudge-accent mb-6 animate-glow">Game Development Asset Library</h2>
+                    <h2 class="text-2xl font-bold text-grudge-accent mb-6">Game Development Asset Library</h2>
                     
                     <div class="mb-6">
                         <div class="flex justify-between items-center mb-4">
@@ -624,7 +548,7 @@
                         </div>
                         
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden animate-float">
+                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden">
                                 <div class="aspect-square bg-grudge-primary flex items-center justify-center">
                                     <span class="text-xs">Asset Preview</span>
                                 </div>
@@ -636,7 +560,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden animate-float">
+                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden">
                                 <div class="aspect-square bg-grudge-primary flex items-center justify-center">
                                     <span class="text-xs">Asset Preview</span>
                                 </div>
@@ -648,7 +572,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden animate-float">
+                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden">
                                 <div class="aspect-square bg-grudge-primary flex items-center justify-center">
                                     <span class="text-xs">Asset Preview</span>
                                 </div>
@@ -660,7 +584,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden animate-float">
+                            <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden">
                                 <div class="aspect-square bg-grudge-primary flex items-center justify-center">
                                     <span class="text-xs">Asset Preview</span>
                                 </div>
@@ -678,7 +602,7 @@
 
                 <!-- Auction House Tab -->
                 <div id="auction-tab" class="tab-content hidden">
-                    <h2 class="text-2xl font-bold text-grudge-accent mb-6 animate-glow">Diary Auction House</h2>
+                    <h2 class="text-2xl font-bold text-grudge-accent mb-6">Diary Auction House</h2>
                     
                     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                         <div class="lg:col-span-3">
@@ -698,11 +622,11 @@
                                         <option value="price-high">Price: High to Low</option>
                                     </select>
                                 </div>
-                                <button class="bg-grudge-primary hover:bg-opacity-80 px-4 py-2 rounded animate-glow">Sell Item</button>
+                                <button class="bg-grudge-primary hover:bg-opacity-80 px-4 py-2 rounded">Sell Item</button>
                             </div>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                                <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden ethereal-signature animate-ethereal-glow">
+                                <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden">
                                     <div class="aspect-square relative bg-grudge-primary">
                                         <div class="card-image-container w-full h-full">
                                             <div class="mythril-bg animate-mythril-sparkle"></div>
@@ -738,7 +662,7 @@
                                         <div class="text-xs text-gray-400 mt-1">Ends in 12h 20m</div>
                                     </div>
                                 </div>
-                                <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden orange-tribe ethereal-signature animate-ethereal-glow">
+                                <div class="bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden orange-tribe">
                                     <div class="aspect-square relative bg-grudge-primary">
                                         <div class="card-image-container w-full h-full">
                                             <div class="mythril-bg animate-mythril-sparkle"></div>
@@ -776,9 +700,9 @@
                             <div class="mb-4">
                                 <h4 class="font-medium mb-2">Wallet Address</h4>
                                 <div class="bg-grudge-dark border border-grudge-primary rounded p-2 mb-2">
-                                    <code class="text-xs break-all" id="wallet-address">0x7F5a8c5E3a1F4b3D6D1c9B8D9a1b2c3d4e5f6g7h</code>
+                                    <code class="text-xs break-all">0x7F5a8c5E3a1F4b3D6D1c9B8D9a1b2c3d4e5f6g7h</code>
                                 </div>
-                                <button id="copy-wallet-btn" class="text-xs text-grudge-accent hover:underline">Copy Address</button>
+                                <button class="text-xs text-grudge-accent hover:underline">Copy Address</button>
                             </div>
                             <div>
                                 <h4 class="font-medium mb-2">Actions</h4>
@@ -794,7 +718,7 @@
 
                 <!-- Academy Tab -->
                 <div id="academy-tab" class="tab-content hidden">
-                    <h2 class="text-2xl font-bold text-grudge-accent mb-6 animate-glow">Grudge Academy</h2>
+                    <h2 class="text-2xl font-bold text-grudge-accent mb-6">Grudge Academy</h2>
                     
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="lg:col-span-2">
@@ -823,7 +747,7 @@
                                 <h3 class="text-xl font-semibold text-grudge-accent mb-4">Scholarship Program</h3>
                                 <p class="mb-4 text-gray-300">Grudge Studio offers educational scholarships to talented developers in India. Apply now to join our program.</p>
                                 <div class="mb-4">
-                                    <h4 class="font-medium mb-2">Requirements:</h4>
+                                    <h4 class="font-bold mb-2">Requirements:</h4>
                                     <ul class="list-disc list-inside text-sm text-gray-400 space-y-1">
                                         <li>Based in India</li>
                                         <li>Portfolio of game development projects</li>
@@ -877,7 +801,7 @@
         <div id="card-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
             <div class="bg-grudge-dark border border-grudge-primary rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto p-6">
                 <div class="flex justify-between items-start mb-4">
-                    <h2 id="modal-card-name" class="text-2xl font-bold text-grudge-accent animate-glow">Card Name</h2>
+                    <h2 id="modal-card-name" class="text-2xl font-bold text-grudge-accent">Card Name</h2>
                     <button id="close-modal-btn" class="text-gray-400 hover:text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -887,7 +811,7 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="flex justify-center">
-                        <div id="modal-card-container" class="w-64 h-80 bg-grudge-primary rounded-lg relative overflow-hidden ethereal-signature animate-ethereal-glow">
+                        <div id="modal-card-container" class="w-64 h-80 bg-grudge-primary rounded-lg relative overflow-hidden">
                             <div id="modal-card-image" class="relative w-full h-full">
                                 <div class="mythril-bg animate-mythril-sparkle"></div>
                                 <img id="modal-card-fg" class="relative w-full h-full object-contain" src="" alt="Card Image">
@@ -957,8 +881,9 @@
         <!-- Card Pack Opening Modal -->
         <div id="pack-opening-modal" class="hidden fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
             <div class="text-center">
-                <h2 class="text-2xl font-bold text-grudge-accent mb-6 animate-glow">Opening Season 0 Pack</h2>
+                <h2 class="text-2xl font-bold text-grudge-accent mb-6">Opening Season 0 Pack</h2>
                 <div id="pack-container" class="flex justify-center gap-4">
+
                     <div class="w-32 h-48 bg-grudge-primary rounded-lg cursor-pointer transform transition hover:scale-105 hover:rotate-3"></div>
                     <div class="w-32 h-48 bg-grudge-primary rounded-lg cursor-pointer transform transition hover:scale-105 hover:-rotate-3"></div>
                     <div class="w-32 h-48 bg-grudge-primary rounded-lg cursor-pointer transform transition hover:scale-105 hover:rotate-2"></div>
@@ -966,7 +891,7 @@
                     <div class="w-32 h-48 bg-grudge-primary rounded-lg cursor-pointer transform transition hover:scale-105 hover:rotate-1"></div>
                 </div>
                 <p class="mt-6 text-gray-400">Click on each card to reveal</p>
-                <button id="close-pack-btn" class="mt-4 bg-grudge-primary hover:bg-opacity-80 px-4 py-2 rounded hidden animate-glow">Done</button>
+                <button id="close-pack-btn" class="mt-4 bg-grudge-primary hover:bg-opacity-80 px-4 py-2 rounded hidden">Done</button>
             </div>
         </div>
         
@@ -974,7 +899,7 @@
         <div id="rarity-chart-container" class="rarity-chart-container">
             <div class="rarity-chart">
                 <div class="flex justify-between items-start mb-4">
-                    <h2 class="text-2xl font-bold text-grudge-accent animate-glow">Season 0 Rarity Chart</h2>
+                    <h2 class="text-2xl font-bold text-grudge-accent">Season 0 Rarity Chart</h2>
                     <button id="close-rarity-chart" class="text-gray-400 hover:text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -983,20 +908,20 @@
                 </div>
                 
                 <div class="mb-6">
-                    <h3 class="text-xl font-bold text-grudge-accent mb-3">The Story of Ethereal Signatures</h3>
+                    <h3 class="text-xl font-bold text-grudge-accent mb-3">The Story of Rare Rolls</h3>
                     <p class="text-gray-300 mb-4">
-                        In the Season 0 collection, every card you acquire is an Ethereal Signature card, a unique and powerful trait that marks it as one-of-a-kind. Only one copy of each card type across the entire game can possess this trait, with a total mint cap of 100,000 Season 0 cards.
+                        In the Season 0 collection, every card you acquire has a chance to possess special traits that enhance its value and power. These rare traits are determined by the mystical forces of the Grudge universe when cards are minted or discovered in packs.
                     </p>
                     <p class="text-gray-300 mb-4">
-                        Each Ethereal Signature card features a mythril background that sparkles with an otherworldly glow, along with a radiant green border that signifies its rarity. These cards come with enhanced gameplay effects and stunning visual animations.
+                        Each Season 0 card features the special "Season0 Rare Skin" with a mythril background that sparkles with an otherworldly glow. This special skin serves as a canvas for the rare traits that may manifest during the minting process.
                     </p>
                     <p class="text-gray-300">
-                        Every card in Season 0 also belongs to a tribe, offering unique synergies. Build your deck to maximize these tribal effects and dominate your opponents!
+                        When opening a card pack, EVERY card will belong to a tribe. Your deck building strategy should focus on maximizing tribe synergies to dominate your opponents.
                     </p>
                 </div>
                 
                 <div class="mb-6">
-                    <h3 class="text-xl font-bold text-grudge-accent mb-3">Rarity Breakdown</h3>
+                    <h3 class="text-xl font-bold text-grudge-accent mb-3">Rarity Percentages</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <h4 class="font-bold text-grudge-accent mb-2">Fortune Favor Tribes</h4>
@@ -1033,15 +958,35 @@
                         </div>
                         
                         <div>
-                            <h4 class="font-bold text-grudge-accent mb-2">Ethereal Signature</h4>
+                            <h4 class="font-bold text-grudge-accent mb-2">Special Traits</h4>
                             <div class="space-y-4">
-                                <div class="bg-grudge-dark border border-ethereal rounded p-3">
+                                <div class="bg-grudge-dark border border-grudge-primary rounded p-3">
                                     <div class="flex justify-between">
-                                        <span class="font-bold text-ethereal">Ethereal Signature</span>
-                                        <span class="text-grudge-light">Unique (1 per card type)</span>
+                                        <span class="font-bold text-yellow-400">Legendary Foil</span>
+                                        <span class="text-grudge-light">1.5%</span>
                                     </div>
-                                    <p class="text-sm text-gray-400 mt-1">Grants +1/+1 stats, cost reduction, and enhanced visuals. Only one of each card type can be an Ethereal Signature across all minted copies.</p>
-                                    <p class="text-xs text-grudge-accent mt-2">Total Mint Cap: 100,000 Season 0 cards</p>
+                                    <p class="text-sm text-gray-400 mt-1">Extremely rare golden foil effect with special animations.</p>
+                                </div>
+                                <div class="bg-grudge-dark border border-grudge-primary rounded p-3">
+                                    <div class="flex justify-between">
+                                        <span class="font-bold text-blue-400">Rare Glyph</span>
+                                        <span class="text-grudge-light">3%</span>
+                                    </div>
+                                    <p class="text-sm text-gray-400 mt-1">Special arcane symbols that enhance tribe effects.</p>
+                                </div>
+                                <div class="bg-grudge-dark border border-grudge-primary rounded p-3">
+                                    <div class="flex justify-between">
+                                        <span class="font-bold text-purple-400">Alternate Art</span>
+                                        <span class="text-grudge-light">3.5%</span>
+                                    </div>
+                                    <p class="text-sm text-gray-400 mt-1">Unique artistic variation of the standard card.</p>
+                                </div>
+                                <div class="bg-grudge-dark border border-grudge-primary rounded p-3">
+                                    <div class="flex justify-between">
+                                        <span class="font-bold text-green-400">Ethereal Signature</span>
+                                        <span class="text-grudge-light">5%</span>
+                                    </div>
+                                    <p class="text-sm text-gray-400 mt-1">Artist signature that gives minor gameplay bonuses.</p>
                                 </div>
                             </div>
                         </div>
@@ -1056,19 +1001,19 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-grudge-dark border border-grudge-primary rounded p-3">
                             <h4 class="font-bold text-grudge-accent">Iron Will + Blood For Conquest</h4>
-                            <p class="text-sm text-gray-400">Combine defensive Silver cards with aggressive Red cards for a balanced strategy. Use Silver's Taunt to protect Red attackers.</p>
+                            <p class="text-sm text-gray-400">Combine defensive Silver cards with aggressive Red cards for a balanced strategy.</p>
                         </div>
                         <div class="bg-grudge-dark border border-grudge-primary rounded p-3">
                             <h4 class="font-bold text-grudge-accent">Fabled + Tribal War</h4>
-                            <p class="text-sm text-gray-400">Use Purple's cost reduction to quickly deploy Orange cards and flood the board with minions that gain +1 Health.</p>
+                            <p class="text-sm text-gray-400">Use Purple's cost reduction to quickly deploy Orange cards and flood the board.</p>
                         </div>
                         <div class="bg-grudge-dark border border-grudge-primary rounded p-3">
                             <h4 class="font-bold text-grudge-accent">Iron Will + Tribal War</h4>
-                            <p class="text-sm text-gray-400">Create an impenetrable wall of defensive minions with Taunt abilities, bolstered by Orange's summoning effects.</p>
+                            <p class="text-sm text-gray-400">Create an impenetrable wall of defensive minions with Taunt abilities.</p>
                         </div>
                         <div class="bg-grudge-dark border border-grudge-primary rounded p-3">
                             <h4 class="font-bold text-grudge-accent">Blood For Conquest + Fabled</h4>
-                            <p class="text-sm text-gray-400">Deploy high-cost Red attackers earlier with Purple's reduced mana costs, enabling swift and powerful strikes.</p>
+                            <p class="text-sm text-gray-400">Deploy high-cost attackers earlier with reduced mana costs.</p>
                         </div>
                     </div>
                 </div>
@@ -1077,11 +1022,165 @@
     </div>
 
     <script>
-        // Initialize Parse SDK
-        Parse.initialize('gweV5ZdFH1KoB5UjbMWaL1p3ibrWwP60x3h209wN', 'tkhLbN9t0i0z31FTjYQySkrgPNgjoUWbOSQ3FWxd');
-        Parse.serverURL = 'https://parseapi.back4app.com/';
+        // Season 0 Card Data 
+        const season0Cards = [
+            { id: 'stealth-drone', name: 'Stealth Drone', type: 'minion', atk: 1, hp: 1, cost: 1, 
+              description: 'Quick scouting unit cloaked in shadow.', 
+              image: 'https://i.imgur.com/zMFckYB.png' },
+            { id: 'coward-priest', name: 'A Coward Priest', type: 'minion', atk: 1, hp: 1, cost: 1, 
+              description: 'Basic reconnaissance unit.', 
+              image: 'https://i.imgur.com/DHS25YU.jpeg' },
+            { id: 'starborn-light', name: 'Starborn Light', type: 'minion', atk: 1, hp: 1, cost: 1, 
+              description: 'Summons structures.', 
+              image: 'https://i.imgur.com/AvsiFog.png' },
+            { id: 'arcane-mystic', name: 'Arcane Mystic', type: 'minion', atk: 2, hp: 3, cost: 2, 
+              description: 'Casts arcane spells with finesse.', 
+              image: 'https://i.imgur.com/Enu1T7Y.png' },
+            { id: 'alpha-skiff', name: 'Alpha Skiff', type: 'minion', atk: 1, hp: 2, cost: 2, 
+              description: 'On play: Deal 2 damage to an enemy.', 
+              image: 'https://i.imgur.com/z1fbkXx.png' },
+            { id: 'orcish-sniper', name: 'Orcish Sniper', type: 'minion', atk: 2, hp: 1, cost: 2, 
+              description: 'Ranged attacker.', 
+              image: 'https://i.imgur.com/nlkfMpI.png' },
+            { id: 'mace-assassin', name: 'Mace Assassin', type: 'minion', atk: 4, hp: 2, cost: 3, 
+              description: 'Strikes with venomous precision.', 
+              image: 'https://i.imgur.com/3SkE6VG.png' },
+            { id: 'swarm-legion', name: 'Swarm Legion', type: 'minion', atk: 3, hp: 3, cost: 3, 
+              description: 'Overruns the enemy in numbers.', 
+              image: 'https://i.imgur.com/Wn84v6I.png' },
+            { id: 'ethereal-phantom', name: 'Ethereal Phantom', type: 'minion', atk: 2, hp: 3, cost: 3, 
+              description: 'Haunts the battlefield.', 
+              image: 'https://i.imgur.com/v0RBTiV.png' },
+            { id: 'crimson-shade', name: 'Crimson Shade', type: 'minion', atk: 2, hp: 3, cost: 3, 
+              description: 'Burns with crimson energy.', 
+              image: 'https://i.imgur.com/36iR3J8.png' },
+            { id: 'logs-much', name: 'Logs Much', type: 'minion', atk: 2, hp: 3, cost: 3, 
+              description: 'Wooden with Steel presence.', 
+              image: 'https://i.imgur.com/PFbnxct.png' },
+            { id: 'luminous-watcher', name: 'Luminous Watcher', type: 'minion', atk: 2, hp: 3, cost: 3, 
+              description: 'Heals all for 1 each turn.', 
+              image: 'https://i.imgur.com/eg8FESL.png' },
+            { id: 'patrol-frigate', name: 'Patrol Frigate', type: 'minion', atk: 2, hp: 3, cost: 3, 
+              description: 'Standard patrol vessel.', 
+              image: 'https://i.imgur.com/nJMY8NA.png' },
+            { id: 'battle-commander', name: 'Battle Commander', type: 'minion', atk: 2, hp: 4, cost: 3, 
+              description: 'Leads the charge.', 
+              image: 'https://i.imgur.com/ABsno64.png' },
+            { id: 'night-wraith', name: 'Night Wraith', type: 'minion', atk: 4, hp: 3, cost: 4, 
+              description: 'Strikes from the shadows.', 
+              image: 'https://i.imgur.com/PSpj7sO.png' },
+            { id: 'night-lord', name: 'Night Lord', type: 'minion', atk: 4, hp: 3, cost: 4, 
+              description: 'Roams from the shadows.', 
+              image: 'https://i.imgur.com/qpsLIcS.png' },
+            { id: 'crimson-revenant', name: 'Crimson Revenant', type: 'minion', atk: 4, hp: 3, cost: 4, 
+              description: 'Strikes with fiery intent.', 
+              image: 'https://i.imgur.com/8YIqCl5.png' },
+            { id: 'emerald-stalker', name: 'Emerald Stalker', type: 'minion', atk: 4, hp: 3, cost: 4, 
+              description: 'Strikes with emerald fury.', 
+              image: 'https://i.imgur.com/5t6kGOi.jpeg' },
+            { id: 'storm-cavalier', name: 'Storm Cavalier', type: 'minion', atk: 4, hp: 4, cost: 4, 
+              description: 'Rides the storm into battle.', 
+              image: 'https://i.imgur.com/nBUKWdy.png' },
+            { id: 'flame-charger', name: 'Flame Charger', type: 'minion', atk: 4, hp: 4, cost: 4, 
+              description: 'Charges with fiery speed.', 
+              image: 'https://i.imgur.com/cep6ytB.png' },
+            { id: 'ra-cal-vin', name: 'Ra Cal Vin', type: 'minion', atk: 4, hp: 4, cost: 4, 
+              description: 'Glides with icy Language.', 
+              image: 'https://i.imgur.com/XbSuPyC.png' },
+            { id: 'beta-cruiser', name: 'Beta Cruiser', type: 'minion', atk: 3, hp: 3, cost: 4, 
+              description: 'On play: Deal 5 damage to an enemy.', 
+              image: 'https://i.imgur.com/JuxTEX9.png' },
+            { id: 'enigmatic-warrior', name: 'Enigmatic Warrior', type: 'minion', atk: 3, hp: 3, cost: 4, 
+              description: 'Mysterious combatant.', 
+              image: 'https://i.imgur.com/JwcxWth.png' },
+            { id: 'barrier-sentinel', name: 'Barrier Sentinel', type: 'minion', atk: 0, hp: 7, cost: 5, 
+              description: 'Unyielding defense with Taunt.', 
+              image: 'https://i.imgur.com/klAa6aX.png' },
+            { id: 'void-sorcerer', name: 'Void Sorcerer', type: 'minion', atk: 3, hp: 4, cost: 5, 
+              description: 'Casts protective dark magic.', 
+              image: 'https://i.imgur.com/2XhqS6d.png' },
+            { id: 'light-mage', name: 'Light Mage', type: 'minion', atk: 3, hp: 4, cost: 5, 
+              description: 'Shields with radiant magic.', 
+              image: 'https://i.imgur.com/cMLK4Oq.png' },
+            { id: 'spectral-warrior', name: 'Spectral Warrior', type: 'minion', atk: 5, hp: 4, cost: 5, 
+              description: 'Fights with ghostly strength.', 
+              image: 'https://i.imgur.com/n2b1ugT.png' },
+            { id: 'radiant-paladin', name: 'Radiant Paladin', type: 'minion', atk: 5, hp: 4, cost: 5, 
+              description: 'Shines with radiant power.', 
+              image: 'https://i.imgur.com/TalRqz3.png' },
+            { id: 'vitality-totem', name: 'Vitality Totem', type: 'minion', atk: 3, hp: 5, cost: 5, 
+              description: 'Heals all for 2 each turn.', 
+              image: 'https://i.imgur.com/SAL2oQY.png' },
+            { id: 'ironclad-titan', name: 'Ironclad Titan', type: 'minion', atk: 4, hp: 4, cost: 5, 
+              description: 'Heavy armored enforcer.', 
+              image: 'https://i.imgur.com/yUzjTDm.png' },
+            { id: 'overlord-mind', name: 'Overlord Mind', type: 'minion', atk: 4, hp: 4, cost: 5, 
+              description: 'Taunt.', 
+              image: 'https://i.imgur.com/LspYMpz.png' },
+            { id: 'celestial-warden', name: 'Celestial Warden', type: 'minion', atk: 5, hp: 5, cost: 6, 
+              description: 'Heals all for 1 each turn.', 
+              image: 'https://i.imgur.com/6CXJn5s.png' },
+            { id: 'abyssal-keeper', name: 'Abyssal Keeper', type: 'minion', atk: 5, hp: 5, cost: 6, 
+              description: 'Heals all with dark energy.', 
+              image: 'https://i.imgur.com/3b2RmGQ.png' },
+            { id: 'thundering-yordy', name: 'Thundering Yordy', type: 'minion', atk: 5, hp: 5, cost: 6, 
+              description: 'Bats with thunderous force.', 
+              image: 'https://i.imgur.com/UvZsOLQ.png' },
+            { id: 'flame-dragon', name: 'Flame Dragon', type: 'minion', atk: 5, hp: 5, cost: 6, 
+              description: 'Burns with fiery wrath.', 
+              image: 'https://i.imgur.com/BocWQdv.png' },
+            { id: 'star-traveler', name: 'Star Traveler', type: 'minion', atk: 5, hp: 5, cost: 6, 
+              description: 'Strikes with void energy.', 
+              image: 'https://i.imgur.com/I3o9UZS.png' },
+            { id: 'omega-dreadnought', name: 'Omega Dreadnought', type: 'minion', atk: 4, hp: 5, cost: 6, 
+              description: 'On play: Give all allies +1 attack.', 
+              image: 'https://i.imgur.com/Phx6yjU.png' },
+            { id: 'valor-knight', name: 'Valor Knight', type: 'minion', atk: 5, hp: 4, cost: 6, 
+              description: 'Elite fighter.', 
+              image: 'https://i.imgur.com/LjBBzdn.png' },
+            { id: 'quantum-behemoth', name: 'Quantum Behemoth', type: 'minion', atk: 6, hp: 4, cost: 7, 
+              description: 'Devastating energy-infused giant.', 
+              image: 'https://i.imgur.com/Y67jKrU.png' },
+            { id: 'abyssal-monolith', name: 'Abyssal Monolith', type: 'minion', atk: 6, hp: 6, cost: 7, 
+              description: 'Dominates with abyssal might.', 
+              image: 'https://i.imgur.com/1VehWYG.png' },
+            { id: 'celestial-serph', name: 'Celestial Serph', type: 'minion', atk: 6, hp: 6, cost: 7, 
+              description: 'Protects with celestial power.', 
+              image: 'https://i.imgur.com/GvWB71v.png' },
+            { id: 'dragon-king', name: 'Dragon King', type: 'minion', atk: 5, hp: 5, cost: 7, 
+              description: 'Powerful undead leader.', 
+              image: 'https://i.imgur.com/uaeSik8.png' },
+            { id: 'stoned-ape', name: 'Stoned Ape', type: 'minion', atk: 8, hp: 8, cost: 8, 
+              description: 'Unstoppable celestial force.', 
+              image: 'https://i.imgur.com/iWv48Xl.png' },
+            { id: 'overcharged-titan', name: 'Overcharged Titan', type: 'minion', atk: 7, hp: 6, cost: 8, 
+              description: 'Overwhelming power surge incarnate.', 
+              image: 'https://i.imgur.com/s0cMpSi.png' },
+            { id: 'gwa-hero', name: 'GwA Hero', type: 'minion', atk: 8, hp: 8, cost: 8, 
+              description: 'Unstoppable Beastial force.', 
+              image: 'https://i.imgur.com/wFYPeDJ.png' },
+            { id: 'abyssal-leviathan', name: 'Abyssal Leviathan', type: 'minion', atk: 7, hp: 9, cost: 8, 
+              description: 'Crushes foes with abyssal might.', 
+              image: 'https://i.imgur.com/SbU1dfG.png' }
+        ];
 
-        // Tribe Data
+        // Additional spells
+        const spellCards = [
+            { id: 'arcane-missile', name: 'Arcane Missile', type: 'spell', cost: 1, 
+              description: 'Deal 3 damage to a random enemy.', 
+              image: 'https://i.imgur.com/jQbF07m.png' },
+            { id: 'shadow-strike', name: 'Shadow Strike', type: 'spell', cost: 2, 
+              description: 'Deal 4 damage to a target enemy.', 
+              image: 'https://i.imgur.com/oPFVuMN.png' },
+            { id: 'healing-wave', name: 'Healing Wave', type: 'spell', cost: 3, 
+              description: 'Restore 6 health to a friendly character.', 
+              image: 'https://i.imgur.com/PgLXUx8.png' },
+            { id: 'mind-control', name: 'Mind Control', type: 'spell', cost: 8, 
+              description: 'Take control of an enemy minion.', 
+              image: 'https://i.imgur.com/dC1AKPu.png' }
+        ];
+
+        // Tribe data with their effects
         const tribeData = {
             silver: {
                 name: 'Iron Will',
@@ -1090,7 +1189,7 @@
                 statBonus: { hp: 1 },
                 description: '+1 extra health over normal',
                 effect: 'If there is a Silver card on the field, gain Taunt on summon.',
-                gameplayText: 'Iron Will: Gain +1 health. If another Silver card is on the field, gain Taunt when summoned.'
+                gameplayText: 'Iron Will: Gain +1 health. If there is another Silver card on the field, gain Taunt when summoned.'
             },
             red: {
                 name: 'Blood For Conquest',
@@ -1121,41 +1220,63 @@
             }
         };
 
-        // Combine Cards (loaded from Back4app)
-        let allCards = [];
+        // Special traits data
+        const specialTraitData = {
+            legendaryFoil: {
+                name: 'Legendary Foil',
+                color: 'text-yellow-400',
+                rarity: 1.5,
+                description: 'Extremely rare golden foil effect with special animations.',
+                cssClass: 'legendary-foil'
+            },
+            rareGlyph: {
+                name: 'Rare Glyph',
+                color: 'text-blue-400',
+                rarity: 3,
+                description: 'Special arcane symbols that enhance tribe effects.',
+                cssClass: 'rare-glyph'
+            },
+            alternateArt: {
+                name: 'Alternate Art',
+                color: 'text-purple-400',
+                rarity: 3.5,
+                description: 'Unique artistic variation of the standard card.',
+                cssClass: 'alternate-art'
+            },
+            etherealSignature: {
+                name: 'Ethereal Signature',
+                color: 'text-green-400',
+                rarity: 5,
+                description: 'Artist signature that gives minor gameplay bonuses.',
+                cssClass: 'ethereal-signature'
+            }
+        };
 
-        // User Collection
+        // Combine all cards
+        const allCards = [...season0Cards, ...spellCards];
+
+        // User collection (cards the user owns)
         let userCollection = [];
-
-        // Load Cards from Back4app
-        async function loadCardsFromBack4app() {
-            const Cards = Parse.Object.extend('Cards');
-            const query = new Parse.Query(Cards);
-            const results = await query.find();
-            return results.map(card => ({
-                id: card.get('cardId'),
-                name: card.get('name'),
-                type: card.get('type'),
-                atk: card.get('atk'),
-                hp: card.get('hp'),
-                cost: card.get('cost'),
-                description: card.get('description'),
-                image: card.get('image'),
-                tribe: card.get('tribe'),
-                specialTrait: card.get('specialTrait') || 'etherealSignature'
-            }));
-        }
 
         // Tab Navigation
         document.querySelectorAll('.tab-btn').forEach(button => {
             button.addEventListener('click', () => {
-                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+                // Hide all tab content
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.add('hidden');
+                });
+                
+                // Remove active class from all buttons
                 document.querySelectorAll('.tab-btn').forEach(btn => {
                     btn.classList.remove('border-grudge-accent');
                     btn.classList.add('border-transparent');
                 });
+                
+                // Show the selected tab content
                 const tabId = button.getAttribute('data-tab');
                 document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+                
+                // Add active class to clicked button
                 button.classList.remove('border-transparent');
                 button.classList.add('border-grudge-accent');
             });
@@ -1173,16 +1294,25 @@
         // Card Detail Modal
         function openCardDetail(card) {
             const modal = document.getElementById('card-detail-modal');
+            
+            // Set modal content
             document.getElementById('modal-card-name').textContent = card.name;
+            
+            // Set foreground image
             const fgImage = document.getElementById('modal-card-fg');
             fgImage.src = card.image;
+            
+            // Show/hide Season0 stamp
             document.getElementById('modal-season0-stamp').classList.remove('hidden');
+            
+            // Set stats
             document.getElementById('modal-card-atk').textContent = card.atk !== undefined ? card.atk : 'N/A';
             document.getElementById('modal-card-hp').textContent = card.hp !== undefined ? card.hp : 'N/A';
             document.getElementById('modal-card-cost').textContent = card.cost;
             document.getElementById('modal-card-type').textContent = card.type;
             document.getElementById('modal-card-desc').textContent = card.description;
-
+            
+            // Tribe section
             if (card.tribe) {
                 document.getElementById('modal-tribe-section').classList.remove('hidden');
                 document.getElementById('modal-tribe-name').textContent = tribeData[card.tribe].name;
@@ -1192,13 +1322,15 @@
             } else {
                 document.getElementById('modal-tribe-section').classList.add('hidden');
             }
-
+            
+            // Apply tribe styling to container if card has a tribe
             const cardContainer = document.getElementById('modal-card-container');
-            cardContainer.className = 'w-64 h-80 bg-grudge-primary rounded-lg relative overflow-hidden ethereal-signature animate-ethereal-glow';
+            cardContainer.className = 'w-64 h-80 bg-grudge-primary rounded-lg relative overflow-hidden';
             if (card.tribe) {
                 cardContainer.classList.add(tribeData[card.tribe].cssClass);
             }
-
+            
+            // Show modal
             modal.classList.remove('hidden');
         }
 
@@ -1206,176 +1338,194 @@
             document.getElementById('card-detail-modal').classList.add('hidden');
         });
 
-        // Load Cards
-        function loadCards(filter = 'all', searchTerm = '') {
+        // Initialize card grid
+        function loadCards(filter = 'all') {
             const container = document.getElementById('card-container');
             container.innerHTML = '';
+            
             let filteredCards;
-
-            switch (filter) {
-                case 'minions': filteredCards = allCards.filter(card => card.type === 'minion'); break;
-                case 'spells': filteredCards = allCards.filter(card => card.type === 'spell'); break;
-                case 'ships': filteredCards = allCards.filter(card => card.type === 'ship'); break;
-                case 'uniques': filteredCards = allCards.filter(card => card.type === 'unique'); break;
-                case 'silver': filteredCards = allCards.filter(card => card.tribe === 'silver'); break;
-                case 'red': filteredCards = allCards.filter(card => card.tribe === 'red'); break;
-                case 'purple': filteredCards = allCards.filter(card => card.tribe === 'purple'); break;
-                case 'orange': filteredCards = allCards.filter(card => card.tribe === 'orange'); break;
-                case 'owned': filteredCards = userCollection; break;
-                default: filteredCards = allCards;
+            
+            switch(filter) {
+                case 'minions':
+                    filteredCards = allCards.filter(card => card.type === 'minion');
+                    break;
+                case 'spells':
+                    filteredCards = allCards.filter(card => card.type === 'spell');
+                    break;
+                case 'silver':
+                    filteredCards = allCards.filter(card => card.tribe === 'silver');
+                    break;
+                case 'red':
+                    filteredCards = allCards.filter(card => card.tribe === 'red');
+                    break;
+                case 'purple':
+                    filteredCards = allCards.filter(card => card.tribe === 'purple');
+                    break;
+                case 'orange':
+                    filteredCards = allCards.filter(card => card.tribe === 'orange');
+                    break;
+                case 'owned':
+                    filteredCards = userCollection;
+                    break;
+                default:
+                    filteredCards = allCards;
             }
-
-            if (searchTerm) {
-                filteredCards = filteredCards.filter(card => 
-                    card.name.toLowerCase().includes(searchTerm) || 
-                    card.description.toLowerCase().includes(searchTerm)
-                );
-            }
-
+            
             filteredCards.forEach(card => {
                 const cardElement = document.createElement('div');
-                let cardClass = 'bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden cursor-pointer transform transition hover:scale-105 ethereal-signature animate-ethereal-glow';
+                
+                // Base card class
+                let cardClass = 'bg-grudge-dark border border-grudge-primary rounded-lg overflow-hidden cursor-pointer transform transition hover:scale-105';
+                
+                // Add tribe-specific class if applicable
                 if (card.tribe) {
                     cardClass += ` ${tribeData[card.tribe].cssClass}`;
                 }
+                
                 cardElement.className = cardClass;
-
+                
+                // Special style for cost if it's a reduced cost Purple tribe card
                 const costClass = card.tribe === 'purple' ? 'purple-mana' : 'bg-grudge-primary';
+                
+                // Create HTML content with mythril background
                 cardElement.innerHTML = `
                     <div class="relative">
                         <div class="card-image-container aspect-[3/4]">
                             <div class="mythril-bg animate-mythril-sparkle"></div>
                             <img src="${card.image}" alt="${card.name}" class="card-foreground">
                             <img src="https://i.imgur.com/SRoq392.png" alt="Season0 Stamp" class="season0-stamp">
-                            <div class="absolute bottom-1 right-1 text-xs font-bold text-white bg-grudge-primary bg-opacity-70 px-1 rounded">Ethereal Signature</div>
+                            <div class="absolute bottom-1 right-1 text-xs font-bold text-white bg-grudge-primary bg-opacity-70 px-1 rounded">Season0 Rare Skin</div>
                         </div>
                         <div class="absolute top-0 left-0 ${costClass} w-8 h-8 flex items-center justify-center font-bold rounded-br-lg">${card.cost}</div>
                     </div>
                     <div class="p-3">
-                        <h3 class="font-bold mb-1 truncate">${card.name} ${card.tribe ? `<span class="text-xs ${tribeData[card.tribe].color} tribe-tooltip">(${tribeData[card.tribe].name})</span>` : ''}</h3>
+                        <h3 class="font-bold mb-1">${card.name} ${card.tribe ? `<span class="text-xs ${tribeData[card.tribe].color}">(${tribeData[card.tribe].name})</span>` : ''}</h3>
                         <div class="flex justify-between text-sm">
                             <span>${card.type}</span>
-                            ${card.type !== 'spell' ? `<span>${card.atk}/${card.hp}</span>` : ''}
+                            ${card.type === 'minion' ? `<span>${card.atk}/${card.hp}</span>` : ''}
                         </div>
                     </div>
                 `;
-
-                const tribeTooltip = cardElement.querySelector('.tribe-tooltip');
-                if (tribeTooltip) {
-                    tribeTooltip.addEventListener('mouseenter', (e) => {
-                        const tooltip = document.createElement('div');
-                        tooltip.className = 'tooltip';
-                        tooltip.innerText = tribeData[card.tribe].gameplayText;
-                        document.body.appendChild(tooltip);
-                        const rect = tribeTooltip.getBoundingClientRect();
-                        tooltip.style.left = `${rect.left + window.scrollX}px`;
-                        tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
-                        tooltip.style.opacity = '1';
-                    });
-                    tribeTooltip.addEventListener('mouseleave', () => {
-                        const tooltip = document.querySelector('.tooltip');
-                        if (tooltip) {
-                            tooltip.remove();
-                        }
-                    });
-                }
-
+                
                 cardElement.addEventListener('click', () => openCardDetail(card));
                 container.appendChild(cardElement);
             });
-
-            if (filteredCards.length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400">No cards match your criteria.</div>';
-            }
         }
 
-        // Filter and Search
-        document.getElementById('card-filter').addEventListener('change', function() {
-            const searchTerm = document.getElementById('card-search').value.toLowerCase();
-            loadCards(this.value, searchTerm);
-        });
+        // Assign a tribe to a card and apply stat bonuses
+        function assignTribe(card) {
+            // Random tribe selection
+            const tribes = Object.keys(tribeData);
+            const tribe = tribes[Math.floor(Math.random() * tribes.length)];
+            
+            // Clone card to avoid modifying original
+            const tribedCard = {...card};
+            tribedCard.tribe = tribe;
+            
+            // Apply stat bonuses based on tribe
+            if (tribe === 'silver' && tribedCard.hp !== undefined) {
+                tribedCard.hp += tribeData.silver.statBonus.hp;
+                tribedCard.description += ` Iron Will: +1 Health.`;
+            } 
+            else if (tribe === 'red' && tribedCard.atk !== undefined) {
+                tribedCard.atk += tribeData.red.statBonus.atk;
+                tribedCard.description += ` Blood For Conquest: +1 Attack.`;
+            } 
+            else if (tribe === 'purple') {
+                tribedCard.originalCost = tribedCard.cost;
+                tribedCard.cost = Math.max(0, tribedCard.cost + tribeData.purple.statBonus.cost);
+                tribedCard.description += ` Fabled: Costs 1 less.`;
+            } 
+            else if (tribe === 'orange') {
+                tribedCard.description += ` Tribal War: Summons a 1/1.`;
+            }
+            
+            return tribedCard;
+        }
 
-        document.getElementById('card-search').addEventListener('input', function() {
-            const filterValue = document.getElementById('card-filter').value;
-            loadCards(filterValue, this.value.toLowerCase());
-        });
+        // Assign a special trait to a card (rarely)
+        function assignSpecialTrait(card) {
+            const roll = Math.random() * 100;
+            let cumulative = 0;
+            
+            // Clone card to avoid modifying original
+            const traitedCard = {...card};
+            
+            for (const traitKey in specialTraitData) {
+                const trait = specialTraitData[traitKey];
+                cumulative += trait.rarity;
+                
+                if (roll <= cumulative) {
+                    traitedCard.specialTrait = traitKey;
+                    traitedCard.description += ` [${trait.name}]`;
+                    return traitedCard;
+                }
+            }
+            
+            return traitedCard;
+        }
 
         // Card Pack Opening
-        document.getElementById('open-pack-btn').addEventListener('click', async () => {
+        document.getElementById('open-pack-btn').addEventListener('click', () => {
+            // Only allow if logged in
             if (!document.getElementById('post-login').classList.contains('hidden')) {
-                const MintTracker = Parse.Object.extend('Season0MintTracker');
-                const query = new Parse.Query(MintTracker);
-                const tracker = await query.first();
-                const totalMinted = tracker.get('totalMinted');
-                const seasonClosed = tracker.get('seasonClosed');
-
-                if (seasonClosed || totalMinted >= 100000) {
-                    alert('Season 0 is closed. No more cards can be minted.');
-                    return;
-                }
                 openCardPack();
             } else {
                 alert('Please login to open card packs');
             }
         });
 
-        async function openCardPack() {
+        function openCardPack() {
             const packModal = document.getElementById('pack-opening-modal');
             const packCards = document.querySelectorAll('#pack-container > div');
             const closeBtn = document.getElementById('close-pack-btn');
             let revealedCount = 0;
-
+            
+            // Reset pack
             packCards.forEach(card => {
                 card.innerHTML = '';
                 card.className = 'w-32 h-48 bg-grudge-primary rounded-lg cursor-pointer transform transition hover:scale-105';
             });
+            
             closeBtn.classList.add('hidden');
+            
+            // Show pack opening modal
             packModal.classList.remove('hidden');
-
+            
+            // Generate 5 random cards for the pack with Fortune Favor tribes
             const packCardData = [];
-            const username = document.getElementById('username-display').textContent || "GrudgePlayer";
-
             for (let i = 0; i < 5; i++) {
-                const randomIndex = Math.floor(Math.random() * allCards.length);
-                const card = allCards[randomIndex];
-                try {
-                    const response = await Parse.Cloud.run('mintSeason0Card', { cardId: card.id, username });
-                    if (response.success) {
-                        const tribes = Object.keys(tribeData);
-                        const tribe = tribes[Math.floor(Math.random() * tribes.length)];
-                        let tribedCard = { ...card, tribe };
-                        if (tribe === 'silver' && tribedCard.atk !== undefined) {
-                            tribedCard.hp += tribeData.silver.statBonus.hp;
-                            tribedCard.description += ` Iron Will: +1 Health.`;
-                        } else if (tribe === 'red' && tribedCard.atk !== undefined) {
-                            tribedCard.atk += tribeData.red.statBonus.atk;
-                            tribedCard.description += ` Blood For Conquest: +1 Attack.`;
-                        } else if (tribe === 'purple') {
-                            tribedCard.originalCost = tribedCard.cost;
-                            tribedCard.cost = Math.max(0, tribedCard.cost + tribeData.purple.statBonus.cost);
-                            tribedCard.description += ` Fabled: Costs 1 less.`;
-                        } else if (tribe === 'orange') {
-                            tribedCard.description += ` Tribal War: Summons a 1/1.`;
-                        }
-                        tribedCard.specialTrait = response.hasEtherealSignature ? 'etherealSignature' : 'etherealSignature';
-                        packCardData.push(tribedCard);
-                    }
-                } catch (error) {
-                    alert('Error minting card: ' + error.message);
-                    return;
-                }
+                // 80% chance for a minion, 20% for a spell
+                const cardPool = Math.random() < 0.8 ? season0Cards : spellCards;
+                let card = {...cardPool[Math.floor(Math.random() * cardPool.length)]};
+                
+                // All cards in Season0 packs get a tribe (Fortune Favor)
+                card = assignTribe(card);
+                
+                // Small chance for special traits
+                card = assignSpecialTrait(card);
+                
+                packCardData.push(card);
             }
-
+            
+            // Add click events to reveal cards
             packCards.forEach((cardElement, index) => {
                 cardElement.addEventListener('click', function revealCard() {
                     const card = packCardData[index];
+                    
+                    // Only if not already revealed
                     if (this.classList.contains('bg-grudge-primary')) {
+                        // Remove the background
                         this.classList.remove('bg-grudge-primary');
-                        this.classList.add('ethereal-signature', 'animate-flip');
+                        
+                        // If it has a tribe, add the tribe class
                         if (card.tribe) {
                             this.classList.add(tribeData[card.tribe].cssClass);
                         }
+                        
+                        // Add card content
                         const costClass = card.tribe === 'purple' ? 'purple-mana' : 'bg-grudge-primary';
+                        
                         this.innerHTML = `
                             <div class="relative h-full">
                                 <div class="card-image-container w-full h-full">
@@ -1390,11 +1540,19 @@
                                 </div>
                             </div>
                         `;
+                        
+                        // Add to user collection
                         userCollection.push(card);
+                        
+                        // Count revealed cards
                         revealedCount++;
+                        
+                        // If all cards revealed, show the close button
                         if (revealedCount === 5) {
                             closeBtn.classList.remove('hidden');
                         }
+                        
+                        // Remove event listener to prevent multiple reveals
                         this.removeEventListener('click', revealCard);
                     }
                 });
@@ -1403,47 +1561,42 @@
 
         document.getElementById('close-pack-btn').addEventListener('click', () => {
             document.getElementById('pack-opening-modal').classList.add('hidden');
-            const filterValue = document.getElementById('card-filter').value;
-            const searchTerm = document.getElementById('card-search').value.toLowerCase();
-            loadCards(filterValue, searchTerm);
+            
+            // Refresh the card grid to show new cards in collection
+            if (document.getElementById('card-filter').value === 'owned') {
+                loadCards('owned');
+            }
+        });
+
+        // Filter cards
+        document.getElementById('card-filter').addEventListener('change', function() {
+            loadCards(this.value);
         });
 
         // Discord Login Simulation
         document.getElementById('discord-login-btn').addEventListener('click', () => {
+            // In a real app, this would redirect to Discord OAuth
+            // For demo, we'll just simulate a successful login
             simulateLogin();
         });
 
-        async function simulateLogin() {
+        function simulateLogin() {
             const username = "GrudgePlayer";
+            
+            // Update UI
             document.getElementById('pre-login').classList.add('hidden');
             document.getElementById('post-login').classList.remove('hidden');
             document.getElementById('username-display').textContent = username;
             document.getElementById('avatar-initial').textContent = username[0];
-
+            
+            // Generate wallet if first login (would be handled by your backend)
             if (!localStorage.getItem('grudgeWallet')) {
                 const walletAddress = '0x' + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('');
                 localStorage.setItem('grudgeWallet', walletAddress);
             }
-            document.getElementById('wallet-address').textContent = localStorage.getItem('grudgeWallet');
-
-            await addStarterCards();
-
-            const UserCards = Parse.Object.extend('UserCards');
-            const query = new Parse.Query(UserCards);
-            query.equalTo('username', username);
-            const results = await query.find();
-            userCollection = results.map(card => ({
-                id: card.get('cardId'),
-                name: card.get('name'),
-                type: card.get('type'),
-                atk: card.get('atk'),
-                hp: card.get('hp'),
-                cost: card.get('cost'),
-                description: card.get('description'),
-                image: card.get('image'),
-                tribe: card.get('tribe'),
-                specialTrait: card.get('specialTrait') || 'etherealSignature'
-            }));
+            
+            // Add some initial cards to collection
+            addStarterCards();
         }
 
         // Logout
@@ -1451,75 +1604,44 @@
             document.getElementById('pre-login').classList.remove('hidden');
             document.getElementById('post-login').classList.add('hidden');
             userCollection = [];
-            const filterValue = document.getElementById('card-filter').value;
-            const searchTerm = document.getElementById('card-search').value.toLowerCase();
-            loadCards(filterValue, searchTerm);
         });
 
-        // Add Starter Cards
-        async function addStarterCards() {
+        // Add starter cards to collection
+        function addStarterCards() {
+            // Reset collection
             userCollection = [];
-            const starterCardIds = ['001', '004', '034', '038', '021'];
-            const username = "GrudgePlayer";
-            const UserCards = Parse.Object.extend('UserCards');
-
-            for (const id of starterCardIds) {
+            
+            // Add some basic cards with assigned tribes
+            const starterCardIds = ['stealth-drone', 'coward-priest', 'starborn-light', 'arcane-mystic', 'orcish-sniper'];
+            starterCardIds.forEach(id => {
                 const card = allCards.find(c => c.id === id);
                 if (card) {
-                    try {
-                        const response = await Parse.Cloud.run('mintSeason0Card', { cardId: id, username });
-                        if (response.success) {
-                            const tribes = Object.keys(tribeData);
-                            const tribe = tribes[Math.floor(Math.random() * tribes.length)];
-                            let tribedCard = { ...card, tribe };
-                            if (tribe === 'silver' && tribedCard.atk !== undefined) {
-                                tribedCard.hp += tribeData.silver.statBonus.hp;
-                                tribedCard.description += ` Iron Will: +1 Health.`;
-                            } else if (tribe === 'red' && tribedCard.atk !== undefined) {
-                                tribedCard.atk += tribeData.red.statBonus.atk;
-                                tribedCard.description += ` Blood For Conquest: +1 Attack.`;
-                            } else if (tribe === 'purple') {
-                                tribedCard.originalCost = tribedCard.cost;
-                                tribedCard.cost = Math.max(0, tribedCard.cost + tribeData.purple.statBonus.cost);
-                                tribedCard.description += ` Fabled: Costs 1 less.`;
-                            } else if (tribe === 'orange') {
-                                tribedCard.description += ` Tribal War: Summons a 1/1.`;
-                            }
-                            tribedCard.specialTrait = response.hasEtherealSignature ? 'etherealSignature' : 'etherealSignature';
-                            userCollection.push(tribedCard);
-                            const userCard = new UserCards();
-                            userCard.set('username', username);
-                            userCard.set('cardId', id);
-                            userCard.set('name', tribedCard.name);
-                            userCard.set('type', tribedCard.type);
-                            userCard.set('atk', tribedCard.atk);
-                            userCard.set('hp', tribedCard.hp);
-                            userCard.set('cost', tribedCard.cost);
-                            userCard.set('description', tribedCard.description);
-                            userCard.set('image', tribedCard.image);
-                            userCard.set('tribe', tribedCard.tribe);
-                            userCard.set('specialTrait', tribedCard.specialTrait);
-                            await userCard.save();
-                        }
-                    } catch (error) {
-                        console.error('Error minting starter card:', error);
-                    }
+                    // Assign a random tribe to each starter card
+                    const tribedCard = assignTribe({...card});
+                    userCollection.push(tribedCard);
                 }
-            }
+            });
         }
 
-        // Copy Wallet Address
-        document.getElementById('copy-wallet-btn').addEventListener('click', () => {
-            const walletAddress = document.getElementById('wallet-address').textContent;
-            navigator.clipboard.writeText(walletAddress).then(() => {
-                alert('Wallet address copied to clipboard!');
-            });
-        });
-
         // Initialize
-        window.onload = async function() {
-            allCards = await loadCardsFromBack4app();
+        window.onload = function() {
+            // Pre-assign some tribes to demo cards for display
+            let demoTribedCards = [];
+            allCards.forEach((card, index) => {
+                if (index % 4 === 0) {
+                    demoTribedCards.push(assignTribe({...card}));
+                } else {
+                    demoTribedCards.push({...card});
+                }
+            });
+            
+            // Replace allCards with the mix of normal and tribe cards
+            allCards.length = 0;
+            demoTribedCards.forEach(card => allCards.push(card));
+            
             loadCards();
+            
+            // Check if user was previously logged in
             if (localStorage.getItem('grudgeWallet')) {
                 simulateLogin();
             }
