@@ -51,6 +51,9 @@ ENV NODE_ENV=production
 # DISCORD_GBUX_WEBHOOK_URL: Discord webhook for GBuX events
 # SEPOLIA_RPC_URL: Sepolia testnet RPC URL
 # GRUDA_CONTRACT_ADDRESS: Deployed GRUDA contract address
+# PARSE_MASTER_KEY: Back4App master key
+# PARSE_REST_KEY: Back4App REST key
+# PARSE_DOTNET_KEY: Back4App .NET key
 # PORT: Server port (default: 3000)
 
 # Expose port for Express server

@@ -8,15 +8,16 @@
     "build": "grunt"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.15.9",
     "axios": "^1.8.4",
     "dotenv": "^16.0.0",
-    "parse": "^6.1.1",
-    "@react-native-async-storage/async-storage": "^1.15.9"
+    "parse": "^6.1.1"
   },
   "devDependencies": {
     "grunt": "^1.5.3",
     "grunt-cli": "^1.4.3",
-    "grunt-contrib-uglify": "^5.2.2",
-    "grunt-contrib-cssmin": "^4.0.0"
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "^4.0.0",
+    "grunt-contrib-uglify": "^5.2.2"
   }
 }
