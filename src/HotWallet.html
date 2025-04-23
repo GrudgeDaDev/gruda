@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grudge Codex Hot Wallet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap');
+
+        :root {
+            --primary: #16a34a; /* Green for GRUDA */
+            --primary-dark: #15803d;
+            --secondary: #4ade80;
+            --light: #ffffff;
+            --card-bg: #f0fdf4;
+            --card-highlight: #dcfce7;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --gruda-color: #16a34a;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--light);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .wallet-header {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .balance-card, .asset-card, .transaction-table {
+            background: var(--light);
+            border: 3px solid var(--primary);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.1);
+        }
+
+        .asset-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(22, 163, 74, 0.2);
+        }
+
+        .gruda-icon {
+            background: rgba(22, 163, 74, 0.15);
+            border-radius: 12px;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #16a34a;
+        }
+
+        .input-field {
+            background: #f1f5f9;
+            border: 2px solid var(--primary);
+            padding: 0.75rem;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: var(--light);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .proprietary-notice {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="proprietary-notice">
+        Grudge Codex Hot Wallet • Sepolia Testnet • Powered by JZ Nation
+    </div>
+
+    <div class="p-4 md:p-8 max-w-6xl mx-auto">
+        <!-- Login Section -->
+        <div id="login-section" class="mb-8">
+            <h1 class="wallet-header text-4xl font-bold mb-4">Grudge Codex Login</h1>
+            <form id="login-form" class="balance-card p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="text-slate-500 text-sm mb-1">Username</label>
+                        <input id="username" type="text" class="input-field" placeholder="Enter username" required />
+                    </div>
+                    <div>
+                        <label class="text-slate-500 text-sm mb-1">Password</label>
+                        <input id="password" type="password" class="input-field" placeholder="Enter password" required />
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <button type="submit" class="btn">Log In</button>
+                    <a href="/api/auth/discord" class="text-green-600 hover:underline">Log In with Discord</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Main Wallet Section (hidden until logged in) -->
+        <div id="wallet-section" class="hidden">
+            <header class="mb-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                    <div>
+                        <h1 class="wallet-header text-4xl font-bold mb-2">Grudge Codex Hot Wallet</h1>
+                        <p class="text-slate-600 text-lg">Connected to Sepolia Testnet</p>
+                    </div>
+                    <div class="flex items-center bg-green-50 border border-green-200 px-4 py-2 rounded-lg mt-4 md:mt-0">
+                        <div id="status-indicator" class="status-indicator bg-red-600 mr-2"></div>
+                        <span id="connection-status" class="text-red-600 font-medium">Disconnected</span>
+                    </div>
+                </div>
+
+                <div class="balance-card p-6 md:p-8">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div>
+                            <p class="text-slate-500 mb-2">Balances</p>
+                            <h2 id="gruda-balance" class="mono text-4xl font-bold text-slate-800">0 GRUDA</h2>
+                            <div class="flex items-center mt-3">
+                                <span id="gbux-balance" class="text-slate-500 text-sm">GBuX: 0</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center mt-6 md:mt-0">
+                            <div id="wallet-address" class="mono text-sm text-slate-600 mb-2">Not connected</div>
+                            <button id="connect-wallet" class="btn">Connect MetaMask</button>
+                            <button id="logout" class="btn bg-red-500 mt-2 hidden">Log Out</button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main>
+                <!-- Season 0 Cards -->
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-4">Season 0 Cards</h2>
+                    <div class="balance-card p-6">
+                        <button id="buy-pack" class="btn mb-4">Buy Card Pack (500 GBuX)</button>
+                        <div id="card-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                    </div>
+                </div>
+
+                <!-- Send GRUDA -->
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-4">Send GRUDA</h2>
+                    <div class="asset-card p-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-slate-500 text-sm mb-1">Recipient Address</label>
+                                <input id="recipient-address" type="text" class="input-field" placeholder="0x..." />
+                            </div>
+                            <div>
+                                <label class="text-slate-500 text-sm mb-1">Amount (GRUDA)</label>
+                                <input id="send-amount" type="number" step="0.01" class="input-field" placeholder="0" />
+                            </div>
+                        </div>
+                        <button id="send-gruda" class="btn mt-4 w-full">Send GRUDA</button>
+                    </div>
+                </div>
+
+                <!-- Transfer GBuX -->
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-4">Transfer GBuX</h2>
+                    <div class="asset-card p-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-slate-500 text-sm mb-1">Recipient User ID</label>
+                                <input id="gbux-recipient" type="text" class="input-field" placeholder="User ID" />
+                            </div>
+                            <div>
+                                <label class="text-slate-500 text-sm mb-1">Amount (GBuX)</label>
+                                <input id="gbux-amount" type="number" class="input-field" placeholder="0" />
+                            </div>
+                        </div>
+                        <button id="transfer-gbux" class="btn mt-4 w-full">Transfer GBuX</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <footer class="mt-8 p-4 text-center text-slate-500 text-sm">
+        <p>© 2025 JZ Nation • Grudge Codex Hot Wallet • Sepolia Testnet</p>
+        <p class="mt-1">This is a testnet application. Use test tokens only.</p>
+    </footer>
+
+    <script>
+        // Configuration
+        const API_BASE_URL = 'https://grudge-codex.onrender.com/api'; // Update with your Render URL
+        const GRUDA_CONTRACT_ADDRESS = 'YOUR_GRUDA_CONTRACT_ADDRESS'; // Replace after deployment
+        const GRUDA_ABI = [
+            "function balanceOf(address account) view returns (uint256)",
+            "function transfer(address recipient, uint256 amount) returns (bool)",
+            "function decimals() view returns (uint8)"
+        ];
+
+        // UI elements
+        const loginSection = document.getElementById('login-section');
+        const walletSection = document.getElementById('wallet-section');
+        const loginForm = document.getElementById('login-form');
+        const connectWalletBtn = document.getElementById('connect-wallet');
+        const logoutBtn = document.getElementById('logout');
+        const statusIndicator = document.getElementById('status-indicator');
+        const connectionStatus = document.getElementById('connection-status');
+        const walletAddressEl = document.getElementById('wallet-address');
+        const grudaBalanceEl = document.getElementById('gruda-balance');
+        const gbuxBalanceEl = document.getElementById('gbux-balance');
+        const buyPackBtn = document.getElementById('buy-pack');
+        const cardList = document.getElementById('card-list');
+        const recipientAddressInput = document.getElementById('recipient-address');
+        const sendAmountInput = document.getElementById('send-amount');
+        const sendGrudaBtn = document.getElementById('send-gruda');
+        const gbuxRecipientInput = document.getElementById('gbux-recipient');
+        const gbuxAmountInput = document.getElementById('gbux-amount');
+        const transferGbuXBtn = document.getElementById('transfer-gbux');
+
+        // State
+        let provider, signer, grudaContract, userAddress;
+        const decimals = 18; // Assumed GRUDA decimals
+
+        // Check login status
+        if (localStorage.getItem('sessionToken')) {
+            loginSection.classList.add('hidden');
+            walletSection.classList.remove('hidden');
+            logoutBtn.classList.remove('hidden');
+            fetchBalances();
+            loadCards();
+        }
+
+        // Login form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+                if (data.sessionToken) {
+                    localStorage.setItem('sessionToken', data.sessionToken);
+                    loginSection.classList.add('hidden');
+                    walletSection.classList.remove('hidden');
+                    logoutBtn.classList.remove('hidden');
+                    gbuxBalanceEl.textContent = `GBuX: ${data.gbuxBalance}`;
+                    fetchBalances();
+                    loadCards();
+                    alert(`Logged in as ${data.username}!`);
+                } else {
+                    alert('Login failed: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        // Connect MetaMask
+        connectWalletBtn.addEventListener('click', async () => {
+            if (!window.ethereum) {
+                alert('Please install MetaMask!');
+                return;
+            }
+
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                userAddress = accounts[0];
+                walletAddressEl.textContent = `Connected: ${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
+
+                provider = new ethers.BrowserProvider(window.ethereum);
+                signer = await provider.getSigner();
+                grudaContract = new ethers.Contract(GRUDA_CONTRACT_ADDRESS, GRUDA_ABI, signer);
+
+                const network = await provider.getNetwork();
+                if (network.chainId !== 11155111n) {
+                    alert('Please switch to Sepolia Testnet in MetaMask!');
+                    return;
+                }
+
+                statusIndicator.classList.remove('bg-red-600');
+                statusIndicator.classList.add('bg-green-600');
+                connectionStatus.textContent = 'Connected';
+                connectionStatus.classList.remove('text-red-600');
+                connectionStatus.classList.add('text-green-600');
+                connectWalletBtn.textContent = 'Disconnect';
+
+                fetchBalances();
+            } catch (error) {
+                alert('Connection error: ' + error.message);
+            }
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('sessionToken');
+            loginSection.classList.remove('hidden');
+            walletSection.classList.add('hidden');
+            logoutBtn.classList.add('hidden');
+            statusIndicator.classList.remove('bg-green-600');
+            statusIndicator.classList.add('bg-red-600');
+            connectionStatus.textContent = 'Disconnected';
+            connectionStatus.classList.remove('text-green-600');
+            connectionStatus.classList.add('text-red-600');
+            connectWalletBtn.textContent = 'Connect MetaMask';
+            walletAddressEl.textContent = 'Not connected';
+            grudaBalanceEl.textContent = '0 GRUDA';
+            gbuxBalanceEl.textContent = 'GBuX: 0';
+            cardList.innerHTML = '';
+            userAddress = null;
+            provider = null;
+            signer = null;
+            grudaContract = null;
+        });
+
+        // Fetch balances
+        async function fetchBalances() {
+            if (!localStorage.getItem('sessionToken')) return;
+
+            try {
+                // GRUDA balance
+                if (userAddress) {
+                    const response = await fetch(`${API_BASE_URL}/cloud/getGrudaBalance`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ walletAddress: userAddress, sessionToken: localStorage.getItem('sessionToken') })
+                    });
+                    const data = await response.json();
+                    grudaBalanceEl.textContent = `${data.balance} GRUDA`;
+                }
+
+                // GBuX balance (from login or cloud function)
+                const response = await fetch(`${API_BASE_URL}/cloud/getSeason0Data`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionToken: localStorage.getItem('sessionToken') })
+                });
+                const data = await response.json();
+                gbuxBalanceEl.textContent = `GBuX: ${data.gbuxBalance}`;
+            } catch (error) {
+                alert('Error fetching balances: ' + error.message);
+            }
+        }
+
+        // Load Season 0 cards
+        async function loadCards() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/cloud/getSeason0Data`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionToken: localStorage.getItem('sessionToken') })
+                });
+                const data = await response.json();
+                cardList.innerHTML = data.cards.map(card => `
+                    <div class="p-4 border border-green-200 rounded-lg bg-green-50">
+                        <h3 class="font-semibold">${card.name}</h3>
+                        <p>Cost: ${card.cost} | Attack: ${card.attack} | Health: ${card.health}</p>
+                        <p>${card.description}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                alert('Error loading cards: ' + error.message);
+            }
+        }
+
+        // Buy card pack
+        buyPackBtn.addEventListener('click', async () => {
+            try {
+                const response = await fetch(`${API_BASE_URL}/cloud/purchaseCardPack`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionToken: localStorage.getItem('sessionToken') })
+                });
+                const data = await response.json();
+                if (data.message) {
+                    alert(`Card pack purchased! New cards: ${data.cards.map(c => c.name).join(', ')}`);
+                    gbuxBalanceEl.textContent = `GBuX: ${data.newGbuXBalance}`;
+                    loadCards();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error buying pack: ' + error.message);
+            }
+        });
+
+        // Send GRUDA
+        sendGrudaBtn.addEventListener('click', async () => {
+            const recipient = recipientAddressInput.value.trim();
+            const amount = sendAmountInput.value.trim();
+
+            if (!userAddress) {
+                alert('Please connect your wallet!');
+                return;
+            }
+            if (!ethers.isAddress(recipient)) {
+                alert('Invalid recipient address!');
+                return;
+            }
+            if (!amount || parseFloat(amount) <= 0) {
+                alert('Please enter a valid amount!');
+                return;
+            }
+
+            try {
+                const amountWei = ethers.parseUnits(amount, decimals);
+                const tx = await grudaContract.transfer(recipient, amountWei);
+                const receipt = await tx.wait();
+                fetchBalances();
+                recipientAddressInput.value = '';
+                sendAmountInput.value = '';
+                alert(`Sent ${amount} GRUDA to ${recipient.slice(0, 6)}...${recipient.slice(-4)}! Tx: ${receipt.hash}`);
+            } catch (error) {
+                alert('Transaction error: ' + error.message);
+            }
+        });
+
+        // Transfer GBuX
+        transferGbuXBtn.addEventListener('click', async () => {
+            const toUserId = gbuxRecipientInput.value.trim();
+            const amount = parseInt(gbuxAmountInput.value);
+
+            if (!toUserId || !amount || amount <= 0) {
+                alert('Please enter a valid user ID and amount!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/cloud/transferGBuX`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ toUserId, amount, sessionToken: localStorage.getItem('sessionToken') })
+                });
+                const data = await response.json();
+                if (typeof data === 'string') {
+                    alert(data);
+                    fetchBalances();
+                    gbuxRecipientInput.value = '';
+                    gbuxAmountInput.value = '';
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error transferring GBuX: ' + error.message);
+            }
+        });
+
+        // Handle MetaMask account/network changes
+        if (window.ethereum) {
+            window.ethereum.on('accountsChanged', async (accounts) => {
+                if (accounts.length === 0) {
+                    statusIndicator.classList.remove('bg-green-600');
+                    statusIndicator.classList.add('bg-red-600');
+                    connectionStatus.textContent = 'Disconnected';
+                    connectionStatus.classList.remove('text-green-600');
+                    connectionStatus.classList.add('text-red-600');
+                    connectWalletBtn.textContent = 'Connect MetaMask';
+                    walletAddressEl.textContent = 'Not connected';
+                    grudaBalanceEl.textContent = '0 GRUDA';
+                    userAddress = null;
+                    provider = null;
+                    signer = null;
+                    grudaContract = null;
+                } else {
+                    userAddress = accounts[0];
+                    walletAddressEl.textContent = `Connected: ${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
+                    fetchBalances();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

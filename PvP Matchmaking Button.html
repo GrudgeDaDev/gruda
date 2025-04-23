@@ -1,0 +1,119 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <script src="https://cdn.tailwindcss.com"></script>  
+    <!-- Parse SDK -->  
+    <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>  
+    <style>  
+        .grudge-button {  
+            background: linear-gradient(135deg, #ff4e50 0%, #f9d423 100%);  
+            transition: all 0.3s ease;  
+            transform-style: preserve-3d;  
+            position: relative;  
+            box-shadow: 0 6px 0 #c73032;  
+        }  
+        .grudge-button:active {  
+            transform: translateY(3px);  
+            box-shadow: 0 3px 0 #c73032;  
+        }  
+        .loader {  
+            border-top-color: #f9d423;  
+            -webkit-animation: spinner 1.5s linear infinite;  
+            animation: spinner 1.5s linear infinite;  
+        }  
+        @-webkit-keyframes spinner {  
+            0% { -webkit-transform: rotate(0deg); }  
+            100% { -webkit-transform: rotate(360deg); }  
+        }  
+        @keyframes spinner {  
+            0% { transform: rotate(0deg); }  
+            100% { transform: rotate(360deg); }  
+        }  
+    </style>  
+</head>  
+<body>  
+    <div id="pvp-matchmaking-container" class="inline-block">  
+        <!-- PvP Button -->  
+        <button id="find-match-btn" class="grudge-button text-white font-bold py-3 px-6 rounded-lg text-lg">  
+            FIND PVP MATCH  
+        </button>  
+
+        <!-- Status Message -->  
+        <div id="matchmaking-status" class="mt-2 text-sm font-medium hidden"></div>  
+    </div>  
+
+    <script>  
+        document.addEventListener('DOMContentLoaded', function() {  
+            // Initialize Parse  
+            Parse.initialize("YgweV5ZdFH1KoB5UjbMWaL1p3ibrWwP60x3h209wN", "YtkhLbN9t0i0z31FTjYQySkrgPNgjoUWbOSQ3FWxd"); // Replace with your actual Parse keys  
+            Parse.serverURL = "https://parseapi.back4app.com/"; // Replace with your actual Parse server URL  
+            
+            const findMatchBtn = document.getElementById('find-match-btn');  
+            const statusMessage = document.getElementById('matchmaking-status');  
+            
+            findMatchBtn.addEventListener('click', async function() {  
+                // Show loading state  
+                findMatchBtn.disabled = true;  
+                findMatchBtn.innerHTML = `  
+                    <div class="inline-block align-middle">  
+                        <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-5 w-5"></div>  
+                    </div>  
+                    <span class="ml-2 inline-block align-middle">MATCHMAKING...</span>  
+                `;  
+                statusMessage.textContent = "Looking for opponents...";  
+                statusMessage.classList.remove('hidden', 'text-red-500', 'text-green-500');  
+                statusMessage.classList.add('text-gray-500');  
+                
+                try {  
+                    // Make sure user is logged in  
+                    const currentUser = Parse.User.current();  
+                    if (!currentUser) {  
+                        throw new Error("You must be logged in to join a PvP match");  
+                    }  
+                    
+                    // Call the cloud function  
+                    const result = await Parse.Cloud.run("joinPvPLobby");  
+                    
+                    // Show success message  
+                    statusMessage.textContent = result.message + " (Lobby ID: " + result.lobbyId + ")";  
+                    statusMessage.classList.remove('text-gray-500', 'text-red-500');  
+                    statusMessage.classList.add('text-green-500');  
+                    
+                    // If lobby is active (matched with opponent), redirect to game  
+                    if (result.message.includes("Joined an existing lobby")) {  
+                        setTimeout(async () => {  
+                            statusMessage.textContent = "Match found! Preparing game...";  
+                            // Call the enterGameServer cloud function
+                            const serverResult = await Parse.Cloud.run("enterGameServer");
+                            statusMessage.textContent = "Assigned to server: " + serverResult.serverId;
+                            statusMessage.classList.remove('text-gray-500', 'text-red-500');
+                            statusMessage.classList.add('text-green-500');
+                            // Redirect to the game page with the lobby ID and server ID
+                            window.location.href = "https://grudgeplatform.com/nexus?lobbyId=" + result.lobbyId + "&serverId=" + serverResult.serverId + "&player=" + (result.isPlayer1 ? "1" : "2");
+                        }, 1500);  
+                    } else {  
+                        // Reset button after 3 seconds if we're still waiting  
+                        setTimeout(() => {  
+                            findMatchBtn.disabled = false;  
+                            findMatchBtn.innerHTML = "FIND PVP MATCH";  
+                            statusMessage.textContent = "Waiting for opponents. Try again or wait in queue.";  
+                        }, 3000);  
+                    }  
+                    
+                } catch (error) {  
+                    console.error("Error joining PvP lobby:", error);  
+                    statusMessage.textContent = "Error: " + (error.message || "Failed to join match");  
+                    statusMessage.classList.remove('text-gray-500', 'text-green-500');  
+                    statusMessage.classList.add('text-red-500');  
+                    
+                    // Reset button  
+                    findMatchBtn.disabled = false;  
+                    findMatchBtn.innerHTML = "FIND PVP MATCH";  
+                }  
+            });  
+        });  
+    </script>  
+</body>  
+</html>  
