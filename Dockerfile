@@ -33,6 +33,11 @@ RUN npm ci --production
 
 # Copy built files from builder stage
 COPY --from=builder /cloud/dist ./dist
+COPY --from=builder /cloud/Gruntfile.js ./
+COPY --from=builder /cloud/package.json ./
+COPY --from=builder /cloud/package-lock.json ./
+COPY --from=builder /cloud/src ./src
+COPY --from=builder /cloud/server ./server
 COPY server.js ./
 COPY cloud/main.js ./cloud/
 COPY test-back4app.js ./

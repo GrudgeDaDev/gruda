@@ -60,3 +60,14 @@ Parse.Cloud.define("enterGameServer", async (request) => {
         throw `No available servers at this time. Please wait or try joining an island game.`;
     }
 });
+
+Parse.Cloud.define("getSeason0Data", async (request) => {
+    const query = new Parse.Query("Cards");
+    query.equalTo("season", "Season0");
+    try {
+        const results = await query.find();
+        return results;
+    } catch (error) {
+        throw new Parse.Error(Parse.Error.SCRIPT_FAILED, "Failed to fetch Season0 data");
+    }
+});
