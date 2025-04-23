@@ -20,7 +20,7 @@ exports.handler = async (event) => {
           client_secret: process.env.DISCORD_CLIENT_SECRET,
           grant_type: 'authorization_code',
           code,
-          redirect_uri: redirectUri,
+          redirect_uri: "https://gruda.grudgewarlords.com/",
           scope: 'identify guilds guilds.join gdm.join',
         }),
       });
