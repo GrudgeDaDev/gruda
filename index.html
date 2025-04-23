@@ -94,6 +94,21 @@
         }
     </style>
 </head>
+    <script>
+  // Function to redirect after successful login or OAuth
+  function redirectToApp() {
+    // Replace this condition with the actual login/OAuth success check
+    const isLoggedIn = true; // Example: Replace with real check for login or OAuth success
+
+    if (isLoggedIn) {
+      // Redirect to the app
+      window.location.href = "https://gruda.grudgewarlords.com/";
+    }
+  }
+
+  // Call the redirect function on page load
+  window.onload = redirectToApp;
+</script>
 <body>
     <div class="bg-overlay"></div>
 
