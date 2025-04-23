@@ -1,3 +1,13 @@
+Parse.initialize(
+  process.env.PARSE_APP_ID,
+  process.env.PARSE_JAVASCRIPT_KEY,
+  process.env.PARSE_CLIENT_KEY,
+  process.env.PARSE_MASTER_KEY,
+  process.env.PARSE_REST_KEY,
+  process.env.PARSE_DOTNET_KEY
+);
+Parse.serverURL = process.env.PARSE_SERVER_URL;
+
 Parse.Cloud.define("joinPvPLobby", async (request) => {
     const playerId = request.user.id;
     const query = new Parse.Query("GameLobby");
