@@ -1,0 +1,1 @@
+const ErrorHandler = {\n  handle: (error) => {\n    const errorMap = {\n      101: 'Invalid credentials or object not found',\n      206: 'Session invalid, please log in again',\n      102: 'Invalid request parameters',\n    };\n    return errorMap[error.code] || error.message || 'An error occurred';\n  },\n};\n\nexport default ErrorHandler;
