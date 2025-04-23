@@ -1,3 +1,13 @@
+Parse.initialize(
+  process.env.PARSE_APP_ID,
+  process.env.PARSE_JAVASCRIPT_KEY,
+  process.env.PARSE_CLIENT_KEY,
+  process.env.PARSE_MASTER_KEY,
+  process.env.PARSE_REST_KEY,
+  process.env.PARSE_DOTNET_KEY
+);
+Parse.serverURL = process.env.PARSE_SERVER_URL;
+
 Parse.Cloud.define("joinPvPLobby", async (request) => {
     const playerId = request.user.id;
     const query = new Parse.Query("GameLobby");
@@ -48,5 +58,16 @@ Parse.Cloud.define("enterGameServer", async (request) => {
         return { message: "Assigned to server", serverId: server.get("serverId") };
     } else {
         throw `No available servers at this time. Please wait or try joining an island game.`;
+    }
+});
+
+Parse.Cloud.define("getSeason0Data", async (request) => {
+    const query = new Parse.Query("Cards");
+    query.equalTo("season", "Season0");
+    try {
+        const results = await query.find();
+        return results;
+    } catch (error) {
+        throw new Parse.Error(Parse.Error.SCRIPT_FAILED, "Failed to fetch Season0 data");
     }
 });

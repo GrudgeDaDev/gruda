@@ -3,73 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grudge Paragon Diary - Main</title>
+    <title>Grudge Platform Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        grudge: {
-                            primary: '#4F2362', // dark purple
-                            secondary: '#AB3E16', // burnt orange
-                            accent: '#FFD700', // gold
-                            dark: '#1E1E24', // near black
-                            light: '#F2F2F2', // off-white
-                        },
-                    },
-                },
-            },
-        };
-    </script>
+    <style>
+        body {
+            font-family: 'Arial Black', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #222 url('https://i.imgur.com/KzcmBtg.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .bg-overlay {
+            background: rgba(0, 0, 0, 0.75);
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+        }
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+        .welcome-screen.hidden { display: none; }
+        .login-container {
+            background: rgba(74, 47, 26, 0.95);
+            padding: 2rem;
+            border: 4px solid #D4A017;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            display: none;
+        }
+        .login-container.visible { display: block; }
+        .input-field {
+            background: #555;
+            border: 3px solid #D4A017;
+            color: #fff;
+            padding: 0.75rem;
+            width: 100%;
+            border-radius: 6px;
+            transition: border-color 0.3s;
+            margin-bottom: 1rem;
+        }
+        .input-field:focus {
+            border-color: #ffeb3b;
+            outline: none;
+        }
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            font-weight: bold;
+            border-radius: 6px;
+            transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #D4A017;
+        }
+        .discord-btn { background: #7289DA; }
+        .discord-btn:hover { background: #5B6EAE; }
+        .local-btn { background: #D4A017; }
+        .local-btn:hover { background: #ffeb3b; color: #000; }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: #D4A017;
+        }
+        .divider-text {
+            margin: 0 1rem;
+            color: #D4A017;
+        }
+    </style>
 </head>
-<body class="bg-grudge-dark text-grudge-light">
-    <header class="p-4 bg-grudge-primary text-center">
-        <h1 class="text-4xl font-bold">Grudge Paragon Diary</h1>
-    </header>
-    <main class="p-4">
-        <section class="mb-4">
-            <h2 class="text-2xl font-semibold">Welcome to the Grudge Paragon Diary</h2>
-            <p>Explore the different seasons and events of the Grudge Paragon universe.</p>
-        </section>
-        <section class="mb-4">
-            <h2 class="text-2xl font-semibold">Season0</h2>
-            <p>Discover the events and stories of Season0.</p>
-            <a href="Season0.html" class="text-grudge-accent underline">Go to Season0</a>
-        </section>
-    </main>
-    <footer class="p-4 bg-grudge-primary text-center">
-        <p>&copy; 2023 Grudge Paragon. All rights reserved.</p>
-    </footer>
+<body>
+    <div class="bg-overlay"></div>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="welcome-screen">
+        <h1 class="text-2xl font-bold text-[#D4A017]">Checking authentication...</h1>
+    </div>
+
+    <!-- Login Container -->
+    <div id="login-container" class="login-container">
+        <h1 class="text-2xl font-bold text-[#D4A017] mb-6">Grudge Platform Login</h1>
+
+        <!-- Discord Login Button -->
+        <button type="button" id="discord-login-btn" class="btn discord-btn text-white mb-4">Login with Discord</button>
+
+        <!-- Divider -->
+        <div class="divider">
+            <span class="divider-line"></span>
+            <span class="divider-text">OR</span>
+            <span class="divider-line"></span>
+        </div>
+
+        <!-- Local Login Form -->
+        <form id="local-auth-form" class="space-y-4">
+            <input type="text" id="local-username" class="input-field" placeholder="Username" required>
+            <input type="password" id="local-password" class="input-field" placeholder="Password" required>
+            <button type="submit" id="local-login-btn" class="btn local-btn text-black">Login</button>
+            <button type="button" id="local-register-btn" class="btn local-btn text-black">Register</button>
+        </form>
+
+        <!-- Status Message -->
+        <p id="status-message" class="text-gray-300 mt-4 hidden"></p>
+    </div>
+
     <script>
-        // JavaScript code for interactive features
-        document.addEventListener('DOMContentLoaded', () => {
-            // Example: Simulate user login
-            const simulateLogin = () => {
-                const user = {
-                    username: 'grudgeUser',
-                    wallet: '0x1234567890abcdef',
-                };
-                localStorage.setItem('grudgeWallet', JSON.stringify(user));
-                console.log('User logged in:', user);
-            };
+        // Configuration
+        const config = {
+            redirectUri: 'https://gruda.grudgewarlords.com/',
+            backendUrl: 'mongodb://admin:iTUSuECueDLfuVC0NFXnbWPt@MongoS3601A.back4app.com:27017/5ede2f64b3b34f12829f05b1e5db3c70?retryWrites=false', // Adjust to your server's URL
+            discord: {
+                clientId: '1342593452793270302',
+                scope: 'identify guilds guilds.members.read'
+            },
+            initialCredits: 10
+        };
 
-            // Example: Load cards for demo
-            const loadCards = () => {
-                const allCards = [
-                    { name: 'Card1', type: 'normal' },
-                    { name: 'Card2', type: 'normal' },
-                    { name: 'Card3', type: 'tribe' },
-                ];
-                console.log('Loaded cards:', allCards);
-            };
+        const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=1343652840526188564&response_type=code&redirect_uri=https%3A%2F%2Fgruda.grudgewarlords.com&scope=identify`;
 
-            // Simulate loading cards and user login
-            loadCards();
-            if (!localStorage.getItem('grudgeWallet')) {
-                simulateLogin();
+        // Utility Functions
+        const utils = {
+            showStatus: (message, isError = false) => {
+                const statusEl = document.getElementById('status-message');
+                if (statusEl) {
+                    statusEl.textContent = message;
+                    statusEl.className = `text-${isError ? 'red-500' : 'gray-300'} mt-4`;
+                    statusEl.classList.remove('hidden');
+                    setTimeout(() => statusEl.classList.add('hidden'), 5000);
+                }
+            },
+            redirectToApp: () => {
+                console.log('Redirecting to:', config.redirectUri);
+                setTimeout(() => window.location.href = config.redirectUri, 1000);
+            },
+            getUrlCode: () => new URLSearchParams(window.location.search).get('code'),
+            clearUrlParams: () => window.history.replaceState({}, document.title, window.location.pathname)
+        };
+
+        // Authentication Handlers
+        const auth = {
+            async checkAutoLogin() {
+                const welcomeScreen = document.getElementById('welcome-screen');
+                const loginContainer = document.getElementById('login-container');
+                const user = JSON.parse(localStorage.getItem('user'));
+
+                if (user) {
+                    utils.showStatus('User found, redirecting...');
+                    utils.redirectToApp();
+                } else {
+                    setTimeout(async () => {
+                        welcomeScreen.classList.add('hidden');
+                        loginContainer.classList.add('visible');
+                        await this.handleDiscordCallback();
+                    }, 2000);
+                }
+            },
+
+            async handleDiscordCallback() {
+                const code = utils.getUrlCode();
+                if (!code) return;
+
+                try {
+                    utils.showStatus('Logging in with Discord...');
+                    const response = await fetch(`${config.backendUrl}/api/auth/discord`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code })
+                    }).then(res => res.json());
+
+                    if (response.error) throw new Error(response.error);
+
+                    const user = {
+                        id: response.id,
+                        username: response.username,
+                        type: 'discord',
+                        avatar: response.avatar
+                    };
+                    localStorage.setItem('user', JSON.stringify(user));
+                    localStorage.setItem('credits', localStorage.getItem('credits') || config.initialCredits);
+                    await this.updateCredits(user.id, 'login');
+                    utils.clearUrlParams();
+                    utils.showStatus('Login successful! Redirecting...');
+                    utils.redirectToApp();
+                } catch (error) {
+                    console.error('Discord login error:', error);
+                    utils.showStatus(`Discord login failed: ${error.message}`, true);
+                }
+            },
+
+            async localLogin(username, password) {
+                try {
+                    utils.showStatus('Logging in...');
+                    const response = await fetch(`${config.backendUrl}/api/auth/local`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    }).then(res => res.json());
+
+                    if (response.error) throw new Error(response.error);
+
+                    const user = { 
+                        id: response.id, 
+                        username: response.username, 
+                        type: 'local' 
+                    };
+                    localStorage.setItem('user', JSON.stringify(user));
+                    localStorage.setItem('credits', localStorage.getItem('credits') || config.initialCredits);
+                    await this.updateCredits(user.id, 'login');
+                    utils.showStatus('Login successful! Redirecting...');
+                    utils.redirectToApp();
+                } catch (error) {
+                    console.error('Local login error:', error);
+                    utils.showStatus(`Login failed: ${error.message}`, true);
+                }
+            },
+
+            async localRegister(username, password) {
+                try {
+                    utils.showStatus('Registering...');
+                    const response = await fetch(`${config.backendUrl}/api/auth/local/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    }).then(res => res.json());
+
+                    if (response.error) throw new Error(response.error);
+
+                    const user = { 
+                        id: response.id, 
+                        username: response.username, 
+                        type: 'local' 
+                    };
+                    localStorage.setItem('user', JSON.stringify(user));
+                    localStorage.setItem('credits', config.initialCredits);
+                    await this.updateCredits(user.id, 'login');
+                    utils.showStatus('Registration successful! Redirecting...');
+                    utils.redirectToApp();
+                } catch (error) {
+                    console.error('Local register error:', error);
+                    utils.showStatus(`Registration failed: ${error.message}`, true);
+                }
+            },
+
+            async updateCredits(userId, action) {
+                const endpoint = action === 'login' ? '/api/credits/login' : '/api/credits/game';
+                try {
+                    const response = await fetch(`${config.backendUrl}${endpoint}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId })
+                    }).then(res => res.json());
+
+                    if (response.error) throw new Error(response.error);
+                    console.log('Credits updated:', response.message);
+                } catch (error) {
+                    console.error('Credit update error:', error);
+                }
             }
+        };
+
+        // Event Listeners
+        document.getElementById('discord-login-btn').addEventListener('click', () => {
+            window.location.href = discordAuthUrl;
+        });
+
+        document.getElementById('local-auth-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('local-username').value.trim();
+            const password = document.getElementById('local-password').value;
+            if (!username || !password) {
+                utils.showStatus('Username and password required!', true);
+                return;
+            }
+            auth.localLogin(username, password);
+        });
+
+        document.getElementById('local-register-btn').addEventListener('click', () => {
+            const username = document.getElementById('local-username').value.trim();
+            const password = document.getElementById('local-password').value;
+            if (!username || !password) {
+                utils.showStatus('Username and password required!', true);
+                return;
+            }
+            auth.localRegister(username, password);
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            auth.checkAutoLogin();
         });
     </script>
 </body>
 </html>
+
