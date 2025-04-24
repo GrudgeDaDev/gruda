@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +15,7 @@
             margin: 0;
             padding: 0;
             background: #111111 url('https://i.imgur.com/KzcmBtg.png') no-repeat center center fixed;
+            background: url('https://i.imgur.com/KzcmBtg.png') no-repeat center center fixed;
             background-size: cover;
             color: #fff;
             min-height: 100vh;
@@ -31,7 +33,8 @@
         }
 
         #codex-ui {
-            position: relative; /* Context for absolute positioning of card preview */
+            position: relative;
+            /* Context for absolute positioning of card preview */
             width: 95%;
             max-width: 1800px;
             height: 95vh;
@@ -101,7 +104,7 @@
             border-radius: 20px;
             overflow-y: auto;
             box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.9),
-            inset 1px 0 2px rgba(0, 0, 0, 0.971);
+                inset 1px 0 2px rgba(0, 0, 0, 0.971);
         }
 
         .tab-content.active {
@@ -166,7 +169,7 @@
         .card-display:hover {
             transform: scale(1.05);
             box-shadow: 0 0 30px #D4A017;
-            background:color-mix(in hwb shorter hue, gold percentage, rgb(122, 221, 73) percentage)
+            background: color-mix(in hwb shorter hue, gold percentage, rgb(122, 221, 73) percentage)
         }
 
         .card-display.selected {
@@ -199,19 +202,23 @@
         }
 
         .card-display.spell {
-            border-color: #0000FF; /* Blue for spells */
+            border-color: #0000FF;
+            /* Blue for spells */
         }
 
         .card-display.minion-normal {
-            border-color: #00FF00; /* Green for normal minions */
+            border-color: #00FF00;
+            /* Green for normal minions */
         }
 
         .card-display.minion-taunt {
-            border-color: #0000FF; /* Blue for minions with taunt */
+            border-color: #0000FF;
+            /* Blue for minions with taunt */
         }
 
         .card-display.minion-effect {
-            border-color: #FF0000; /* Red for minions with effects */
+            border-color: #FF0000;
+            /* Red for minions with effects */
         }
 
         .card-info {
@@ -223,7 +230,7 @@
             font-size: 13px;
             opacity: 0.9;
             transition: opacity 0.3s ease;
-            background:color-mix(in hwb shorter hue, gold percentage, rgb(122, 221, 73) percentage)
+            background: color-mix(in hwb shorter hue, gold percentage, rgb(122, 221, 73) percentage)
         }
 
         .card-display:hover .card-info {
@@ -455,6 +462,7 @@
             from {
                 transform: rotateY(0deg);
             }
+
             to {
                 transform: rotateY(360deg);
             }
@@ -464,6 +472,7 @@
             from {
                 opacity: 1;
             }
+
             to {
                 opacity: 0;
                 transform: scale(0.8);
@@ -474,6 +483,7 @@
             0% {
                 background-position: 0 0;
             }
+
             100% {
                 background-position: -120px 0;
             }
@@ -484,10 +494,12 @@
                 background: url('https://i.imgur.com/QP9cMm4.png') center/cover no-repeat;
                 opacity: 1;
             }
+
             50% {
                 background: url('https://i.imgur.com/pvW3OSi.png') center/cover no-repeat;
                 opacity: 0.8;
             }
+
             100% {
                 background: none;
                 opacity: 0;
@@ -556,7 +568,8 @@
         .cards-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            grid-gap: 1.5rem 120px; /* Vertical gap: 1.5rem (24px), Horizontal gap: 120px (80% of 150px card width) */
+            grid-gap: 1.5rem 120px;
+            /* Vertical gap: 1.5rem (24px), Horizontal gap: 120px (80% of 150px card width) */
             justify-items: center;
             align-items: center;
             flex: 1;
@@ -631,6 +644,7 @@
                 opacity: 0;
                 transform: scale(0.9);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -638,7 +652,8 @@
         }
 
         .card-preview {
-            position: absolute; /* Relative to #codex-ui */
+            position: absolute;
+            /* Relative to #codex-ui */
             width: 300px;
             height: 450px;
             background-size: cover;
@@ -695,11 +710,13 @@
         }
     </style>
 </head>
+
 <body>
     <div class="bg-overlay"></div>
     <div id="codex-ui">
         <header>
-            <h1 class="text-4xl md:text-5xl font-bold text-[#D4A017] text-shadow-[0_0_12px_#D4A017]">Chain Nexus Codex</h1>
+            <h1 class="text-4xl md:text-5xl font-bold text-[#D4A017] text-shadow-[0_0_12px_#D4A017]">Chain Nexus Codex
+            </h1>
             <div class="flex items-center gap-5" id="user-section">
                 <div class="flex items-center gap-4 text-[#D4A017] text-xl md:text-2xl">
                     <img id="user-avatar" class="w-28 h-28 rounded-full hidden" alt="User Avatar">
@@ -708,7 +725,8 @@
                         <span id="credits-info">Balance: 0 $GBuX</span>
                     </div>
                 </div>
-                <button id="login-btn" class="btn bg-[#D4A017] text-black font-bold py-2.5 px-4" onclick="window.location.href='https://www.grudgeplatform.com/login'">Login with Discord</button>
+                <button id="login-btn" class="btn bg-[#D4A017] text-black font-bold py-2.5 px-4"
+                    onclick="window.location.href='https://www.grudgeplatform.com/login'">Login with Discord</button>
             </div>
         </header>
 
@@ -774,18 +792,25 @@
         <!-- Create Card Tab -->
         <div class="tab-content" id="create-card">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
-                <div class="bg-gray-800 bg-opacity-95 rounded-lg p-5 border-5 border-[#4A2F1A] flex flex-col justify-between items-center h-full">
+                <div
+                    class="bg-gray-800 bg-opacity-95 rounded-lg p-5 border-5 border-[#4A2F1A] flex flex-col justify-between items-center h-full">
                     <div id="card-preview-container" class="flex justify-center items-center h-4/5 w-full">
-                        <divd class="flex flex-col w-full h-full">
+                        <div class="flex flex-col w-full h-full">
                     </div>
                     <div class="flex flex-col gap-2 w-full">
-                        <button id="undo-btn" class="btn bg-[#D4A017] text-black font-bold py-1.5 px-3 rounded hidden">Undo</button>
-                        <button id="redo-btn" class="btn bg-[#D4A017] text-black font-bold py-1.5 px-3 rounded hidden">Redo</button>
-                        <button id="claim-gbux-btn" class="mt-2 w-full bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded btn">Claim 200 $GBuX (Daily)</button>
+                        <button id="undo-btn"
+                            class="btn bg-[#D4A017] text-black font-bold py-1.5 px-3 rounded hidden">Undo</button>
+                        <button id="redo-btn"
+                            class="btn bg-[#D4A017] text-black font-bold py-1.5 px-3 rounded hidden">Redo</button>
+                        <button id="claim-gbux-btn"
+                            class="mt-2 w-full bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded btn">Claim 200
+                            $GBuX (Daily)</button>
                     </div>
                 </div>
-                <div class="bg-gray-800 bg-opacity-95 rounded-lg p-5 border-5 border-[#4A2F1A] flex flex-col justify-between h-full">
-                    <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center text-shadow-[0_0_12px_#D4A017]">Create Your Card</h2>
+                <div
+                    class="bg-gray-800 bg-opacity-95 rounded-lg p-5 border-5 border-[#4A2F1A] flex flex-col justify-between h-full">
+                    <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center text-shadow-[0_0_12px_#D4A017]">Create
+                        Your Card</h2>
                     <div class="space-y-5 flex-1 overflow-y-auto">
                         <div>
                             <label class="block text-gray-300 mb-2 text-xl">Theme
@@ -795,33 +820,47 @@
                                     <option value="cyber">Cyber Grid</option>
                                 </select>
                             </label>
-                            <label class="block text-gray-300 mb-2 text-xl">Upload Image <span class="text-red-500">*</span></label>
-                            <div class="image-upload" id="image-upload"><span class="text-gray-400 text-xl">Click to upload</span></div>
-                            <input type="file" id="card-image" accept="image/*" class="hidden" required aria-label="Upload card image">
-                            </div>
-                            <div>
-                            <label class="block text-gray-300 mb-2 text-xl">Card Name <span class="text-red-500">*</span></label>
-                            <input type="text" id="card-name" class="input-field w-full" placeholder="Enter card name" required>
+                            <label class="block text-gray-300 mb-2 text-xl">Upload Image <span
+                                    class="text-red-500">*</span></label>
+                            <div class="image-upload" id="image-upload"><span class="text-gray-400 text-xl">Click to
+                                    upload</span></div>
+                            <input type="file" id="card-image" accept="image/*" class="hidden" required
+                                aria-label="Upload card image">
                         </div>
                         <div>
-                            <label class="block text-gray-300 mb-2 text-xl">Attack <span id="attack-value" class="text-xl">1</span></label>
-                            <input type="range" id="attack" min="1" max="10" value="1" class="w-full" title="Attack Value" aria-label="Attack Value">
+                            <label class="block text-gray-300 mb-2 text-xl">Card Name <span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" id="card-name" class="input-field w-full" placeholder="Enter card name"
+                                required>
                         </div>
                         <div>
-                            <label class="block text-gray-300 mb-2 text-xl">Health <span id="health-value" class="text-xl">1</span></label>
-                            <input type="range" id="health" min="1" max="10" value="1" class="w-full" title="Health Value" aria-label="Health Value">
+                            <label class="block text-gray-300 mb-2 text-xl">Attack <span id="attack-value"
+                                    class="text-xl">1</span></label>
+                            <input type="range" id="attack" min="1" max="10" value="1" class="w-full"
+                                title="Attack Value" aria-label="Attack Value">
+                        </div>
+                        <div>
+                            <label class="block text-gray-300 mb-2 text-xl">Health <span id="health-value"
+                                    class="text-xl">1</span></label>
+                            <input type="range" id="health" min="1" max="10" value="1" class="w-full"
+                                title="Health Value" aria-label="Health Value">
                         </div>
                         <div>
                             <label class="block text-gray-300 mb-2 text-xl">Special Abilities</label>
                             <div class="grid grid-cols-2 gap-2.5 text-xl">
-                                <label class="flex items-center"><input type="checkbox" id="taunt" class="w-6 h-6 mr-2.5"> Taunt</label>
-                                <label class="flex items-center"><input type="checkbox" id="healAll" class="w-6 h-6 mr-2.5"> Heal All (1)</label>
+                                <label class="flex items-center"><input type="checkbox" id="taunt"
+                                        class="w-6 h-6 mr-2.5"> Taunt</label>
+                                <label class="flex items-center"><input type="checkbox" id="healAll"
+                                        class="w-6 h-6 mr-2.5"> Heal All (1)</label>
                             </div>
                         </div>
                         <div class="flex justify-between items-center mt-auto">
                             <span class="text-gray-300 text-xl">Balance: <span id="gbux-balance">0</span> $GBuX</span>
-                            <button id="save-draft-btn" class="btn bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded mr-2">Save Draft</button>
-                            <button id="mint-btn" class="btn bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded">Mint Card (10 $GBuX)</button>
+                            <button id="save-draft-btn"
+                                class="btn bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded mr-2">Save
+                                Draft</button>
+                            <button id="mint-btn" class="btn bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded">Mint
+                                Card (10 $GBuX)</button>
                         </div>
                     </div>
                 </div>
@@ -837,15 +876,22 @@
                     <button class="deck-slot" data-slot="3">Deck 3</button>
                 </div>
                 <div class="flex gap-5 flex-1 h-full">
-                    <div class="bg-gray-800 bg-opacity-95 rounded-lg p-5 border-5 border-[#4A2F1A] flex-1 flex flex-col">
-                        <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center text-shadow-[0_0_12px_#D4A017]">Selected Cards (<span id="deck-count">0</span>/20)</h2>
+                    <div
+                        class="bg-gray-800 bg-opacity-95 rounded-lg p-5 border-5 border-[#4A2F1A] flex-1 flex flex-col">
+                        <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center text-shadow-[0_0_12px_#D4A017]">
+                            Selected Cards (<span id="deck-count">0</span>/20)</h2>
                         <input type="text" id="deck-name" class="input-field mb-5 w-full" placeholder="Deck Name">
                         <div id="selected-cards" class="grid grid-cols-4 gap-2.5 flex-1 overflow-y-auto"></div>
-                        <button id="save-deck-btn" class="w-full mt-5 bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded btn">Save Deck</button>
+                        <button id="save-deck-btn"
+                            class="w-full mt-5 bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded btn">Save
+                            Deck</button>
                     </div>
-                    <div class="bg-gray-800 bg-opacity-95 rounded-lg p-5 border-5 border-[#4A2F1A] flex-1 flex flex-col">
-                        <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center text-shadow-[0_0_12px_#D4A017]">Available Cards</h2>
-                        <input type="text" id="deck-search" class="input-field mb-5 w-full" placeholder="Search available cards...">
+                    <div
+                        class="bg-gray-800 bg-opacity-95 rounded-lg p-5 border-5 border-[#4A2F1A] flex-1 flex flex-col">
+                        <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center text-shadow-[0_0_12px_#D4A017]">
+                            Available Cards</h2>
+                        <input type="text" id="deck-search" class="input-field mb-5 w-full"
+                            placeholder="Search available cards...">
                         <div id="deck-builder-cards" class="scroll-container grid grid-cols-4 gap-2.5 flex-1"></div>
                     </div>
                 </div>
@@ -855,281 +901,294 @@
         <!-- PvP Tab -->
         <div class="tab-content" id="nexus-deck">
             <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center text-shadow-[0_0_12px_#D4A017]">PvP Arena</h2>
-            
+
             <!-- Game Mode Selection -->
             <div class="flex justify-center gap-5 mb-8">
-            <button class="game-mode-btn active" data-mode="nexus">Nexus Nemesis</button>
-            <button class="game-mode-btn" data-mode="island">Grudge Island</button>
+                <button class="game-mode-btn active" data-mode="nexus">Nexus Nemesis</button>
+                <button class="game-mode-btn" data-mode="island">Grudge Island</button>
             </div>
 
             <!-- Heads Up Tables -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <!-- Table 1 -->
-            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
-                <h3 class="text-xl text-[#D4A017] mb-3">Table 1</h3>
-                <div class="flex justify-between items-center">
-                <div class="seat" id="table1-seat1">
-                    <div class="avatar-placeholder">Empty</div>
+                <!-- Table 1 -->
+                <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                    <h3 class="text-xl text-[#D4A017] mb-3">Table 1</h3>
+                    <div class="flex justify-between items-center">
+                        <div class="seat" id="table1-seat1">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                        <div class="text-xl text-[#D4A017]">VS</div>
+                        <div class="seat" id="table1-seat2">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                    </div>
+                    <button class="sit-btn mt-3 w-full" data-table="1">Take Seat</button>
                 </div>
-                <div class="text-xl text-[#D4A017]">VS</div>
-                <div class="seat" id="table1-seat2">
-                    <div class="avatar-placeholder">Empty</div>
-                </div>
-                </div>
-                <button class="sit-btn mt-3 w-full" data-table="1">Take Seat</button>
-            </div>
 
-            <!-- Table 2 -->
-            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
-                <h3 class="text-xl text-[#D4A017] mb-3">Table 2</h3>
-                <div class="flex justify-between items-center">
-                <div class="seat" id="table2-seat1">
-                    <div class="avatar-placeholder">Empty</div>
+                <!-- Table 2 -->
+                <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                    <h3 class="text-xl text-[#D4A017] mb-3">Table 2</h3>
+                    <div class="flex justify-between items-center">
+                        <div class="seat" id="table2-seat1">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                        <div class="text-xl text-[#D4A017]">VS</div>
+                        <div class="seat" id="table2-seat2">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                    </div>
+                    <button class="sit-btn mt-3 w-full" data-table="2">Take Seat</button>
                 </div>
-                <div class="text-xl text-[#D4A017]">VS</div>
-                <div class="seat" id="table2-seat2">
-                    <div class="avatar-placeholder">Empty</div>
-                </div>
-                </div>
-                <button class="sit-btn mt-3 w-full" data-table="2">Take Seat</button>
-            </div>
 
-            <!-- Table 3 -->
-            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
-                <h3 class="text-xl text-[#D4A017] mb-3">Table 3</h3>
-                <div class="flex justify-between items-center">
-                <div class="seat" id="table3-seat1">
-                    <div class="avatar-placeholder">Empty</div>
+                <!-- Table 3 -->
+                <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                    <h3 class="text-xl text-[#D4A017] mb-3">Table 3</h3>
+                    <div class="flex justify-between items-center">
+                        <div class="seat" id="table3-seat1">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                        <div class="text-xl text-[#D4A017]">VS</div>
+                        <div class="seat" id="table3-seat2">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                    </div>
+                    <button class="sit-btn mt-3 w-full" data-table="3">Take Seat</button>
                 </div>
-                <div class="text-xl text-[#D4A017]">VS</div>
-                <div class="seat" id="table3-seat2">
-                    <div class="avatar-placeholder">Empty</div>
-                </div>
-                </div>
-                <button class="sit-btn mt-3 w-full" data-table="3">Take Seat</button>
-            </div>
 
-            <!-- Table 4 -->
-            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
-                <h3 class="text-xl text-[#D4A017] mb-3">Table 4</h3>
-                <div class="flex justify-between items-center">
-                <div class="seat" id="table4-seat1">
-                    <div class="avatar-placeholder">Empty</div>
+                <!-- Table 4 -->
+                <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                    <h3 class="text-xl text-[#D4A017] mb-3">Table 4</h3>
+                    <div class="flex justify-between items-center">
+                        <div class="seat" id="table4-seat1">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                        <div class="text-xl text-[#D4A017]">VS</div>
+                        <div class="seat" id="table4-seat2">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                    </div>
+                    <button class="sit-btn mt-3 w-full" data-table="4">Take Seat</button>
                 </div>
-                <div class="text-xl text-[#D4A017]">VS</div>
-                <div class="seat" id="table4-seat2">
-                    <div class="avatar-placeholder">Empty</div>
-                </div>
-                </div>
-                <button class="sit-btn mt-3 w-full" data-table="4">Take Seat</button>
-            </div>
 
-            <!-- Table 5 -->
-            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
-                <h3 class="text-xl text-[#D4A017] mb-3">Table 5</h3>
-                <div class="flex justify-between items-center">
-                <div class="seat" id="table5-seat1">
-                    <div class="avatar-placeholder">Empty</div>
+                <!-- Table 5 -->
+                <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                    <h3 class="text-xl text-[#D4A017] mb-3">Table 5</h3>
+                    <div class="flex justify-between items-center">
+                        <div class="seat" id="table5-seat1">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                        <div class="text-xl text-[#D4A017]">VS</div>
+                        <div class="seat" id="table5-seat2">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                    </div>
+                    <button class="sit-btn mt-3 w-full" data-table="5">Take Seat</button>
                 </div>
-                <div class="text-xl text-[#D4A017]">VS</div>
-                <div class="seat" id="table5-seat2">
-                    <div class="avatar-placeholder">Empty</div>
+                <!-- Table 6 -->
+                <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                    <h3 class="text-xl text-[#D4A017] mb-3">Table 6</h3>
+                    <div class="flex justify-between items-center">
+                        <div class="seat" id="table6-seat1">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                        <div class="text-xl text-[#D4A017]">VS</div>
+                        <div class="seat" id="table6-seat2">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                    </div>
+                    <button class="sit-btn mt-3 w-full" data-table="6">Take Seat</button>
                 </div>
-                </div>
-                <button class="sit-btn mt-3 w-full" data-table="5">Take Seat</button>
-            </div>
-            <!-- Table 6 -->
-            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
-                <h3 class="text-xl text-[#D4A017] mb-3">Table 6</h3>
-                <div class="flex justify-between items-center">
-                <div class="seat" id="table6-seat1">
-                    <div class="avatar-placeholder">Empty</div>
-                </div>
-                <div class="text-xl text-[#D4A017]">VS</div>
-                <div class="seat" id="table6-seat2">
-                    <div class="avatar-placeholder">Empty</div>
-                </div>
-                </div>
-                <button class="sit-btn mt-3 w-full" data-table="6">Take Seat</button>
-            </div>
 
-            <!-- Table 7 -->
-            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
-                <h3 class="text-xl text-[#D4A017] mb-3">Table 7</h3>
-                <div class="flex justify-between items-center">
-                <div class="seat" id="table7-seat1">
-                    <div class="avatar-placeholder">Empty</div>
+                <!-- Table 7 -->
+                <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                    <h3 class="text-xl text-[#D4A017] mb-3">Table 7</h3>
+                    <div class="flex justify-between items-center">
+                        <div class="seat" id="table7-seat1">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                        <div class="text-xl text-[#D4A017]">VS</div>
+                        <div class="seat" id="table7-seat2">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                    </div>
+                    <button class="sit-btn mt-3 w-full" data-table="7">Take Seat</button>
                 </div>
-                <div class="text-xl text-[#D4A017]">VS</div>
-                <div class="seat" id="table7-seat2">
-                    <div class="avatar-placeholder">Empty</div>
-                </div>
-                </div>
-                <button class="sit-btn mt-3 w-full" data-table="7">Take Seat</button>
-            </div>
 
-            <!-- Table 8 -->
-            <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
-                <h3 class="text-xl text-[#D4A017] mb-3">Table 8</h3>
-                <div class="flex justify-between items-center">
-                <div class="seat" id="table8-seat1">
-                    <div class="avatar-placeholder">Empty</div>
+                <!-- Table 8 -->
+                <div class="table-container bg-gray-800 bg-opacity-90 rounded-lg p-4 border-2 border-[#D4A017]">
+                    <h3 class="text-xl text-[#D4A017] mb-3">Table 8</h3>
+                    <div class="flex justify-between items-center">
+                        <div class="seat" id="table8-seat1">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                        <div class="text-xl text-[#D4A017]">VS</div>
+                        <div class="seat" id="table8-seat2">
+                            <div class="avatar-placeholder">Empty</div>
+                        </div>
+                    </div>
+                    <button class="sit-btn mt-3 w-full" data-table="8">Take Seat</button>
                 </div>
-                <div class="text-xl text-[#D4A017]">VS</div>
-                <div class="seat" id="table8-seat2">
-                    <div class="avatar-placeholder">Empty</div>
-                </div>
-                </div>
-                <button class="sit-btn mt-3 w-full" data-table="8">Take Seat</button>
-            </div>
             </div>
 
             <!-- Selected Deck Display -->
             <div class="flex justify-center gap-5 mb-8">
-            <div id="deck-1-card" class="card-display cursor-pointer"></div>
-            <div id="deck-2-card" class="card-display cursor-pointer"></div>
-            <div id="deck-3-card" class="card-display cursor-pointer"></div>
+                <div id="deck-1-card" class="card-display cursor-pointer"></div>
+                <div id="deck-2-card" class="card-display cursor-pointer"></div>
+                <div id="deck-3-card" class="card-display cursor-pointer"></div>
             </div>
 
             <!-- Server Status -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="server-status bg-gray-800 bg-opacity-90 p-3 rounded-lg text-center">
-                <div class="text-[#D4A017]">Server 1</div>
-                <div class="status-indicator"></div>
-                <div class="player-count">Players: 0/2</div>
-            </div>
-            <div class="server-status bg-gray-800 bg-opacity-90 p-3 rounded-lg text-center">
-                <div class="text-[#D4A017]">Server 2</div>
-                <div class="status-indicator"></div>
-                <div class="player-count">Players: 0/2</div>
-            </div>
-            <div class="server-status bg-gray-800 bg-opacity-90 p-3 rounded-lg text-center">
-                <div class="text-[#D4A017]">Server 3</div>
-                <div class="status-indicator"></div>
-                <div class="player-count">Players: 0/2</div>
-            </div>
-            <div class="server-status bg-gray-800 bg-opacity-90 p-3 rounded-lg text-center">
-                <div class="text-[#D4A017]">Server 4</div>
-                <div class="status-indicator"></div>
-                <div class="player-count">Players: 0/2</div>
-            </div>
+                <div class="server-status bg-gray-800 bg-opacity-90 p-3 rounded-lg text-center">
+                    <div class="text-[#D4A017]">Server 1</div>
+                    <div class="status-indicator"></div>
+                    <div class="player-count">Players: 0/2</div>
+                </div>
+                <div class="server-status bg-gray-800 bg-opacity-90 p-3 rounded-lg text-center">
+                    <div class="text-[#D4A017]">Server 2</div>
+                    <div class="status-indicator"></div>
+                    <div class="player-count">Players: 0/2</div>
+                </div>
+                <div class="server-status bg-gray-800 bg-opacity-90 p-3 rounded-lg text-center">
+                    <div class="text-[#D4A017]">Server 3</div>
+                    <div class="status-indicator"></div>
+                    <div class="player-count">Players: 0/2</div>
+                </div>
+                <div class="server-status bg-gray-800 bg-opacity-90 p-3 rounded-lg text-center">
+                    <div class="text-[#D4A017]">Server 4</div>
+                    <div class="status-indicator"></div>
+                    <div class="player-count">Players: 0/2</div>
+                </div>
             </div>
 
             <!-- Quick Match Button -->
             <div class="text-center">
-            <button id="find-game-btn" class="btn bg-[#D4A017] text-black font-bold py-3 px-8 text-xl rounded">
-                Find Game
-            </button>
-            <div id="matchmaking-status" class="mt-3 text-[#ADD8E6] hidden">
-                Searching for opponent... <span class="animate-pulse">⌛</span>
-            </div>
+                <button id="find-game-btn" class="btn bg-[#D4A017] text-black font-bold py-3 px-8 text-xl rounded">
+                    Find Game
+                </button>
+                <div id="matchmaking-status" class="mt-3 text-[#ADD8E6] hidden">
+                    Searching for opponent... <span class="animate-pulse">⌛</span>
+                </div>
             </div>
         </div>
 
         <style>
             .game-mode-btn {
-            padding: 0.75rem 1.5rem;
-            background: rgba(74, 47, 26, 0.9);
-            border: 3px solid #D4A017;
-            border-radius: 8px;
-            color: #fff;
-            transition: all 0.3s ease;
+                padding: 0.75rem 1.5rem;
+                background: rgba(74, 47, 26, 0.9);
+                border: 3px solid #D4A017;
+                border-radius: 8px;
+                color: #fff;
+                transition: all 0.3s ease;
             }
 
             .game-mode-btn.active {
-            background: #D4A017;
-            color: #000;
-            transform: scale(1.05);
-            box-shadow: 0 0 15px #D4A017;
+                background: #D4A017;
+                color: #000;
+                transform: scale(1.05);
+                box-shadow: 0 0 15px #D4A017;
             }
 
             .table-container {
-            transition: all 0.3s ease;
+                transition: all 0.3s ease;
             }
 
             .table-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 20px rgba(212, 160, 23, 0.3);
+                transform: translateY(-5px);
+                box-shadow: 0 0 20px rgba(212, 160, 23, 0.3);
             }
 
             .seat {
-            width: 80px;
-            height: 80px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid #D4A017;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            transition: all 0.3s ease;
+                width: 80px;
+                height: 80px;
+                background: rgba(0, 0, 0, 0.5);
+                border: 2px solid #D4A017;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                transition: all 0.3s ease;
             }
 
             .seat.occupied {
-            background: rgba(0, 255, 0, 0.2);
-            border-color: #00ff00;
+                background: rgba(0, 255, 0, 0.2);
+                border-color: #00ff00;
             }
 
             .sit-btn {
-            background: rgba(74, 47, 26, 0.9);
-            border: 2px solid #D4A017;
-            color: #fff;
-            padding: 0.5rem;
-            border-radius: 4px;
-            transition: all 0.3s ease;
+                background: rgba(74, 47, 26, 0.9);
+                border: 2px solid #D4A017;
+                color: #fff;
+                padding: 0.5rem;
+                border-radius: 4px;
+                transition: all 0.3s ease;
             }
 
             .sit-btn:hover {
-            background: #D4A017;
-            color: #000;
+                background: #D4A017;
+                color: #000;
             }
 
             .server-status {
-            border: 1px solid #D4A017;
+                border: 1px solid #D4A017;
             }
 
             .status-indicator {
-            width: 12px;
-            height: 12px;
-            background: #00ff00;
-            border-radius: 50%;
-            margin: 0.5rem auto;
+                width: 12px;
+                height: 12px;
+                background: #00ff00;
+                border-radius: 50%;
+                margin: 0.5rem auto;
             }
 
             .status-indicator.busy {
-            background: #ff0000;
+                background: #ff0000;
             }
 
             #find-game-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 25px #D4A017;
+                transform: scale(1.1);
+                box-shadow: 0 0 25px #D4A017;
             }
 
             @keyframes searchPulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+                0% {
+                    opacity: 1;
+                }
+
+                50% {
+                    opacity: 0.5;
+                }
+
+                100% {
+                    opacity: 1;
+                }
             }
         </style>
 
         <!-- Packs Tab -->
         <div class="tab-content" id="packs">
-            <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center text-shadow-[0_0_12px_#D4A017]">Card Packs</h2>
+            <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center text-shadow-[0_0_12px_#D4A017]">Card Packs
+            </h2>
             <div id="packs-container" class="flex flex-wrap gap-5 justify-center"></div>
             <div id="pack-result" class="mt-5 flex flex-wrap gap-2.5 justify-center"></div>
-            <button id="buy-pack-btn" class="mt-5 w-full bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded btn hidden">Buy Pack (500 $GBuX)</button>
+            <button id="buy-pack-btn"
+                class="mt-5 w-full bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded btn hidden">Buy Pack (500
+                $GBuX)</button>
             <div id="collection-progress" class="mt-2 text-center text-lg text-[#ADD8E6]"></div>
         </div>
 
-        <button id="play-game-btn" class="absolute bottom-5 right-5 bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded btn text-xl">Play Game</button>
+        <button id="play-game-btn"
+            class="absolute bottom-5 right-5 bg-[#D4A017] text-black font-bold py-2.5 px-5 rounded btn text-xl">Play
+            Game</button>
     </div>
 
     <script>
-        const CLIENT_ID = '1342593452793270302';
-        const CLIENT_SECRET = 'dvNMm6xErLdFqkLRsLKSMxVdbCtqisEM';
-        const REDIRECT_URI = 'https://www.grudgeplatform.com/card-minter';
-        const DB_URL = 'https://database.example.com';
-        const DB_KEY = 'your-db-key';
+        const CLIENT_ID = "1342593452793270302";
+        const CLIENT_SECRET = "dvNMm6xErLdFqkLRsLKSMxVdbCtqisEM";
+        const REDIRECT_URI = "https://www.grudgeplatform.com/card-minter";
+        const DB_URL = "https://database.example.com";
+        const DB_KEY = "your-db-key";
 
         const dbClient = typeof Database !== 'undefined' ? Database.createClient(DB_URL, DB_KEY) : null;
 
@@ -1149,107 +1208,107 @@
 
         const grudgeCard = { id: 0, name: "Grudge", cost: 3, attack: 2, health: 2, description: "A basic fighter.", backgroundImage: "https://i.imgur.com/3SkE6VG.png", uid: "grudge" };
         const season0 = [
-        {"cardId": "001", "name": "Stealth Drone", "type": "minion", "atk": 1, "hp": 1, "cost": 1, "description": "Quick scouting unit cloaked in shadow.", "image": "https://i.imgur.com/zMFckYB.png", "startingAmount": 2},
-        {"cardId": "002", "name": "A Coward Priest", "type": "minion", "atk": 1, "hp": 1, "cost": 1, "description": "Basic reconnaissance unit.", "image": "https://i.imgur.com/DHS25YU.jpeg", "startingAmount": 2},
-        {"cardId": "003", "name": "Starborn Light", "type": "minion", "atk": 1, "hp": 1, "cost": 1, "description": "Summons structures.", "image": "https://i.imgur.com/AvsiFog.png", "startingAmount": 2},
-        {"cardId": "004", "name": "Arcane Mystic", "type": "minion", "atk": 2, "hp": 3, "cost": 2, "description": "Casts arcane spells with finesse.", "image": "https://i.imgur.com/Enu1T7Y.png", "startingAmount": 2},
-        {"cardId": "005", "name": "Alpha Skiff", "type": "minion", "atk": 1, "hp": 2, "cost": 2, "description": "On play: Deal 2 damage to an enemy.", "image": "https://i.imgur.com/z1fbkXx.png", "startingAmount": 2},
-        {"cardId": "006", "name": "Orcish Sniper", "type": "minion", "atk": 2, "hp": 1, "cost": 2, "description": "Ranged attacker.", "image": "https://i.imgur.com/nlkfMpI.png", "startingAmount": 2},
-        {"cardId": "007", "name": "Mace Assassin", "type": "minion", "atk": 4, "hp": 2, "cost": 3, "description": "Strikes with venomous precision.", "image": "https://i.imgur.com/3SkE6VG.png", "startingAmount": 2},
-        {"cardId": "008", "name": "Swarm Legion", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Overruns the enemy in numbers.", "image": "https://i.imgur.com/Wn84v6I.png", "startingAmount": 2},
-        {"cardId": "009", "name": "Ethereal Phantom", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Haunts the battlefield.", "image": "https://i.imgur.com/v0RBTiV.png", "startingAmount": 2},
-        {"cardId": "010", "name": "Crimson Shade", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Burns with crimson energy.", "image": "https://i.imgur.com/36iR3J8.png", "startingAmount": 2},
-        {"cardId": "011", "name": "Logs Much", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Wooden with Steel presence.", "image": "https://i.imgur.com/PFbnxct.png", "startingAmount": 2},
-        {"cardId": "012", "name": "Luminous Watcher", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Heals all for 1 each turn.", "image": "https://i.imgur.com/eg8FESL.png", "startingAmount": 2},
-        {"cardId": "013", "name": "Patrol Frigate", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Standard patrol vessel.", "image": "https://i.imgur.com/nJMY8NA.png", "startingAmount": 2},
-        {"cardId": "014", "name": "Battle Commander", "type": "minion", "atk": 2, "hp": 4, "cost": 3, "description": "Leads the charge.", "image": "https://i.imgur.com/ABsno64.png", "startingAmount": 2},
-        {"cardId": "015", "name": "Night Wraith", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Strikes from the shadows.", "image": "https://i.imgur.com/PSpj7sO.png", "startingAmount": 1},
-        {"cardId": "016", "name": "Night Lord", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Roams from the shadows.", "image": "https://i.imgur.com/qpsLIcS.png", "startingAmount": 1},
-        {"cardId": "017", "name": "Crimson Revenant", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Strikes with fiery intent.", "image": "https://i.imgur.com/8YIqCl5.png", "startingAmount": 1},
-        {"cardId": "018", "name": "Emerald Stalker", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Strikes with emerald fury.", "image": "https://i.imgur.com/5t6kGOi.jpeg", "startingAmount": 1},
-        {"cardId": "019", "name": "Storm Cavalier", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Rides the storm into battle.", "image": "https://i.imgur.com/nBUKWdy.png", "startingAmount": 1},
-        {"cardId": "020", "name": "Flame Charger", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Charges with fiery speed.", "image": "https://i.imgur.com/cep6ytB.png", "startingAmount": 1},
-        {"cardId": "021", "name": "Ra Cal Vin", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Glides with icy Language.", "image": "https://i.imgur.com/XbSuPyC.png", "startingAmount": 1},
-        {"cardId": "022", "name": "Beta Cruiser", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "On play: Deal 5 damage to an enemy.", "image": "https://i.imgur.com/JuxTEX9.png", "startingAmount": 1},
-        {"cardId": "023", "name": "Enigmatic Warrior", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Mysterious combatant.", "image": "https://i.imgur.com/JwcxWth.png", "startingAmount": 1},
-        {"cardId": "024", "name": "Barrier Sentinel", "type": "minion", "atk": 0, "hp": 7, "cost": 5, "description": "Unyielding defense with Taunt.", "image": "https://i.imgur.com/klAa6aX.png", "startingAmount": 1},
-        {"cardId": "025", "name": "Void Sorcerer", "type": "minion", "atk": 3, "hp": 4, "cost": 5, "description": "Casts protective dark magic.", "image": "https://i.imgur.com/2XhqS6d.png", "startingAmount": 1},
-        {"cardId": "026", "name": "Light Mage", "type": "minion", "atk": 3, "hp": 4, "cost": 5, "description": "Shields with radiant magic.", "image": "https://i.imgur.com/cMLK4Oq.png", "startingAmount": 1},
-        {"cardId": "027", "name": "Spectral Warrior", "type": "minion", "atk": 5, "hp": 4, "cost": 5, "description": "Fights with ghostly strength.", "image": "https://i.imgur.com/n2b1ugT.png", "startingAmount": 1},
-        {"cardId": "028", "name": "Radiant Paladin", "type": "minion", "atk": 5, "hp": 4, "cost": 5, "description": "Shines with radiant power.", "image": "https://i.imgur.com/TalRqz3.png", "startingAmount": 1},
-        {"cardId": "029", "name": "Vitality Totem", "type": "minion", "atk": 3, "hp": 5, "cost": 5, "description": "Heals all for 2 each turn.", "image": "https://i.imgur.com/SAL2oQY.png", "startingAmount": 1},
-        {"cardId": "030", "name": "Ironclad Titan", "type": "minion", "atk": 4, "hp": 4, "cost": 5, "description": "Heavy armored enforcer.", "image": "https://i.imgur.com/yUzjTDm.png", "startingAmount": 1},
-        {"cardId": "031", "name": "Overlord Mind", "type": "minion", "atk": 4, "hp": 4, "cost": 5, "description": "Taunt.", "image": "https://i.imgur.com/LspYMpz.png", "startingAmount": 1},
-        {"cardId": "032", "name": "Celestial Warden", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Heals all for 1 each turn.", "image": "https://i.imgur.com/6CXJn5s.png", "startingAmount": 0},
-        {"cardId": "033", "name": "Abyssal Keeper", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Heals all with dark energy.", "image": "https://i.imgur.com/3b2RmGQ.png", "startingAmount": 0},
-        {"cardId": "034", "name": "Arcane Missile", "type": "spell", "cost": 1, "description": "Deal 3 damage to a random enemy.", "image": "https://i.imgur.com/jQbF07m.png", "startingAmount": 1},
-        {"cardId": "035", "name": "Shadow Strike", "type": "spell", "cost": 2, "description": "Deal 4 damage to a target enemy.", "image": "https://i.imgur.com/oPFVuMN.png", "startingAmount": 1},
-        {"cardId": "036", "name": "Healing Wave", "type": "spell", "cost": 3, "description": "Restore 6 health to a friendly character.", "image": "https://i.imgur.com/PgLXUx8.png", "startingAmount": 1},
-        {"cardId": "037", "name": "Mind Control", "type": "spell", "cost": 8, "description": "Take control of an enemy minion.", "image": "https://i.imgur.com/dC1AKPu.png", "startingAmount": 0},
-        {"cardId": "038", "name": "Starship Alpha", "type": "minion", "atk": 2, "hp": 2, "cost": 2, "description": "Stealth. Gains +1 atk in space-themed games.", "image": "https://i.imgur.com/scyPIUs.png", "startingAmount": 1},
-        {"cardId": "039", "name": "Star Hut", "type": "minion", "atk": 0, "hp": 5, "cost": 3, "description": "Taunt. Heals adjacent allies for 1 in Island.", "image": "https://i.imgur.com/TCYVocs.png", "startingAmount": 1},
-        {"cardId": "040", "name": "Engineer Prime", "type": "minion", "atk": 4, "hp": 4, "cost": 6, "description": "Super Rare. On play: Give all allies +2 atk in Warlords.", "image": "https://i.imgur.com/KpHvcmW.mp4", "startingAmount": 0},
-        {"cardId": "041", "name": "Starship Beta", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Deals +2 damage to structures in RTS.", "image": "https://i.imgur.com/BSurWbZ.png", "startingAmount": 1},
-        {"cardId": "042", "name": "Starship Gamma", "type": "minion", "atk": 2, "hp": 4, "cost": 4, "description": "Heals allies for 1 in Crawl.", "image": "https://i.imgur.com/5PSOVVc.png", "startingAmount": 1},
-        {"cardId": "043", "name": "Star Cruiser", "type": "minion", "atk": 6, "hp": 5, "cost": 7, "description": "On play: Deal 3 damage to all enemies in Battle.", "image": "https://i.imgur.com/Ldfm3An.png", "startingAmount": 0},
-        {"cardId": "044", "name": "Fireball", "type": "spell", "cost": 4, "description": "Deal 6 damage to a target. +2 damage in Warlords.", "image": "https://i.imgur.com/V1HCiAI.jpg", "startingAmount": 1},
-        {"cardId": "045", "name": "Undead", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Grants Undead Hardcore Island character. +1 hp in Island.", "image": "https://i.imgur.com/8YIqCl5.png", "startingAmount": 0},
-        {"cardId": "046", "name": "Human", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Grants Human Hardcore Island character. +1 atk in Warlords.", "image": "https://i.imgur.com/0XcU175.png", "startingAmount": 0},
-        {"cardId": "047", "name": "Orc", "type": "minion", "atk": 4, "hp": 2, "cost": 3, "description": "Grants Orc Hardcore Island character. Haste in Battle.", "image": "https://i.imgur.com/nlkfMpI.png", "startingAmount": 0},
-        {"cardId": "048", "name": "Elf", "type": "minion", "atk": 2, "hp": 4, "cost": 3, "description": "Grants Elf Hardcore Island character. +1 cost reduction in Crawl.", "image": "https://i.imgur.com/6CXJn5s.png", "startingAmount": 0},
-        {"cardId": "049", "name": "Dwarf", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Grants Dwarf Hardcore Island character. +2 hp in Tower.", "image": "https://i.imgur.com/nBUKWdy.png", "startingAmount": 0},
-        {"cardId": "050", "name": "Barbarian", "type": "minion", "atk": 4, "hp": 3, "cost": 3, "description": "Grants Barbarian Hardcore Island character. +1 atk in Island.", "image": "https://i.imgur.com/a9H86By.png", "startingAmount": 0},
-        {"cardId": "051", "name": "Skeleton NB", "type": "minion", "atk": 2, "hp": 3, "cost": 2, "description": "Swift skeletal fighter with a mace.", "image": "https://i.imgur.com/Dh99XuH.png", "startingAmount": 2},
-        {"cardId": "052", "name": "Scourge Warrior", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Dark warrior with a cursed blade.", "image": "https://i.imgur.com/NFjvmxO.png", "startingAmount": 1},
-        {"cardId": "053", "name": "Orc NB", "type": "minion", "atk": 2, "hp": 2, "cost": 2, "description": "Stealthy orc scout.", "image": "https://i.imgur.com/zMFckYB.png", "startingAmount": 2},
-        {"cardId": "054", "name": "Barbarian Mace", "type": "minion", "atk": 4, "hp": 2, "cost": 3, "description": "Barbarian wielding a heavy mace.", "image": "https://i.imgur.com/3SkE6VG.png", "startingAmount": 2},
-        {"cardId": "055", "name": "Human NB", "type": "minion", "atk": 3, "hp": 4, "cost": 4, "description": "Versatile human defender with a shield.", "image": "https://i.imgur.com/klAa6aX.png", "startingAmount": 1},
-        {"cardId": "056", "name": "Dwarf", "type": "minion", "atk": 3, "hp": 5, "cost": 4, "description": "Sturdy dwarf with a hammer.", "image": "https://i.imgur.com/Wn84v6I.png", "startingAmount": 1},
-        {"cardId": "057", "name": "Elf Archer", "type": "minion", "atk": 3, "hp": 2, "cost": 3, "description": "Precise elf archer with a bow.", "image": "https://i.imgur.com/Enu1T7Y.png", "startingAmount": 2},
-        {"cardId": "058", "name": "Knight", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Armored knight with a greatsword.", "image": "https://i.imgur.com/s0cMpSi.png", "startingAmount": 0},
-        {"cardId": "059", "name": "Dwarf Knight NB", "type": "minion", "atk": 4, "hp": 5, "cost": 5, "description": "Heavily armored dwarf knight.", "image": "https://i.imgur.com/TalRqz3.png", "startingAmount": 1},
-        {"cardId": "060", "name": "Yorda", "type": "minion", "atk": 5, "hp": 4, "cost": 6, "description": "Bats with thunderous force.", "image": "https://i.imgur.com/UvZsOLQ.png", "startingAmount": 0},
-        {"cardId": "061", "name": "Magician NB", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Casts arcane spells with a staff.", "image": "https://i.imgur.com/PSpj7sO.png", "startingAmount": 1},
-        {"cardId": "062", "name": "Calvin", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Glides with icy magic.", "image": "https://i.imgur.com/XbSuPyC.png", "startingAmount": 1},
-        {"cardId": "063", "name": "NB Undead", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Undead soldier with enduring spirit.", "image": "https://i.imgur.com/8YIqCl5.png", "startingAmount": 1},
-        {"cardId": "064", "name": "NB Human Wizard", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Human wizard casting powerful spells.", "image": "https://i.imgur.com/0XcU175.png", "startingAmount": 1},
-        {"cardId": "065", "name": "Human Archer NB", "type": "minion", "atk": 3, "hp": 2, "cost": 3, "description": "Human archer with deadly aim.", "image": "https://i.imgur.com/jKE3ClI.png", "startingAmount": 2},
-        {"cardId": "066", "name": "Undead NB", "type": "minion", "atk": 2, "hp": 4, "cost": 3, "description": "Undead warrior with a shield.", "image": "https://i.imgur.com/XJ8Saun.png", "startingAmount": 2},
-        {"cardId": "067", "name": "NB Undead Archer", "type": "minion", "atk": 3, "hp": 2, "cost": 3, "description": "Undead archer with ghostly arrows.", "image": "https://i.imgur.com/fGDbB5o.png", "startingAmount": 2},
-        {"cardId": "068", "name": "Barrel Weapon", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Explosive barrel used as a weapon.", "image": "https://i.imgur.com/PFbnxct.png", "startingAmount": 2},
-        {"cardId": "069", "name": "Orc Archer NB", "type": "minion", "atk": 3, "hp": 2, "cost": 3, "description": "Orc archer with a heavy bow.", "image": "https://i.imgur.com/nlkfMpI.png", "startingAmount": 2},
-        {"cardId": "070", "name": "Priest NB", "type": "minion", "atk": 2, "hp": 4, "cost": 4, "description": "Heals allies with divine light.", "image": "https://i.imgur.com/6CXJn5s.png", "startingAmount": 1},
-        {"cardId": "071", "name": "Paladin NB", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Protects with holy power.", "image": "https://i.imgur.com/3b2RmGQ.png", "startingAmount": 0},
-        {"cardId": "072", "name": "Orc Heavy", "type": "minion", "atk": 5, "hp": 4, "cost": 5, "description": "Heavy orc with a massive axe.", "image": "https://i.imgur.com/cep6ytB.png", "startingAmount": 1},
-        {"cardId": "073", "name": "Human Heavy", "type": "minion", "atk": 4, "hp": 5, "cost": 5, "description": "Heavily armored human warrior.", "image": "https://i.imgur.com/UT8Yfo2.png", "startingAmount": 1},
-        {"cardId": "074", "name": "Undead Heavy", "type": "minion", "atk": 4, "hp": 5, "cost": 5, "description": "Undead giant with a spiked club.", "image": "https://i.imgur.com/9Prc8Md.png", "startingAmount": 1},
-        {"cardId": "075", "name": "WareTree", "type": "minion", "atk": 3, "hp": 6, "cost": 5, "description": "Living tree that attacks with roots.", "image": "https://i.imgur.com/gA5V2vd.png", "startingAmount": 1},
-        {"cardId": "076", "name": "Small Troll", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Small troll with regenerative powers.", "image": "https://i.imgur.com/R5AKvO4.png", "startingAmount": 2},
-        {"cardId": "077", "name": "Human Upgrade", "type": "minion", "atk": 4, "hp": 4, "cost": 5, "description": "Upgraded human with enhanced armor.", "image": "https://i.imgur.com/9lhozCz.png", "startingAmount": 1},
-        {"cardId": "078", "name": "Dwarf Heavy", "type": "minion", "atk": 4, "hp": 6, "cost": 5, "description": "Heavy dwarf with a warhammer.", "image": "https://i.imgur.com/oGautmG.png", "startingAmount": 1},
-        {"cardId": "079", "name": "Scourge Familiar", "type": "minion", "atk": 2, "hp": 2, "cost": 2, "description": "Dark familiar that boosts spells.", "image": "https://i.imgur.com/FcwHTwA.png", "startingAmount": 2},
-        {"cardId": "080", "name": "Faitherbearer", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Bearer of faith with divine strength.", "image": "https://i.imgur.com/ENXGMbn.jpg", "startingAmount": 0},
-        {"cardId": "081", "name": "Explosion 2", "type": "spell", "cost": 5, "description": "Deal 8 damage to a target and 2 to adjacent enemies.", "image": "https://i.imgur.com/vUfG5PJ.png", "startingAmount": 1},
-        {"cardId": "082", "name": "Explosion 1", "type": "spell", "cost": 3, "description": "Deal 5 damage to a target and 1 to adjacent enemies.", "image": "https://i.imgur.com/lAUM1L7.png", "startingAmount": 1},
-        {"cardId": "083", "name": "Spell Ball", "type": "spell", "cost": 2, "description": "Deal 3 damage to a random enemy and draw a card.", "image": "https://i.imgur.com/1iicyne.png", "startingAmount": 1},
-        {"cardId": "084", "name": "Fire Swirl", "type": "spell", "cost": 4, "description": "Deal 4 damage to all enemies.", "image": "https://i.imgur.com/dramBbf.png", "startingAmount": 1},
-        {"cardId": "085", "name": "Fire Ball", "type": "spell", "cost": 4, "description": "Deal 6 damage to a target.", "image": "https://i.imgur.com/KfE0K3N.png", "startingAmount": 1},
-        {"cardId": "086", "name": "Purple Swipe", "type": "spell", "cost": 3, "description": "Deal 4 damage and reduce target atk by 1.", "image": "https://i.imgur.com/X4uVLBC.png", "startingAmount": 1},
-        {"cardId": "087", "name": "Sword", "type": "spell", "cost": 2, "description": "Give a minion +2 atk this turn.", "image": "https://i.imgur.com/u95mHRc.png", "startingAmount": 1},
-        {"cardId": "088", "name": "Pick Axe Efforts", "type": "spell", "cost": 3, "description": "Deal 3 damage and gain 2 armor.", "image": "https://i.imgur.com/OaIxVfq.png", "startingAmount": 1},
-        {"cardId": "089", "name": "Book", "type": "spell", "cost": 1, "description": "Draw 2 cards.", "image": "https://i.imgur.com/LhKeIUk.png", "startingAmount": 1},
-        {"cardId": "090", "name": "Light", "type": "spell", "cost": 2, "description": "Restore 4 health to a friendly character.", "image": "https://i.imgur.com/8fYU7nG.png", "startingAmount": 1},
-        {"cardId": "091", "name": "Light 2", "type": "spell", "cost": 3, "description": "Restore 6 health to a friendly character.", "image": "https://i.imgur.com/FGmWArp.png", "startingAmount": 1},
-        {"cardId": "092", "name": "Arcane", "type": "spell", "cost": 5, "description": "Deal 5 damage to a target and stun it.", "image": "https://i.imgur.com/dU3QrVi.png", "startingAmount": 1},
-        {"cardId": "093", "name": "Mystic Green", "type": "spell", "cost": 4, "description": "Restore 5 health to all friendly characters.", "image": "https://i.imgur.com/ra2S7o0.png", "startingAmount": 1},
-        {"cardId": "094", "name": "Red Skull Magic", "type": "spell", "cost": 6, "description": "Deal 6 damage to a target and summon a 2/2 skull.", "image": "https://i.imgur.com/KjBYZ7L.png", "startingAmount": 0},
-        {"cardId": "095", "name": "Green Skull Magic", "type": "spell", "cost": 6, "description": "Deal 5 damage to a target and heal for 5.", "image": "https://i.imgur.com/dWpBsru.png", "startingAmount": 0},
-        {"cardId": "096", "name": "Small Building", "type": "minion", "atk": 0, "hp": 5, "cost": 3, "description": "Taunt. Defensive structure for RTS.", "image": "https://i.imgur.com/LouhX6b.png", "startingAmount": 1},
-        {"cardId": "097", "name": "Summoning Tower", "type": "minion", "atk": 2, "hp": 4, "cost": 4, "description": "On play: Summon a 1/1 spirit in Crawl.", "image": "https://i.imgur.com/aBeF0N8.png", "startingAmount": 1},
-        {"cardId": "098", "name": "Armory", "type": "minion", "atk": 0, "hp": 6, "cost": 5, "description": "Taunt. Gives +1 atk to summoned minions in RTS.", "image": "https://i.imgur.com/4TFvg1K.png", "startingAmount": 1},
-        {"cardId": "099", "name": "Hero Hall", "type": "minion", "atk": 0, "hp": 7, "cost": 6, "description": "Taunt. Boosts hero atk by 2 in Warlords.", "image": "https://i.imgur.com/H0EAefW.png", "startingAmount": 0},
-        {"cardId": "100", "name": "Tower", "type": "minion", "atk": 0, "hp": 8, "cost": 7, "description": "Taunt. Defensive structure for RTS.", "image": "https://i.imgur.com/4TFvg1K.png", "startingAmount": 0},
-    ];
+            { "cardId": "001", "name": "Stealth Drone", "type": "minion", "atk": 1, "hp": 1, "cost": 1, "description": "Quick scouting unit cloaked in shadow.", "image": "https://i.imgur.com/zMFckYB.png", "startingAmount": 2 },
+            { "cardId": "002", "name": "A Coward Priest", "type": "minion", "atk": 1, "hp": 1, "cost": 1, "description": "Basic reconnaissance unit.", "image": "https://i.imgur.com/DHS25YU.jpeg", "startingAmount": 2 },
+            { "cardId": "003", "name": "Starborn Light", "type": "minion", "atk": 1, "hp": 1, "cost": 1, "description": "Summons structures.", "image": "https://i.imgur.com/AvsiFog.png", "startingAmount": 2 },
+            { "cardId": "004", "name": "Arcane Mystic", "type": "minion", "atk": 2, "hp": 3, "cost": 2, "description": "Casts arcane spells with finesse.", "image": "https://i.imgur.com/Enu1T7Y.png", "startingAmount": 2 },
+            { "cardId": "005", "name": "Alpha Skiff", "type": "minion", "atk": 1, "hp": 2, "cost": 2, "description": "On play: Deal 2 damage to an enemy.", "image": "https://i.imgur.com/z1fbkXx.png", "startingAmount": 2 },
+            { "cardId": "006", "name": "Orcish Sniper", "type": "minion", "atk": 2, "hp": 1, "cost": 2, "description": "Ranged attacker.", "image": "https://i.imgur.com/nlkfMpI.png", "startingAmount": 2 },
+            { "cardId": "007", "name": "Mace Assassin", "type": "minion", "atk": 4, "hp": 2, "cost": 3, "description": "Strikes with venomous precision.", "image": "https://i.imgur.com/3SkE6VG.png", "startingAmount": 2 },
+            { "cardId": "008", "name": "Swarm Legion", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Overruns the enemy in numbers.", "image": "https://i.imgur.com/Wn84v6I.png", "startingAmount": 2 },
+            { "cardId": "009", "name": "Ethereal Phantom", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Haunts the battlefield.", "image": "https://i.imgur.com/v0RBTiV.png", "startingAmount": 2 },
+            { "cardId": "010", "name": "Crimson Shade", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Burns with crimson energy.", "image": "https://i.imgur.com/36iR3J8.png", "startingAmount": 2 },
+            { "cardId": "011", "name": "Logs Much", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Wooden with Steel presence.", "image": "https://i.imgur.com/PFbnxct.png", "startingAmount": 2 },
+            { "cardId": "012", "name": "Luminous Watcher", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Heals all for 1 each turn.", "image": "https://i.imgur.com/eg8FESL.png", "startingAmount": 2 },
+            { "cardId": "013", "name": "Patrol Frigate", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Standard patrol vessel.", "image": "https://i.imgur.com/nJMY8NA.png", "startingAmount": 2 },
+            { "cardId": "014", "name": "Battle Commander", "type": "minion", "atk": 2, "hp": 4, "cost": 3, "description": "Leads the charge.", "image": "https://i.imgur.com/ABsno64.png", "startingAmount": 2 },
+            { "cardId": "015", "name": "Night Wraith", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Strikes from the shadows.", "image": "https://i.imgur.com/PSpj7sO.png", "startingAmount": 1 },
+            { "cardId": "016", "name": "Night Lord", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Roams from the shadows.", "image": "https://i.imgur.com/qpsLIcS.png", "startingAmount": 1 },
+            { "cardId": "017", "name": "Crimson Revenant", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Strikes with fiery intent.", "image": "https://i.imgur.com/8YIqCl5.png", "startingAmount": 1 },
+            { "cardId": "018", "name": "Emerald Stalker", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Strikes with emerald fury.", "image": "https://i.imgur.com/5t6kGOi.jpeg", "startingAmount": 1 },
+            { "cardId": "019", "name": "Storm Cavalier", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Rides the storm into battle.", "image": "https://i.imgur.com/nBUKWdy.png", "startingAmount": 1 },
+            { "cardId": "020", "name": "Flame Charger", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Charges with fiery speed.", "image": "https://i.imgur.com/cep6ytB.png", "startingAmount": 1 },
+            { "cardId": "021", "name": "Ra Cal Vin", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Glides with icy Language.", "image": "https://i.imgur.com/XbSuPyC.png", "startingAmount": 1 },
+            { "cardId": "022", "name": "Beta Cruiser", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "On play: Deal 5 damage to an enemy.", "image": "https://i.imgur.com/JuxTEX9.png", "startingAmount": 1 },
+            { "cardId": "023", "name": "Enigmatic Warrior", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Mysterious combatant.", "image": "https://i.imgur.com/JwcxWth.png", "startingAmount": 1 },
+            { "cardId": "024", "name": "Barrier Sentinel", "type": "minion", "atk": 0, "hp": 7, "cost": 5, "description": "Unyielding defense with Taunt.", "image": "https://i.imgur.com/klAa6aX.png", "startingAmount": 1 },
+            { "cardId": "025", "name": "Void Sorcerer", "type": "minion", "atk": 3, "hp": 4, "cost": 5, "description": "Casts protective dark magic.", "image": "https://i.imgur.com/2XhqS6d.png", "startingAmount": 1 },
+            { "cardId": "026", "name": "Light Mage", "type": "minion", "atk": 3, "hp": 4, "cost": 5, "description": "Shields with radiant magic.", "image": "https://i.imgur.com/cMLK4Oq.png", "startingAmount": 1 },
+            { "cardId": "027", "name": "Spectral Warrior", "type": "minion", "atk": 5, "hp": 4, "cost": 5, "description": "Fights with ghostly strength.", "image": "https://i.imgur.com/n2b1ugT.png", "startingAmount": 1 },
+            { "cardId": "028", "name": "Radiant Paladin", "type": "minion", "atk": 5, "hp": 4, "cost": 5, "description": "Shines with radiant power.", "image": "https://i.imgur.com/TalRqz3.png", "startingAmount": 1 },
+            { "cardId": "029", "name": "Vitality Totem", "type": "minion", "atk": 3, "hp": 5, "cost": 5, "description": "Heals all for 2 each turn.", "image": "https://i.imgur.com/SAL2oQY.png", "startingAmount": 1 },
+            { "cardId": "030", "name": "Ironclad Titan", "type": "minion", "atk": 4, "hp": 4, "cost": 5, "description": "Heavy armored enforcer.", "image": "https://i.imgur.com/yUzjTDm.png", "startingAmount": 1 },
+            { "cardId": "031", "name": "Overlord Mind", "type": "minion", "atk": 4, "hp": 4, "cost": 5, "description": "Taunt.", "image": "https://i.imgur.com/LspYMpz.png", "startingAmount": 1 },
+            { "cardId": "032", "name": "Celestial Warden", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Heals all for 1 each turn.", "image": "https://i.imgur.com/6CXJn5s.png", "startingAmount": 0 },
+            { "cardId": "033", "name": "Abyssal Keeper", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Heals all with dark energy.", "image": "https://i.imgur.com/3b2RmGQ.png", "startingAmount": 0 },
+            { "cardId": "034", "name": "Arcane Missile", "type": "spell", "cost": 1, "description": "Deal 3 damage to a random enemy.", "image": "https://i.imgur.com/jQbF07m.png", "startingAmount": 1 },
+            { "cardId": "035", "name": "Shadow Strike", "type": "spell", "cost": 2, "description": "Deal 4 damage to a target enemy.", "image": "https://i.imgur.com/oPFVuMN.png", "startingAmount": 1 },
+            { "cardId": "036", "name": "Healing Wave", "type": "spell", "cost": 3, "description": "Restore 6 health to a friendly character.", "image": "https://i.imgur.com/PgLXUx8.png", "startingAmount": 1 },
+            { "cardId": "037", "name": "Mind Control", "type": "spell", "cost": 8, "description": "Take control of an enemy minion.", "image": "https://i.imgur.com/dC1AKPu.png", "startingAmount": 0 },
+            { "cardId": "038", "name": "Starship Alpha", "type": "minion", "atk": 2, "hp": 2, "cost": 2, "description": "Stealth. Gains +1 atk in space-themed games.", "image": "https://i.imgur.com/scyPIUs.png", "startingAmount": 1 },
+            { "cardId": "039", "name": "Star Hut", "type": "minion", "atk": 0, "hp": 5, "cost": 3, "description": "Taunt. Heals adjacent allies for 1 in Island.", "image": "https://i.imgur.com/TCYVocs.png", "startingAmount": 1 },
+            { "cardId": "040", "name": "Engineer Prime", "type": "minion", "atk": 4, "hp": 4, "cost": 6, "description": "Super Rare. On play: Give all allies +2 atk in Warlords.", "image": "https://i.imgur.com/KpHvcmW.mp4", "startingAmount": 0 },
+            { "cardId": "041", "name": "Starship Beta", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Deals +2 damage to structures in RTS.", "image": "https://i.imgur.com/BSurWbZ.png", "startingAmount": 1 },
+            { "cardId": "042", "name": "Starship Gamma", "type": "minion", "atk": 2, "hp": 4, "cost": 4, "description": "Heals allies for 1 in Crawl.", "image": "https://i.imgur.com/5PSOVVc.png", "startingAmount": 1 },
+            { "cardId": "043", "name": "Star Cruiser", "type": "minion", "atk": 6, "hp": 5, "cost": 7, "description": "On play: Deal 3 damage to all enemies in Battle.", "image": "https://i.imgur.com/Ldfm3An.png", "startingAmount": 0 },
+            { "cardId": "044", "name": "Fireball", "type": "spell", "cost": 4, "description": "Deal 6 damage to a target. +2 damage in Warlords.", "image": "https://i.imgur.com/V1HCiAI.jpg", "startingAmount": 1 },
+            { "cardId": "045", "name": "Undead", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Grants Undead Hardcore Island character. +1 hp in Island.", "image": "https://i.imgur.com/8YIqCl5.png", "startingAmount": 0 },
+            { "cardId": "046", "name": "Human", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Grants Human Hardcore Island character. +1 atk in Warlords.", "image": "https://i.imgur.com/0XcU175.png", "startingAmount": 0 },
+            { "cardId": "047", "name": "Orc", "type": "minion", "atk": 4, "hp": 2, "cost": 3, "description": "Grants Orc Hardcore Island character. Haste in Battle.", "image": "https://i.imgur.com/nlkfMpI.png", "startingAmount": 0 },
+            { "cardId": "048", "name": "Elf", "type": "minion", "atk": 2, "hp": 4, "cost": 3, "description": "Grants Elf Hardcore Island character. +1 cost reduction in Crawl.", "image": "https://i.imgur.com/6CXJn5s.png", "startingAmount": 0 },
+            { "cardId": "049", "name": "Dwarf", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Grants Dwarf Hardcore Island character. +2 hp in Tower.", "image": "https://i.imgur.com/nBUKWdy.png", "startingAmount": 0 },
+            { "cardId": "050", "name": "Barbarian", "type": "minion", "atk": 4, "hp": 3, "cost": 3, "description": "Grants Barbarian Hardcore Island character. +1 atk in Island.", "image": "https://i.imgur.com/a9H86By.png", "startingAmount": 0 },
+            { "cardId": "051", "name": "Skeleton NB", "type": "minion", "atk": 2, "hp": 3, "cost": 2, "description": "Swift skeletal fighter with a mace.", "image": "https://i.imgur.com/Dh99XuH.png", "startingAmount": 2 },
+            { "cardId": "052", "name": "Scourge Warrior", "type": "minion", "atk": 4, "hp": 3, "cost": 4, "description": "Dark warrior with a cursed blade.", "image": "https://i.imgur.com/NFjvmxO.png", "startingAmount": 1 },
+            { "cardId": "053", "name": "Orc NB", "type": "minion", "atk": 2, "hp": 2, "cost": 2, "description": "Stealthy orc scout.", "image": "https://i.imgur.com/zMFckYB.png", "startingAmount": 2 },
+            { "cardId": "054", "name": "Barbarian Mace", "type": "minion", "atk": 4, "hp": 2, "cost": 3, "description": "Barbarian wielding a heavy mace.", "image": "https://i.imgur.com/3SkE6VG.png", "startingAmount": 2 },
+            { "cardId": "055", "name": "Human NB", "type": "minion", "atk": 3, "hp": 4, "cost": 4, "description": "Versatile human defender with a shield.", "image": "https://i.imgur.com/klAa6aX.png", "startingAmount": 1 },
+            { "cardId": "056", "name": "Dwarf", "type": "minion", "atk": 3, "hp": 5, "cost": 4, "description": "Sturdy dwarf with a hammer.", "image": "https://i.imgur.com/Wn84v6I.png", "startingAmount": 1 },
+            { "cardId": "057", "name": "Elf Archer", "type": "minion", "atk": 3, "hp": 2, "cost": 3, "description": "Precise elf archer with a bow.", "image": "https://i.imgur.com/Enu1T7Y.png", "startingAmount": 2 },
+            { "cardId": "058", "name": "Knight", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Armored knight with a greatsword.", "image": "https://i.imgur.com/s0cMpSi.png", "startingAmount": 0 },
+            { "cardId": "059", "name": "Dwarf Knight NB", "type": "minion", "atk": 4, "hp": 5, "cost": 5, "description": "Heavily armored dwarf knight.", "image": "https://i.imgur.com/TalRqz3.png", "startingAmount": 1 },
+            { "cardId": "060", "name": "Yorda", "type": "minion", "atk": 5, "hp": 4, "cost": 6, "description": "Bats with thunderous force.", "image": "https://i.imgur.com/UvZsOLQ.png", "startingAmount": 0 },
+            { "cardId": "061", "name": "Magician NB", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Casts arcane spells with a staff.", "image": "https://i.imgur.com/PSpj7sO.png", "startingAmount": 1 },
+            { "cardId": "062", "name": "Calvin", "type": "minion", "atk": 4, "hp": 4, "cost": 4, "description": "Glides with icy magic.", "image": "https://i.imgur.com/XbSuPyC.png", "startingAmount": 1 },
+            { "cardId": "063", "name": "NB Undead", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Undead soldier with enduring spirit.", "image": "https://i.imgur.com/8YIqCl5.png", "startingAmount": 1 },
+            { "cardId": "064", "name": "NB Human Wizard", "type": "minion", "atk": 3, "hp": 3, "cost": 4, "description": "Human wizard casting powerful spells.", "image": "https://i.imgur.com/0XcU175.png", "startingAmount": 1 },
+            { "cardId": "065", "name": "Human Archer NB", "type": "minion", "atk": 3, "hp": 2, "cost": 3, "description": "Human archer with deadly aim.", "image": "https://i.imgur.com/jKE3ClI.png", "startingAmount": 2 },
+            { "cardId": "066", "name": "Undead NB", "type": "minion", "atk": 2, "hp": 4, "cost": 3, "description": "Undead warrior with a shield.", "image": "https://i.imgur.com/XJ8Saun.png", "startingAmount": 2 },
+            { "cardId": "067", "name": "NB Undead Archer", "type": "minion", "atk": 3, "hp": 2, "cost": 3, "description": "Undead archer with ghostly arrows.", "image": "https://i.imgur.com/fGDbB5o.png", "startingAmount": 2 },
+            { "cardId": "068", "name": "Barrel Weapon", "type": "minion", "atk": 2, "hp": 3, "cost": 3, "description": "Explosive barrel used as a weapon.", "image": "https://i.imgur.com/PFbnxct.png", "startingAmount": 2 },
+            { "cardId": "069", "name": "Orc Archer NB", "type": "minion", "atk": 3, "hp": 2, "cost": 3, "description": "Orc archer with a heavy bow.", "image": "https://i.imgur.com/nlkfMpI.png", "startingAmount": 2 },
+            { "cardId": "070", "name": "Priest NB", "type": "minion", "atk": 2, "hp": 4, "cost": 4, "description": "Heals allies with divine light.", "image": "https://i.imgur.com/6CXJn5s.png", "startingAmount": 1 },
+            { "cardId": "071", "name": "Paladin NB", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Protects with holy power.", "image": "https://i.imgur.com/3b2RmGQ.png", "startingAmount": 0 },
+            { "cardId": "072", "name": "Orc Heavy", "type": "minion", "atk": 5, "hp": 4, "cost": 5, "description": "Heavy orc with a massive axe.", "image": "https://i.imgur.com/cep6ytB.png", "startingAmount": 1 },
+            { "cardId": "073", "name": "Human Heavy", "type": "minion", "atk": 4, "hp": 5, "cost": 5, "description": "Heavily armored human warrior.", "image": "https://i.imgur.com/UT8Yfo2.png", "startingAmount": 1 },
+            { "cardId": "074", "name": "Undead Heavy", "type": "minion", "atk": 4, "hp": 5, "cost": 5, "description": "Undead giant with a spiked club.", "image": "https://i.imgur.com/9Prc8Md.png", "startingAmount": 1 },
+            { "cardId": "075", "name": "WareTree", "type": "minion", "atk": 3, "hp": 6, "cost": 5, "description": "Living tree that attacks with roots.", "image": "https://i.imgur.com/gA5V2vd.png", "startingAmount": 1 },
+            { "cardId": "076", "name": "Small Troll", "type": "minion", "atk": 3, "hp": 3, "cost": 3, "description": "Small troll with regenerative powers.", "image": "https://i.imgur.com/R5AKvO4.png", "startingAmount": 2 },
+            { "cardId": "077", "name": "Human Upgrade", "type": "minion", "atk": 4, "hp": 4, "cost": 5, "description": "Upgraded human with enhanced armor.", "image": "https://i.imgur.com/9lhozCz.png", "startingAmount": 1 },
+            { "cardId": "078", "name": "Dwarf Heavy", "type": "minion", "atk": 4, "hp": 6, "cost": 5, "description": "Heavy dwarf with a warhammer.", "image": "https://i.imgur.com/oGautmG.png", "startingAmount": 1 },
+            { "cardId": "079", "name": "Scourge Familiar", "type": "minion", "atk": 2, "hp": 2, "cost": 2, "description": "Dark familiar that boosts spells.", "image": "https://i.imgur.com/FcwHTwA.png", "startingAmount": 2 },
+            { "cardId": "080", "name": "Faitherbearer", "type": "minion", "atk": 5, "hp": 5, "cost": 6, "description": "Bearer of faith with divine strength.", "image": "https://i.imgur.com/ENXGMbn.jpg", "startingAmount": 0 },
+            { "cardId": "081", "name": "Explosion 2", "type": "spell", "cost": 5, "description": "Deal 8 damage to a target and 2 to adjacent enemies.", "image": "https://i.imgur.com/vUfG5PJ.png", "startingAmount": 1 },
+            { "cardId": "082", "name": "Explosion 1", "type": "spell", "cost": 3, "description": "Deal 5 damage to a target and 1 to adjacent enemies.", "image": "https://i.imgur.com/lAUM1L7.png", "startingAmount": 1 },
+            { "cardId": "083", "name": "Spell Ball", "type": "spell", "cost": 2, "description": "Deal 3 damage to a random enemy and draw a card.", "image": "https://i.imgur.com/1iicyne.png", "startingAmount": 1 },
+            { "cardId": "084", "name": "Fire Swirl", "type": "spell", "cost": 4, "description": "Deal 4 damage to all enemies.", "image": "https://i.imgur.com/dramBbf.png", "startingAmount": 1 },
+            { "cardId": "085", "name": "Fire Ball", "type": "spell", "cost": 4, "description": "Deal 6 damage to a target.", "image": "https://i.imgur.com/KfE0K3N.png", "startingAmount": 1 },
+            { "cardId": "086", "name": "Purple Swipe", "type": "spell", "cost": 3, "description": "Deal 4 damage and reduce target atk by 1.", "image": "https://i.imgur.com/X4uVLBC.png", "startingAmount": 1 },
+            { "cardId": "087", "name": "Sword", "type": "spell", "cost": 2, "description": "Give a minion +2 atk this turn.", "image": "https://i.imgur.com/u95mHRc.png", "startingAmount": 1 },
+            { "cardId": "088", "name": "Pick Axe Efforts", "type": "spell", "cost": 3, "description": "Deal 3 damage and gain 2 armor.", "image": "https://i.imgur.com/OaIxVfq.png", "startingAmount": 1 },
+            { "cardId": "089", "name": "Book", "type": "spell", "cost": 1, "description": "Draw 2 cards.", "image": "https://i.imgur.com/LhKeIUk.png", "startingAmount": 1 },
+            { "cardId": "090", "name": "Light", "type": "spell", "cost": 2, "description": "Restore 4 health to a friendly character.", "image": "https://i.imgur.com/8fYU7nG.png", "startingAmount": 1 },
+            { "cardId": "091", "name": "Light 2", "type": "spell", "cost": 3, "description": "Restore 6 health to a friendly character.", "image": "https://i.imgur.com/FGmWArp.png", "startingAmount": 1 },
+            { "cardId": "092", "name": "Arcane", "type": "spell", "cost": 5, "description": "Deal 5 damage to a target and stun it.", "image": "https://i.imgur.com/dU3QrVi.png", "startingAmount": 1 },
+            { "cardId": "093", "name": "Mystic Green", "type": "spell", "cost": 4, "description": "Restore 5 health to all friendly characters.", "image": "https://i.imgur.com/ra2S7o0.png", "startingAmount": 1 },
+            { "cardId": "094", "name": "Red Skull Magic", "type": "spell", "cost": 6, "description": "Deal 6 damage to a target and summon a 2/2 skull.", "image": "https://i.imgur.com/KjBYZ7L.png", "startingAmount": 0 },
+            { "cardId": "095", "name": "Green Skull Magic", "type": "spell", "cost": 6, "description": "Deal 5 damage to a target and heal for 5.", "image": "https://i.imgur.com/dWpBsru.png", "startingAmount": 0 },
+            { "cardId": "096", "name": "Small Building", "type": "minion", "atk": 0, "hp": 5, "cost": 3, "description": "Taunt. Defensive structure for RTS.", "image": "https://i.imgur.com/LouhX6b.png", "startingAmount": 1 },
+            { "cardId": "097", "name": "Summoning Tower", "type": "minion", "atk": 2, "hp": 4, "cost": 4, "description": "On play: Summon a 1/1 spirit in Crawl.", "image": "https://i.imgur.com/aBeF0N8.png", "startingAmount": 1 },
+            { "cardId": "098", "name": "Armory", "type": "minion", "atk": 0, "hp": 6, "cost": 5, "description": "Taunt. Gives +1 atk to summoned minions in RTS.", "image": "https://i.imgur.com/4TFvg1K.png", "startingAmount": 1 },
+            { "cardId": "099", "name": "Hero Hall", "type": "minion", "atk": 0, "hp": 7, "cost": 6, "description": "Taunt. Boosts hero atk by 2 in Warlords.", "image": "https://i.imgur.com/H0EAefW.png", "startingAmount": 0 },
+            { "cardId": "100", "name": "Tower", "type": "minion", "atk": 0, "hp": 8, "cost": 7, "description": "Taunt. Defensive structure for RTS.", "image": "https://i.imgur.com/4TFvg1K.png", "startingAmount": 0 },
+        ];
 
         function updateUserInfo() {
             const userInfoEl = document.getElementById('username-display');
@@ -1410,7 +1469,7 @@
                         <div class="season0-indicator"></div>
                         <div class="card-info">
                             <div class="card-name">${deck.name}</div>
-                            <div class="stats">${deck.attack !== undefined ? ${deck.attack}/${deck.health} : 'Special'}</div>
+                            <div class="stats">${deck.attack !== undefined ? `${deck.attack}/${deck.health}` : 'Special'}</div>
                             <div class="description">${deck.description}</div>
                         </div>
                     `;
@@ -1426,7 +1485,7 @@
         function openDeckModal(slot) {
             const modal = document.getElementById('deck-modal');
             const deck = savedDecks[slot]?.cards || [];
-            const name = savedDecks[slot]?.name || `Deck ${slot}`;
+            const name = (savedDecks[slot] && savedDecks[slot].name) || `Deck ${slot}`;
             document.getElementById('deck-modal-name').textContent = name;
             const container = document.getElementById('deck-modal-cards');
             container.innerHTML = '';
@@ -1444,9 +1503,11 @@
             });
             document.getElementById('deck-stats').innerHTML = `
                 <p>Cost Breakdown: ${Object.entries(costCounts).map(([cost, count]) => `${cost}: ${count}`).join(', ')}</p>
-                <p>Minions: ${minions}</p>
-                <p>Spells: ${spells}</p>
-            `;
+                <div>
+                    <p>Minions: ${minions}</p>
+                    <p>Spells: ${spells}</p>
+                </div>
+                `;
             modal.classList.remove('hidden');
         }
 
@@ -1477,9 +1538,9 @@
                         <div class="pack-back card-display ${randomCard.hue || ''}" style="background-image: url('${randomCard.backgroundImage}')">
                             <div class="cost">${randomCard.cost}</div>
                             <div class="season0-indicator"></div>
-                            <div class="card-info">
+                                <div class="stats">${randomCard.attack !== undefined ? `${randomCard.attack}/${randomCard.health}` : 'Special'}</div>
                                 <div class="card-name">${randomCard.name}</div>
-                                <div class="stats">${randomCard.attack !== undefined ? ${randomCard.attack}/${randomCard.health} : 'Special'}</div>
+                                <div class="stats">${randomCard.attack !== undefined ? `${randomCard.attack}/${randomCard.health}` : 'Special'}</div>
                                 <div class="description">${randomCard.description}</div>
                             </div>
                         </div>
@@ -1511,10 +1572,10 @@
                 <div class="season0-indicator"></div>
                 <div class="card-info">
                     <div class="card-name">${!user.id || !ownedCards.includes(card.id) ? 'Unknown' : `${card.name} (Owner ${ownerName})`}</div>
-                    <div class="stats">${card.attack !== undefined ? ${card.attack}/${card.health}${card.taunt ? ' (Taunt)' : ''}${card.healAll ? ` (Heal ${card.healAll})` : ''} : card.damage ? `Dmg: ${card.damage}` : card.healing ? `Heal: ${card.healing}` : 'Special'}</div>
-                    <div class="description">${!user.id || !ownedCards.includes(card.id) ? 'Unknown card details.' : card.description}</div>
+                    <div class="stats">${card.attack !== undefined ? ${ card.attack } /${card.health}${card.taunt ? ' (Taunt)' : ''}${card.healAll ? ` (Heal ${card.healAll})` : ''} : card.damage ? `Dmg: ${card.damage}` : card.healing ? `Heal: ${card.healing}` : 'Special'}</div >
+                <div class="description">${!user.id || !ownedCards.includes(card.id) ? 'Unknown card details.' : card.description}</div>
                 </div>
-            `;
+                `;
             return cardEl;
         }
 
@@ -1538,12 +1599,12 @@
 
                 preview.style.left = `${leftPos}px`;
                 preview.style.top = `${topPos}px`;
-                preview.style.backgroundImage = `url('${card.backgroundImage}')`;
+                preview.style.backgroundImage = "url('" + card.backgroundImage + "')";
                 preview.className = `card-preview ${card.hue || ''}`;
                 preview.querySelector('.cost').textContent = card.cost;
                 preview.querySelector('.season0-indicator').style.display = 'block';
-                preview.querySelector('.card-name').textContent = !user.id || !ownedCards.includes(card.id) ? 'name' : `${card.name} (Owner ${user.username})`;
-                preview.querySelector('.stats').textContent = card.attack !== undefined ? ${card.attack}/${card.health}${card.taunt ? ' (Taunt)' : ''}${card.healAll ? ` (Heal ${card.healAll})` : ''} : card.damage ? `Dmg: ${card.damage}` : card.healing ? `Heal: ${card.healing}` : 'Special';
+                preview.querySelector('.card-name').textContent = !user.id || !ownedCards.includes(card.id) ? 'Unknown' : `${card.name} (Owner ${user.username})`;
+                preview.querySelector('.stats').textContent = card.attack !== undefined ? ${card.attack}/${card.health}${card.taunt ? ' (Taunt)' : ''}${card.healAll ? ` (Heal ${card.healAll})` : ''} : card.damage ? `Dmg: ${ card.damage } ` : card.healing ? `Heal: ${ card.healing } ` : 'Special';
                 preview.querySelector('.description').textContent = !user.id || !ownedCards.includes(card.id) ? 'description' : card.description;
                 preview.style.display = 'block';
             });
@@ -1600,7 +1661,10 @@
 
         function buyCard(card) {
             const cost = card.cost * 20;
-            if (credits < cost) return alert(`Not enough $GBuX! Need ${cost}`);
+            if (credits < cost) {
+                alert(`Not enough $GBuX! Need ${cost}`);
+                return;
+            }
             if (ownedCards.includes(card.id)) return alert('You already own this card!');
             credits -= cost;
             ownedCards.push(card.id);
@@ -1652,7 +1716,7 @@
             if (Math.random() < 0.1) { // 10% chance for bonus
                 const bonus = Math.floor(Math.random() * 100) + 50; // 50-150 $GBuX
                 credits += bonus;
-                alert(`Bonus Reward! +${bonus} $GBuX`);
+                alert(`Bonus Reward! + ${bonus} $GBuX`);
                 localStorage.setItem('credits', credits);
                 if (dbClient && user.id) dbClient.from('user_credits').upsert({ userId: user.id, credits, last_updated: new Date().toISOString() });
                 updateUserInfo();
@@ -1662,7 +1726,7 @@
         function updateCollectionProgress() {
             const totalCards = new Set(season0.map(c => c.id)).size;
             const ownedUniqueCards = new Set(ownedCards.filter(id => id > 0)).size;
-            document.getElementById('collection-progress').textContent = `Collection: ${ownedUniqueCards}/${totalCards} (${((ownedUniqueCards / totalCards) * 100).toFixed(1)}%)`;
+        document.getElementById('collection-progress').textContent = `Collection: ${ownedUniqueCards}/${totalCards} (${((ownedUniqueCards / totalCards) * 100).toFixed(1)}%)`;
         }
 
         document.getElementById('buy-pack-btn').addEventListener('click', () => {
@@ -1674,17 +1738,15 @@
             updateUserInfo();
             renderPacks();
             alert('Purchased a pack for 500 $GBuX!');
-        });
-
+            const deckName = document.getElementById('deck-name').value || `Deck ${currentDeckSlot}`;
         document.getElementById('save-deck-btn').addEventListener('click', () => {
             const deckName = document.getElementById('deck-name').value || `Deck ${currentDeckSlot}`;
-            savedDecks[currentDeckSlot] = { name: deckName, cards: [...selectedCards] };
+            const deckName = document.getElementById('deck-name').value || `Deck ${currentDeckSlot}`;
             localStorage.setItem('savedDecks', JSON.stringify(savedDecks));
             nexusDeck = [...selectedCards];
-            localStorage.setItem('nexusDeck', JSON.stringify(nexusDeck));
-            if (user.id && dbClient) dbClient.from('decks').upsert({ userId: user.id, slot: currentDeckSlot, deck: savedDecks[currentDeckSlot] });
             alert(`Deck saved as ${deckName} in slot ${currentDeckSlot}!`);
-            renderNexusDeck();
+            alert(`Deck saved as ${ deckName } in slot ${ currentDeckSlot } !`);
+            alert(`Deck saved as ${deckName} in slot ${currentDeckSlot}!`);
             updateUserInfo();
         });
 
@@ -1710,9 +1772,8 @@
                 updateUserInfo();
                 alert('Successfully claimed 200 $GBuX!');
             } else {
-                const timeLeft = Math.ceil((24 * 60 * 60 * 1000 - (now - lastClaimTime)) / (60 * 60 * 1000));
                 alert(`Wait ${timeLeft} hours until next claim!`);
-            }
+                alert(`Wait ${timeLeft} hours until next claim!`);
         });
 
         document.getElementById('mint-btn').addEventListener('click', async () => {
@@ -1741,8 +1802,7 @@
                     health,
                     taunt,
                     healAll,
-                    description: `Custom card: ${taunt ? 'Taunt ' : ''}${healAll ? 'Heal All (1) ' : ''}`,
-                    backgroundImage,
+                    description: `Custom card: ${taunt ? 'Taunt ' : ''}${healAll ? 'Heal All (1)' : ''}`,
                     uid: crypto.randomUUID(),
                     theme
                 };
@@ -1759,9 +1819,8 @@
                 }
                 updateUserInfo();
                 renderLibrary('all', libraryPage);
+                alert(`Successfully minted ${ name } for 10 $GBuX!`);
                 alert(`Successfully minted ${name} for 10 $GBuX!`);
-            };
-            reader.readAsDataURL(file);
         });
 
         function saveDraft(card) {
@@ -1826,7 +1885,7 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (ev) => {
-                    document.getElementById('image-upload').innerHTML = `<img src="${ev.target.result}" class="w-full h-full object-cover" />`;
+                    document.getElementById('image-upload').innerHTML = '<img src="' + ev.target.result + '" class="w-full h-full object-cover" />';
                     saveDraft({ ...getCurrentDraft(), backgroundImage: ev.target.result });
                 };
                 reader.readAsDataURL(file);
@@ -1955,32 +2014,32 @@
                     const tokenData = await response.json();
                     if (tokenData.access_token) {
                         const userResponse = await fetch('https://discord.com/api/users/@me', {
-                            headers: { Authorization: `Bearer ${tokenData.access_token}` }
-                        });
-                        const userData = await userResponse.json();
-                        user = {
+                            headers: { "Authorization": `Bearer ${ tokenData.access_token } ` }
+                            headers: { "Authorization": `Bearer ${tokenData.access_token}` }
+                            headers: { "Authorization": `Bearer ${tokenData.access_token}` }
                             id: userData.id,
                             username: userData.username,
                             avatar: userData.avatar ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png` : ''
                         };
-                        localStorage.setItem('user', JSON.stringify(user));
-                        if (dbClient) {
-                            const { data } = await dbClient.from('user_credits').select('credits').eq('userId', user.id).single();
-                            credits = data?.credits || 0;
-                            localStorage.setItem('credits', credits);
-                        }
+        localStorage.setItem('user', JSON.stringify(user));
+        if (dbClient) {
+            const { data } = await dbClient.from('user_credits').select('credits').eq('userId', user.id).single();
+            credits = data?.credits || 0;
+            localStorage.setItem('credits', credits);
+        }
                     }
-                } catch (error) {s
-                    console.error('Error during OAuth:', error);
-                }
-                window.history.replaceState({}, document.title, window.location.pathname);
+                } catch (error) {
+            console.error('Error during OAuth:', error);
+        }
+        window.history.replaceState({}, document.title, window.location.pathname);
             }
-            draftHistory = JSON.parse(localStorage.getItem('draftHistory') || '[]');
-            currentDraftIndex = parseInt(localStorage.getItem('currentDraftIndex') || '-1');
-            applyDraft();
-            updateUserInfo();
-            await loadUserCards();
+        draftHistory = JSON.parse(localStorage.getItem('draftHistory') || '[]');
+        currentDraftIndex = parseInt(localStorage.getItem('currentDraftIndex') || '-1');
+        applyDraft();
+        updateUserInfo();
+        await loadUserCards();
         });
     </script>
 </body>
+
 </html>

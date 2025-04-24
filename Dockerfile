@@ -59,6 +59,8 @@ ENV NODE_ENV=production
 # PARSE_MASTER_KEY: Back4App master key
 # PARSE_REST_KEY: Back4App REST key
 # PARSE_DOTNET_KEY: Back4App .NET key
+# SUPABASE_URL: Supabase project URL
+# SUPABASE_ANON_KEY: Supabase anonymous key
 # PORT: Server port (default: 3000)
 
 # Expose port for Express server
