@@ -9,6 +9,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/parse@3.4.3/dist/parse.min.js"></script>
+    <script src="https://unpkg.com/web3@1.8.0/dist/web3.min.js"></script>
+    <script src="ai-assistant.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -1572,7 +1575,7 @@
                 <div class="season0-indicator"></div>
                 <div class="card-info">
                     <div class="card-name">${!user.id || !ownedCards.includes(card.id) ? 'Unknown' : `${card.name} (Owner ${ownerName})`}</div>
-                    <div class="stats">${card.attack !== undefined ? ${ card.attack } /${card.health}${card.taunt ? ' (Taunt)' : ''}${card.healAll ? ` (Heal ${card.healAll})` : ''} : card.damage ? `Dmg: ${card.damage}` : card.healing ? `Heal: ${card.healing}` : 'Special'}</div >
+                    <div class="stats">${card.attack !== undefined ? ${ card.attack } /${card.health}${card.taunt ? ' (Taunt)' : ''}${card.healAll ? ` (Heal ${card.healAll})` : ''} : card.damage ? `Dmg: ${ card.damage } ` : card.healing ? `Heal: ${ card.healing } ` : 'Special'}</div >
                 <div class="description">${!user.id || !ownedCards.includes(card.id) ? 'Unknown card details.' : card.description}</div>
                 </div>
                 `;
