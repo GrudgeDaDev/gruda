@@ -1,4 +1,4 @@
-cardId,name,type,atk,hp,cost,description,image,tribe,specialTrait,startingAmount
+cardId,name,type,atack,health,cost,description,image,tribe,ability,rare
 001,Stealth Drone,minion,1,1,1,Quick scouting unit cloaked in shadow.,https://i.imgur.com/zMFckYB.png,,,2
 002,A Coward Priest,minion,1,1,1,Basic reconnaissance unit.,https://i.imgur.com/DHS25YU.jpeg,,,2
 003,Starborn Light,minion,1,1,1,Summons structures.,https://i.imgur.com/AvsiFog.png,,,2
