@@ -21,13 +21,14 @@ The following environment variables are required and should be added to the `.en
 - `PARSE_CLIENT_KEY`
 - `PARSE_JAVASCRIPT_KEY`
 - `PARSE_SERVER_URL`
-- `PARSE_WEBHOOK_KEY`
 - `DISCORD_CLIENT_ID`
 - `DISCORD_CLIENT_SECRET`
 - `DISCORD_GUILD_ID`
 - `DISCORD_WEBHOOK_URL`
 - `DISCORD_GBUX_WEBHOOK_URL`
 - `DISCORD_REDIRECT_URI`
+- `SUPABASE_URL`
+- `SUPABASE_KEY`
 
 ## Test Script
 

@@ -1,8 +1,0 @@
-[build]
-  command = "npm run build" # Runs build script from package.json
-  publish = "public"        # Directory for static files
-  functions = "netlify/functions" # Optional, for future Netlify Functions
-
-[dev]
-  targetPort = 3000         # Optional, for local dev server
-  port = 8888               # Local dev port

@@ -37,8 +37,18 @@ async function createCorrectedDockerfile(errorLogs) {
   return filePath;
 }
 
+async function updateDatabaseConnectionSettings(newSettings) {
+  const response = await openai.createCompletion({
+    model: 'text-davinci-003',
+    prompt: `Update the database connection settings with the following new settings:\n\n${JSON.stringify(newSettings)}`,
+    max_tokens: 150,
+  });
+  return response.data.choices[0].text.trim();
+}
+
 module.exports = {
   analyzeErrorLogs,
   suggestSolutions,
   createCorrectedDockerfile,
+  updateDatabaseConnectionSettings,
 };
