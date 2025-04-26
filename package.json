@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "scripts": {
     "start": "npx serve public/",
-    "build": "echo 'Copying files to public/' && cp -r src/* public/ || true", // Adjust if no src/ folder
+    "build": "echo 'Copying files to public/' && cp -r src/* public/ || true",
     "deploy": "netlify deploy --prod --dir=public"
   },
   "dependencies": {
-    "parse": "^4.3.2",
+    "parse": "4.10.0",
     "dotenv": "^16.4.5",
     "@supabase/supabase-js": "^2.45.4",
     "boardgame.io": "^0.50.2"
