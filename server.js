@@ -4,6 +4,7 @@ const Parse = require('parse/node');
 const cors = require('cors');
 const axios = require('axios');
 const Web3 = require('web3');
+const { createClient } = require('@supabase/supabase-js');
 
 // Validate environment variables
 const requiredEnvVars = [
@@ -18,6 +19,10 @@ const requiredEnvVars = [
   'GRUDA_CONTRACT_ABI',
   'ADMIN_PRIVATE_KEY',
   'PORT',
+  'SUPABASE_URL',
+  'SUPABASE_ANON_KEY',
+  'SUPABASE_SERVICE_ROLE_KEY',
+  'SUPABASE_JWT_SECRET'
 ];
 const missingVars = requiredEnvVars.filter((varName) => !process.env[varName]);
 if (missingVars.length > 0) {
@@ -33,6 +38,9 @@ Parse.serverURL = process.env.PARSE_SERVER_URL;
 const web3 = new Web3(process.env.SEPOLIA_RPC_URL);
 const contractABI = JSON.parse(process.env.GRUDA_CONTRACT_ABI);
 const contract = new web3.eth.Contract(contractABI, process.env.GRUDA_CONTRACT_ADDRESS);
+
+// Initialize Supabase
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
 // Initialize Express
 const app = express();
@@ -562,6 +570,70 @@ app.get('/api/packs', async (req, res) => {
     res.json({ success: true, packs: packs.map((p) => p.toJSON()) });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message || 'Failed to retrieve packs' });
+  }
+});
+
+// PvP Matchmaking: Join PvP Lobby
+app.post('/api/pvp/join', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const sessionToken = req.headers['x-parse-session-token'];
+
+    const userQuery = new Parse.Query(Parse.User);
+    const user = await userQuery.get(userId, { sessionToken });
+    if (!user) {
+      return res.status(401).json({ success: false, error: 'Invalid session or user' });
+    }
+
+    const PvPLobby = Parse.Object.extend('PvPLobby');
+    const query = new Parse.Query(PvPLobby);
+    query.equalTo('status', 'waiting');
+    const existingLobby = await query.first({ useMasterKey: true });
+
+    if (existingLobby) {
+      existingLobby.set('player2Id', { __type: 'Pointer', className: '_User', objectId: userId });
+      existingLobby.set('status', 'active');
+      await existingLobby.save(null, { useMasterKey: true });
+      res.json({ success: true, message: 'Joined an existing lobby', lobbyId: existingLobby.id });
+    } else {
+      const newLobby = new PvPLobby();
+      newLobby.set('player1Id', { __type: 'Pointer', className: '_User', objectId: userId });
+      newLobby.set('status', 'waiting');
+      await newLobby.save(null, { useMasterKey: true });
+      res.json({ success: true, message: 'Created a new lobby', lobbyId: newLobby.id });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message || 'Failed to join PvP lobby' });
+  }
+});
+
+// PvP Matchmaking: Enter Game Server
+app.post('/api/pvp/enter', async (req, res) => {
+  try {
+    const { userId, lobbyId } = req.body;
+    const sessionToken = req.headers['x-parse-session-token'];
+
+    const userQuery = new Parse.Query(Parse.User);
+    const user = await userQuery.get(userId, { sessionToken });
+    if (!user) {
+      return res.status(401).json({ success: false, error: 'Invalid session or user' });
+    }
+
+    const PvPLobby = Parse.Object.extend('PvPLobby');
+    const lobbyQuery = new Parse.Query(PvPLobby);
+    const lobby = await lobbyQuery.get(lobbyId, { useMasterKey: true });
+    if (!lobby) {
+      return res.status(404).json({ success: false, error: 'Lobby not found' });
+    }
+
+    if (lobby.get('status') !== 'active') {
+      return res.status(400).json({ success: false, error: 'Lobby is not active' });
+    }
+
+    const serverId = generateUUID();
+    res.json({ success: true, serverId });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message || 'Failed to enter game server' });
   }
 });
 
