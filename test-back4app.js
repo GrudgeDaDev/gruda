@@ -4,10 +4,7 @@ const Parse = require('parse/node');
 Parse.initialize(
   process.env.PARSE_APP_ID,
   process.env.PARSE_JAVASCRIPT_KEY,
-  process.env.PARSE_CLIENT_KEY,
-  process.env.PARSE_MASTER_KEY,
-  process.env.PARSE_REST_KEY,
-  process.env.PARSE_DOTNET_KEY
+  process.env.PARSE_CLIENT_KEY
 );
 Parse.serverURL = process.env.PARSE_SERVER_URL;
 
@@ -20,42 +17,6 @@ async function testDatabase() {
     console.log('Parse object saved:', result);
   } catch (error) {
     console.error('Error while saving Parse object:', error);
-  }
-}
-
-async function testGetSeason0Data() {
-  try {
-    const results = await Parse.Cloud.run('getSeason0Data');
-    console.log('Season0 data fetched:', results);
-  } catch (error) {
-    console.error('Error while fetching Season0 data:', error);
-  }
-}
-
-async function testGetSeason0Data() {
-  try {
-    const results = await Parse.Cloud.run('getSeason0Data');
-    console.log('Season0 data fetched:', results);
-  } catch (error) {
-    console.error('Error while fetching Season0 data:', error);
-  }
-}
-
-async function testGetSeason0Data() {
-  try {
-    const results = await Parse.Cloud.run('getSeason0Data');
-    console.log('Season0 data fetched:', results);
-  } catch (error) {
-    console.error('Error while fetching Season0 data:', error);
-  }
-}
-
-async function testGetSeason0Data() {
-  try {
-    const results = await Parse.Cloud.run('getSeason0Data');
-    console.log('Season0 data fetched:', results);
-  } catch (error) {
-    console.error('Error while fetching Season0 data:', error);
   }
 }
 

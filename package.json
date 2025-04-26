@@ -1,26 +1,20 @@
 {
-  "name": "grudge-studio-launcher",
+  "name": "gruda",
   "version": "1.0.0",
-  "description": "Backend for Grudge Studio Launcher",
-  "main": "test-back4app.js",
   "scripts": {
-    "test": "node test-back4app.js",
-    "build": "grunt"
+    "start": "npx serve public/",
+    "build": "echo 'Copying files to public/' && cp -r src/* public/ || true",
+    "deploy": "netlify deploy --prod --dir=public"
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.15.9",
-    "axios": "^1.8.4",
-    "dotenv": "^16.0.0",
-    "parse": "^6.1.1"
+    "parse": "^6.0.0",
+    "dotenv": "^16.4.5",
+    "@supabase/supabase-js": "^2.45.4",
+    "boardgame.io": "^0.50.2"
   },
   "devDependencies": {
-    "grunt": "^1.5.3",
-    "grunt-cli": "^1.4.3",
-    "grunt-contrib-uglify": "^5.2.2",
-    "grunt-contrib-cssmin": "^4.0.0",
-    "grunt-contrib-copy": "^1.0.0"
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-cssmin": "^4.0.0",
-    "grunt-contrib-uglify": "^5.2.2"
+    "grunt": "^1.6.1",
+    "grunt-cli": "^1.5.0",
+    "serve": "^14.2.3"
   }
 }

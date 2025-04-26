@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Nemesis</title>
+    <style>
+        body {
+            font-family: 'Arial Black', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #1a1a1a url('https://i.imgur.com/KzcmBtg.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            overflow: hidden;
+        }
+        #game {
+            max-width: 1280px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .game-boards {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            gap: 10px;
+        }
+        .hero-area {
+            width: 300px;
+            height: 120px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            border: 3px solid #ffd700;
+            border-radius: 12px;
+            box-shadow: 0 0 15px #ffd700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hero-area:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px #ffd700;
+        }
+        .character {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #player-avatar, #ai-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid #ffd700;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+        #ai-avatar {
+            background: url('https://i.imgur.com/o7ZWJcL.png') no-repeat center;
+            background-size: cover;
+        }
+        .stats-box {
+            position: absolute;
+            right: -140px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 120px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ffd700;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .health-display {
+            display: inline-block;
+            width: 50px;
+            height: 30px;
+            background: #ff0000;
+            color: #fff;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+        }
+        .mana-display {
+            display: inline-block;
+            width: 50px;
+            height: 30px;
+            background: #00b7eb;
+            color: #fff;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 4px;
+        }
+        .minion-board {
+            width: 900px;
+            height: 140px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: url('https://i.imgur.com/pogh99r.png') no-repeat center;
+            background-size: cover;
+            border: 3px solid #666;
+            border-radius: 10px;
+            margin: 0 auto;
+            transition: border 0.2s ease, transform 0.2s ease;
+        }
+        .minion-board:hover {
+            border: 3px solid #ffd700;
+            transform: scale(1.01);
+        }
+        #player-hand {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 160px;
+            display: flex;
+            justify-content: right;
+            align-items: flex-end;
+            padding: 10px;
+            overflow: visible;
+        }
+        #player-hand .card {
+            position: relative;
+            width: 100px;
+            height: 150px;
+            padding: 10px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 3px solid #ffd700;
+            background-color: rgba(68, 68, 68, 0.8);
+            background-blend-mode: overlay;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transform-origin: bottom center;
+            margin: 0 -30px;
+        }
+        #player-hand .card:hover {
+            transform: translateY(-20px) scale(1.2);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.8);
+            z-index: 10;
+        }
+        #ai-hand {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        #ai-hand .ai-card-back {
+            width: 60px;
+            height: 90px;
+            background: url('https://i.imgur.com/LVCaPdg.png') no-repeat center;
+            background-size: cover;
+            border: 2px solid #ffd700;
+            border-radius: 6px;
+            box-shadow: 0 0 5px #ffd700;
+        }
+        #deck {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 120px;
+            background: url('https://i.imgur.com/LVCaPdg.png') no-repeat center;
+            background-size: cover;
+            border: 3px solid #ffd700;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #ffd700;
+            transition: transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+        }
+        #deck:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+        #graveyard, #ai-graveyard {
+            position: absolute;
+            width: 100px;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        #graveyard {
+            bottom: 10px;
+            left: 20px;
+        }
+        #ai-graveyard {
+            top: 100px;
+            right: 20px;
+        }
+        .graveyard-card {
+            width: 80px;
+            height: 120px;
+            margin: 5px auto;
+            background: #333;
+            border: 2px solid #ffd700;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        #starting-deck {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 3px solid #ffd700;
+            border-radius: 12px;
+            box-shadow: 0 0 20px #ffd700;
+            z-index: 100;
+        }
+        #selection-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 0 0 8px #ffd700;
+        }
+        #starting-deck-cards {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        #starting-deck .card:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px #00ff00;
+        }
+        #confirm-selection {
+            padding: 12px 24px;
+            background: #ffd700;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #confirm-selection:hover {
+            background: #ffeb3b;
+            transform: scale(1.05);
+        }
+        .card {
+            position: relative;
+            width: 80px;
+            height: 120px;
+            padding: 8px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 3px solid #ffd700;
+            background-color: rgba(68, 68, 68, 0.8);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ffd700;
+        }
+        .card.selected {
+            border: 3px solid #00ff00;
+            box-shadow: 0 0 15px #00ff00;
+        }
+        .card.exhausted {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .card.can-attack:hover {
+            border: 3px solid #ff4500;
+            box-shadow: 0 0 15px #ff4500;
+        }
+        .card.taunt {
+            border: 4px solid #00b7eb;
+            box-shadow: 0 0 12px #00b7eb;
+        }
+        .card-name {
+            position: absolute;
+            top: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: bold;
+            color: #ffd700;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2px 5px;
+            width: 90%;
+            text-align: center;
+        }
+        .card-description {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 8px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2px 5px;
+            width: 90%;
+            text-align: center;
+        }
+        .card-cost, .card-attack, .card-health {
+            position: absolute;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .card-cost {
+            top: 20px;
+            right: 5px;
+            color: #00b7eb;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        .card-attack {
+            bottom: 5px;
+            left: 5px;
+            color: #00ff00;
+            background: rgba(0, 0, 0, 0.7);
+        }
+        .card-health {
+            bottom: 5px;
+            right: 5px;
+            color: #fff;
+            background: #ff0000;
+        }
+        .drop-target.drag-over {
+            border: 3px dashed #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        .end-turn-btn {
+            position: absolute;
+            bottom: 180px;
+            right: 20px;
+            width: 120px;
+            height: 50px;
+            background: url('https://i.imgur.com/uCUHUNs.jpeg') no-repeat center;
+            background-size: cover;
+            border: 3px solid #ffd700;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 5px #000;
+            box-shadow: 0 0 15px #ff4500;
+        }
+        .end-turn-btn:hover:not(:disabled) {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #ff4500;
+        }
+        .end-turn-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: 0 0 5px #ff4500;
+        }
+        #restart-btn {
+            position: absolute;
+            top: 20px;
+            right: 160px;
+            padding: 10px 20px;
+            background: #ff4500;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #restart-btn:hover {
+            background: #ff6347;
+            transform: scale(1.05);
+        }
+        #back-to-codex-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #00b7eb;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+        }
+        #back-to-codex-btn:hover {
+            background: #00d4ff;
+            transform: scale(1.05);
+        }
+        .log-box {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 200px;
+            height: 300px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ffd700;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 14px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #ffd700;
+        }
+        .log-box p {
+            margin: 5px 0;
+        }
+        .mana-bar {
+            position: absolute;
+            bottom: 160px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 25px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ffd700;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .mana-fill {
+            height: 100%;
+            background: #00b7eb;
+            transition: width 0.3s ease;
+        }
+        #turn-indicator {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 0 0 10px #ffd700;
+            padding: 5px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+        }
+        .heal-animation {
+            animation: healSparkle 1s ease-in-out;
+        }
+        @keyframes healSparkle {
+            0% { box-shadow: 0 0 10px #00ff00; }
+            50% { box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00; }
+            100% { box-shadow: 0 0 10px #00ff00; }
+        }
+        .attack-animation {
+            animation: attackPulse 0.5s ease-in-out;
+        }
+        @keyframes attackPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 #ff4500; }
+            50% { transform: scale(1.1); box-shadow: 0 0 15px #ff4500; }
+            100% { transform: scale(1); box-shadow: 0 0 0 #ff4500; }
+        }
+        .spell-projectile {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: url('https://i.imgur.com/KfE0K3N.png') no-repeat center;
+            background-size: contain;
+            z-index: 20;
+            animation: flyToTarget 0.8s ease-out forwards;
+        }
+        @keyframes flyToTarget {
+            0% { opacity: 1; transform: scale(0.5); }
+            80% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1); }
+        }
+        .spell-impact {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: url('https://i.imgur.com/vUfG5PJ.png') no-repeat center;
+            background-size: contain;
+            z-index: 21;
+            animation: impactBurst 0.6s ease-out forwards;
+        }
+        @keyframes impactBurst {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        .damage-circles {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            z-index: 22;
+        }
+        .damage-circle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #ff4500 30%, transparent 70%);
+            border-radius: 50%;
+            animation: damageRipple 0.5s ease-out forwards;
+        }
+        @keyframes damageRipple {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        .mana-gain {
+            animation: manaGlow 0.7s ease-in-out;
+        }
+        @keyframes manaGlow {
+            0% { box-shadow: 0 0 10px #00b7eb; }
+            50% { box-shadow: 0 0 20px #00b7eb, 0 0 30px #00b7eb; }
+            100% { box-shadow: 0 0 10px #00b7eb; }
+        }
+        #tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ffd700;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #fff;
+            max-width: 200px;
+            z-index: 100;
+            display: none;
+        }
+        #tooltip.show {
+            display: block;
+        }
+        #game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 3px solid #ffd700;
+            border-radius: 12px;
+            text-align: center;
+            z-index: 100;
+        }
+        #game-over h2 {
+            color: #ffd700;
+            font-size: 24px;
+        }
+        #game-over p {
+            font-size: 18px;
+        }
+        #game-over button {
+            padding: 10px 20px;
+            background: #ffd700;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #game-over button:hover {
+            background: #ffeb3b;
+            transform: scale(1.05);
+        }
+        .discord-button-container {
+            position: fixed;
+            top: 0;
+            left: 65%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            padding: 20px;
+        }
+        .discord-button {
+            display: block;
+            position: relative;
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            padding: 3px;
+            background: transparent;
+            border: 3px solid #000;
+            box-shadow: 0 0 0 2px #000;
+        }
+        .discord-button::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 15px;
+            background: linear-gradient(45deg, #ff8a00, #ffd700, #ff8a00, #ffd700);
+            z-index: -1;
+            background-size: 400% 400%;
+            filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .discord-button:hover {
+            transform: scale(1.1) rotate(2deg);
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 138, 0, 0.5);
+        }
+        .discord-button:hover::before {
+            opacity: 1;
+            animation: borderRotate 1s linear infinite;
+        }
+        .discord-button:hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 15px;
+            background: radial-gradient(circle at center, rgba(255, 138, 0, 0.2), rgba(255, 215, 0, 0.2), transparent 70%);
+            z-index: -1;
+            animation: swirl 2s linear infinite;
+        }
+        .discord-button img {
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+            display: block;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        .discord-button:hover img {
+            transform: scale(1.05) rotate(-2deg);
+            filter: brightness(1.1);
+        }
+        @keyframes borderRotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes swirl {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        .button-background {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle at center, rgba(255, 138, 0, 0.3), rgba(255, 215, 0, 0.2), transparent 70%);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: -2;
+        }
+        .discord-button:hover .button-background {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.7; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+        }
+        @media (max-width: 768px) {
+            .discord-button-container { left: 50%; }
+            .discord-button img { width: 150px; }
+            .button-background { width: 200px; height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="discord-button-container">
+        <a href="https://discord.com/oauth2/authorize?client_id=1342593452793270302&response_type=code&redirect_uri=https%3A%2F%2Fwww.grudgeplatform.com%2FSeason0&scope=identify" 
+            class="discord-button"
+            target="_blank"
+            rel="noopener noreferrer">
+            <div class="button-background"></div>
+            <img src="https://i.imgur.com/SRoq392.png"
+                alt="Connect with Discord"
+                title="Connect with Discord">
+        </a>
+    </div>
+    <div id="game">
+        <div id="ai-hand"></div>
+        <div class="game-boards">
+            <div class="hero-area drop-target" id="ai-health-board">
+                <div class="character drop-target" id="ai-hero-image">
+                    <div id="ai-avatar"></div>
+                    <div class="stats-box drop-target" id="ai-stats-box">
+                        Health: <span id="ai-health" class="health-display">30</span><br>
+                        Mana: <span id="ai-mana" class="mana-display">0</span>/<span id="ai-max-mana">0</span>
+                    </div>
+                </div>
+            </div>
+            <div id="ai-minion-board" class="minion-board drop-target"></div>
+            <div id="player-minion-board" class="minion-board drop-target"></div>
+            <div class="hero-area drop-target" id="hero-health-board">
+                <div class="character drop-target" id="player-hero-image">
+                    <img id="player-avatar" src="https://i.imgur.com/sample-avatar.png" alt="Player Avatar">
+                    <div class="stats-box drop-target" id="player-stats-box">
+                        Health: <span id="player-health" class="health-display">30</span><br>
+                        Mana: <span id="player-mana" class="mana-display">0</span>/<span id="player-max-mana">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="player-hand"></div>
+        <div id="deck"></div>
+        <div id="graveyard"></div>
+        <div id="ai-graveyard"></div>
+        <div class="log-box" id="log">Battle Log</div>
+        <div class="mana-bar"><div class="mana-fill" id="mana-fill"></div></div>
+        <div id="turn-indicator">Player's Turn</div>
+        <button id="end-turn" class="end-turn-btn" type="button" disabled>End Turn</button>
+        <button id="restart-btn" type="button">Restart Game</button>
+        <button id="back-to-codex-btn" type="button">Back to Codex</button>
+        <div id="tooltip"></div>
+        <div id="game-over" style="display: none;"></div>
+    </div>
+    <script>
+        // Card data for Season 0
+    const season0 = [
+            { id: "001", name: "Stealth Drone", type: "minion", attack: 1, health: 1, cost: 1, description: "Quick scouting unit cloaked in shadow.", backgroundImage: "https://i.imgur.com/zMFckYB.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "002", name: "A Coward Priest", type: "minion", attack: 1, health: 1, cost: 1, description: "Basic reconnaissance unit.", backgroundImage: "https://i.imgur.com/DHS25YU.jpeg", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "003", name: "Starborn Light", type: "minion", attack: 1, health: 1, cost: 1, description: "Summons structures.", backgroundImage: "https://i.imgur.com/AvsiFog.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "004", name: "Arcane Mystic", type: "minion", attack: 2, health: 3, cost: 2, description: "Casts arcane spells with finesse.", backgroundImage: "https://i.imgur.com/Enu1T7Y.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "005", name: "Alpha Skiff", type: "minion", attack: 1, health: 2, cost: 2, description: "On play: Deal 2 damage to an enemy.", backgroundImage: "https://i.imgur.com/z1fbkXx.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "006", name: "Orcish Sniper", type: "minion", attack: 2, health: 1, cost: 2, description: "Ranged attacker.", backgroundImage: "https://i.imgur.com/nlkfMpI.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "007", name: "Mace Assassin", type: "minion", attack: 4, health: 2, cost: 3, description: "Strikes with venomous precision.", backgroundImage: "https://i.imgur.com/3SkE6VG.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "008", name: "Swarm Legion", type: "minion", attack: 3, health: 3, cost: 3, description: "Overruns the enemy in numbers.", backgroundImage: "https://i.imgur.com/Wn84v6I.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "009", name: "Ethereal Phantom", type: "minion", attack: 2, health: 3, cost: 3, description: "Haunts the battlefield.", backgroundImage: "https://i.imgur.com/v0RBTiV.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "010", name: "Crimson Shade", type: "minion", attack: 2, health: 3, cost: 3, description: "Burns with crimson energy.", backgroundImage: "https://i.imgur.com/36iR3J8.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "011", name: "Logs Much", type: "minion", attack: 2, health: 3, cost: 3, description: "Wooden with steel presence.", backgroundImage: "https://i.imgur.com/PFbnxct.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "012", name: "Luminous Watcher", type: "minion", attack: 2, health: 3, cost: 3, description: "Heals all for 1 each turn.", backgroundImage: "https://i.imgur.com/eg8FESL.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "013", name: "Patrol Frigate", type: "minion", attack: 2, health: 3, cost: 3, description: "Standard patrol vessel.", backgroundImage: "https://i.imgur.com/nJMY8NA.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "014", name: "Battle Commander", type: "minion", attack: 2, health: 4, cost: 3, description: "Leads the charge.", backgroundImage: "https://i.imgur.com/ABsno64.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "015", name: "Night Wraith", type: "minion", attack: 4, health: 3, cost: 4, description: "Strikes from the shadows.", backgroundImage: "https://i.imgur.com/PSpj7sO.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "016", name: "Night Lord", type: "minion", attack: 4, health: 3, cost: 4, description: "Roams from the shadows.", backgroundImage: "https://i.imgur.com/qpsLIcS.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "017", name: "Crimson Revenant", type: "minion", attack: 4, health: 3, cost: 4, description: "Strikes with fiery intent.", backgroundImage: "https://i.imgur.com/8YIqCl5.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "018", name: "Emerald Stalker", type: "minion", attack: 4, health: 3, cost: 4, description: "Strikes with emerald fury.", backgroundImage: "https://i.imgur.com/5t6kGOi.jpeg", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "019", name: "Storm Cavalier", type: "minion", attack: 4, health: 4, cost: 4, description: "Rides the storm into battle.", backgroundImage: "https://i.imgur.com/nBUKWdy.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "020", name: "Flame Charger", type: "minion", attack: 4, health: 4, cost: 4, description: "Charges with fiery speed.", backgroundImage: "https://i.imgur.com/cep6ytB.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "021", name: "Ra Cal Vin", type: "minion", attack: 4, health: 4, cost: 4, description: "Glides with icy language.", backgroundImage: "https://i.imgur.com/XbSuPyC.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "022", name: "Beta Cruiser", type: "minion", attack: 3, health: 3, cost: 4, description: "On play: Deal 5 damage to an enemy.", backgroundImage: "https://i.imgur.com/JuxTEX9.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "023", name: "Enigmatic Warrior", type: "minion", attack: 3, health: 3, cost: 4, description: "Mysterious combatant.", backgroundImage: "https://i.imgur.com/JwcxWth.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "024", name: "Barrier Sentinel", type: "minion", attack: 0, health: 7, cost: 5, description: "Unyielding defense with Taunt.", backgroundImage: "https://i.imgur.com/klAa6aX.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "025", name: "Void Sorcerer", type: "minion", attack: 3, health: 4, cost: 5, description: "Casts protective dark magic.", backgroundImage: "https://i.imgur.com/2XhqS6d.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "026", name: "Light Mage", type: "minion", attack: 3, health: 4, cost: 5, description: "Shields with radiant magic.", backgroundImage: "https://i.imgur.com/cMLK4Oq.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "027", name: "Spectral Warrior", type: "minion", attack: 5, health: 4, cost: 5, description: "Fights with ghostly strength.", backgroundImage: "https://i.imgur.com/n2b1ugT.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "028", name: "Radiant Paladin", type: "minion", attack: 5, health: 4, cost: 5, description: "Shines with radiant power.", backgroundImage: "https://i.imgur.com/TalRqz3.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "029", name: "Vitality Totem", type: "minion", attack: 3, health: 5, cost: 5, description: "Heals all for 2 each turn.", backgroundImage: "https://i.imgur.com/SAL2oQY.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "030", name: "Ironclad Titan", type: "minion", attack: 4, health: 4, cost: 5, description: "Heavy armored enforcer.", backgroundImage: "https://i.imgur.com/yUzjTDm.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "031", name: "Overlord Mind", type: "minion", attack: 4, health: 4, cost: 5, description: "Taunt.", backgroundImage: "https://i.imgur.com/LspYMpz.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "032", name: "Celestial Warden", type: "minion", attack: 5, health: 5, cost: 6, description: "Heals all for 1 each turn.", backgroundImage: "https://i.imgur.com/6CXJn5s.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "033", name: "Abyssal Keeper", type: "minion", attack: 5, health: 5, cost: 6, description: "Heals all with dark energy.", backgroundImage: "https://i.imgur.com/3b2RmGQ.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "034", name: "Arcane Missile", type: "spell", cost: 1, description: "Deal 3 damage to a random enemy.", backgroundImage: "https://i.imgur.com/jQbF07m.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "035", name: "Shadow Strike", type: "spell", cost: 2, description: "Deal 4 damage to a target enemy.", backgroundImage: "https://i.imgur.com/oPFVuMN.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "036", name: "Healing Wave", type: "spell", cost: 3, description: "Restore 6 health to a friendly character.", backgroundImage: "https://i.imgur.com/PgLXUx8.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "037", name: "Mind Control", type: "spell", cost: 8, description: "Take control of an enemy minion.", backgroundImage: "https://i.imgur.com/dC1AKPu.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "038", name: "Starship Alpha", type: "minion", attack: 2, health: 2, cost: 2, description: "Stealth. Gains +1 atk in space-themed games.", backgroundImage: "https://i.imgur.com/scyPIUs.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "039", name: "Star Hut", type: "minion", attack: 0, health: 5, cost: 3, description: "Taunt. Heals adjacent allies for 1 in Island.", backgroundImage: "https://i.imgur.com/TCYVocs.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "040", name: "Engineer Prime", type: "minion", attack: 4, health: 4, cost: 6, description: "Super Rare. On play: Give all allies +2 atk in Warlords.", backgroundImage: "https://i.imgur.com/KpHvcmW.mp4", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "041", name: "Starship Beta", type: "minion", attack: 3, health: 3, cost: 4, description: "Deals +2 damage to structures in RTS.", backgroundImage: "https://i.imgur.com/BSurWbZ.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "042", name: "Starship Gamma", type: "minion", attack: 2, health: 4, cost: 4, description: "Heals allies for 1 in Crawl.", backgroundImage: "https://i.imgur.com/5PSOVVc.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "043", name: "Star Cruiser", type: "minion", attack: 6, health: 5, cost: 7, description: "On play: Deal 3 damage to all enemies in Battle.", backgroundImage: "https://i.imgur.com/Ldfm3An.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "044", name: "Fireball", type: "spell", cost: 4, description: "Deal 6 damage to a target. +2 damage in Warlords.", backgroundImage: "https://i.imgur.com/V1HCiAI.jpg", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "045", name: "Undead", type: "minion", attack: 3, health: 3, cost: 3, description: "Grants Undead Hardcore Island character. +1 hp in Island.", backgroundImage: "https://i.imgur.com/8YIqCl5.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "046", name: "Human", type: "minion", attack: 3, health: 3, cost: 3, description: "Grants Human Hardcore Island character. +1 atk in Warlords.", backgroundImage: "https://i.imgur.com/0XcU175.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "047", name: "Orc", type: "minion", attack: 4, health: 2, cost: 3, description: "Grants Orc Hardcore Island character. Haste in Battle.", backgroundImage: "https://i.imgur.com/nlkfMpI.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "048", name: "Elf", type: "minion", attack: 2, health: 4, cost: 3, description: "Grants Elf Hardcore Island character. +1 cost reduction in Crawl.", backgroundImage: "https://i.imgur.com/6CXJn5s.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "049", name: "Dwarf", type: "minion", attack: 3, health: 3, cost: 3, description: "Grants Dwarf Hardcore Island character. +2 hp in Tower.", backgroundImage: "https://i.imgur.com/nBUKWdy.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "050", name: "Barbarian", type: "minion", attack: 4, health: 3, cost: 3, description: "Grants Barbarian Hardcore Island character. +1 atk in Island.", backgroundImage: "https://i.imgur.com/a9H86By.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "051", name: "Skeleton NB", type: "minion", attack: 2, health: 3, cost: 2, description: "Swift skeletal fighter with a mace.", backgroundImage: "https://i.imgur.com/Dh99XuH.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "052", name: "Scourge Warrior", type: "minion", attack: 4, health: 3, cost: 4, description: "Dark warrior with a cursed blade.", backgroundImage: "https://i.imgur.com/NFjvmxO.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "053", name: "Orc NB", type: "minion", attack: 2, health: 2, cost: 2, description: "Stealthy orc scout.", backgroundImage: "https://i.imgur.com/zMFckYB.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "054", name: "Barbarian Mace", type: "minion", attack: 4, health: 2, cost: 3, description: "Barbarian wielding a heavy mace.", backgroundImage: "https://i.imgur.com/3SkE6VG.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "055", name: "Human NB", type: "minion", attack: 3, health: 4, cost: 4, description: "Versatile human defender with a shield.", backgroundImage: "https://i.imgur.com/klAa6aX.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "056", name: "Dwarf Hammer", type: "minion", attack: 3, health: 5, cost: 4, description: "Sturdy dwarf with a hammer.", backgroundImage: "https://i.imgur.com/Wn84v6I.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "057", name: "Elf Archer", type: "minion", attack: 3, health: 2, cost: 3, description: "Precise elf archer with a bow.", backgroundImage: "https://i.imgur.com/Enu1T7Y.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "058", name: "Knight", type: "minion", attack: 5, health: 5, cost: 6, description: "Armored knight with a greatsword.", backgroundImage: "https://i.imgur.com/s0cMpSi.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "059", name: "Dwarf Knight", type: "minion", attack: 4, health: 5, cost: 5, description: "Heavily armored dwarf knight.", backgroundImage: "https://i.imgur.com/TalRqz3.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "060", name: "Yorda", type: "minion", attack: 5, health: 4, cost: 6, description: "Bats with thunderous force.", backgroundImage: "https://i.imgur.com/UvZsOLQ.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "061", name: "Magician NB", type: "minion", attack: 3, health: 3, cost: 4, description: "Casts arcane spells with a staff.", backgroundImage: "https://i.imgur.com/PSpj7sO.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "062", name: "Calvin", type: "minion", attack: 4, health: 4, cost: 4, description: "Glides with icy magic.", backgroundImage: "https://i.imgur.com/XbSuPyC.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "063", name: "Undead Soldier", type: "minion", attack: 3, health: 3, cost: 3, description: "Undead soldier with enduring spirit.", backgroundImage: "https://i.imgur.com/8YIqCl5.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "064", name: "Human Wizard", type: "minion", attack: 3, health: 3, cost: 4, description: "Human wizard casting powerful spells.", backgroundImage: "https://i.imgur.com/0XcU175.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "065", name: "Human Archer", type: "minion", attack: 3, health: 2, cost: 3, description: "Human archer with deadly aim.", backgroundImage: "https://i.imgur.com/jKE3ClI.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "066", name: "Undead Warrior", type: "minion", attack: 2, health: 4, cost: 3, description: "Undead warrior with a shield.", backgroundImage: "https://i.imgur.com/XJ8Saun.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "067", name: "Undead Archer", type: "minion", attack: 3, health: 2, cost: 3, description: "Undead archer with ghostly arrows.", backgroundImage: "https://i.imgur.com/fGDbB5o.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "068", name: "Barrel Weapon", type: "minion", attack: 2, health: 3, cost: 3, description: "Explosive barrel used as a weapon.", backgroundImage: "https://i.imgur.com/PFbnxct.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "069", name: "Orc Archer", type: "minion", attack: 3, health: 2, cost: 3, description: "Orc archer with a heavy bow.", backgroundImage: "https://i.imgur.com/nlkfMpI.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "070", name: "Priest", type: "minion", attack: 2, health: 4, cost: 4, description: "Heals allies with divine light.", backgroundImage: "https://i.imgur.com/6CXJn5s.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "071", name: "Paladin", type: "minion", attack: 5, health: 5, cost: 6, description: "Protects with holy power.", backgroundImage: "https://i.imgur.com/3b2RmGQ.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "072", name: "Orc Heavy", type: "minion", attack: 5, health: 4, cost: 5, description: "Heavy orc with a massive axe.", backgroundImage: "https://i.imgur.com/cep6ytB.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "073", name: "Human Heavy", type: "minion", attack: 4, health: 5, cost: 5, description: "Heavily armored human warrior.", backgroundImage: "https://i.imgur.com/UT8Yfo2.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "074", name: "Undead Heavy", type: "minion", attack: 4, health: 5, cost: 5, description: "Undead giant with a spiked club.", backgroundImage: "https://i.imgur.com/9Prc8Md.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "075", name: "WareTree", type: "minion", attack: 3, health: 6, cost: 5, description: "Living tree that attacks with roots.", backgroundImage: "https://i.imgur.com/gA5V2vd.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "076", name: "Small Troll", type: "minion", attack: 3, health: 3, cost: 3, description: "Small troll with regenerative powers.", backgroundImage: "https://i.imgur.com/R5AKvO4.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "077", name: "Human Upgrade", type: "minion", attack: 4, health: 4, cost: 5, description: "Upgraded human with enhanced armor.", backgroundImage: "https://i.imgur.com/9lhozCz.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "078", name: "Dwarf Heavy", type: "minion", attack: 4, health: 6, cost: 5, description: "Heavy dwarf with a warhammer.", backgroundImage: "https://i.imgur.com/oGautmG.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "079", name: "Scourge Familiar", type: "minion", attack: 2, health: 2, cost: 2, description: "Dark familiar that boosts spells.", backgroundImage: "https://i.imgur.com/FcwHTwA.png", startingAmount: 2, tribe: null, rarity: null, uniqueId: null },
+            { id: "080", name: "Faitherbearer", type: "minion", attack: 5, health: 5, cost: 6, description: "Bearer of faith with divine strength.", backgroundImage: "https://i.imgur.com/ENXGMbn.jpg", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "081", name: "Explosion 2", type: "spell", cost: 5, description: "Deal 8 damage to a target and 2 to adjacent enemies.", backgroundImage: "https://i.imgur.com/vUfG5PJ.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "082", name: "Explosion 1", type: "spell", cost: 3, description: "Deal 5 damage to a target and 1 to adjacent enemies.", backgroundImage: "https://i.imgur.com/lAUM1L7.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "083", name: "Spell Ball", type: "spell", cost: 2, description: "Deal 3 damage to a random enemy and draw a card.", backgroundImage: "https://i.imgur.com/1iicyne.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "084", name: "Fire Swirl", type: "spell", cost: 4, description: "Deal 4 damage to all enemies.", backgroundImage: "https://i.imgur.com/dramBbf.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "085", name: "Fire Ball", type: "spell", cost: 4, description: "Deal 6 damage to a target.", backgroundImage: "https://i.imgur.com/KfE0K3N.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "086", name: "Purple Swipe", type: "spell", cost: 3, description: "Deal 4 damage and reduce target atk by 1.", backgroundImage: "https://i.imgur.com/X4uVLBC.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "087", name: "Sword", type: "spell", cost: 2, description: "Give a minion +2 atk this turn.", backgroundImage: "https://i.imgur.com/u95mHRc.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "088", name: "Pick Axe Efforts", type: "spell", cost: 3, description: "Deal 3 damage and gain 2 armor.", backgroundImage: "https://i.imgur.com/OaIxVfq.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "089", name: "Book", type: "spell", cost: 1, description: "Draw 2 cards.", backgroundImage: "https://i.imgur.com/LhKeIUk.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "090", name: "Light", type: "spell", cost: 2, description: "Restore 4 health to a friendly character.", backgroundImage: "https://i.imgur.com/8fYU7nG.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "091", name: "Light 2", type: "spell", cost: 3, description: "Restore 6 health to a friendly character.", backgroundImage: "https://i.imgur.com/FGmWArp.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "092", name: "Arcane", type: "spell", cost: 5, description: "Deal 5 damage to a target and stun it.", backgroundImage: "https://i.imgur.com/dU3QrVi.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "093", name: "Mystic Green", type: "spell", cost: 4, description: "Restore 5 health to all friendly characters.", backgroundImage: "https://i.imgur.com/ra2S7o0.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "094", name: "Red Skull Magic", type: "spell", cost: 6, description: "Deal 6 damage to a target and summon a 2/2 skull.", backgroundImage: "https://i.imgur.com/KjBYZ7L.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "095", name: "Green Skull Magic", type: "spell", cost: 6, description: "Deal 5 damage to a target and heal for 5.", backgroundImage: "https://i.imgur.com/dWpBsru.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "096", name: "Small Building", type: "minion", attack: 0, health: 5, cost: 3, description: "Taunt. Defensive structure for RTS.", backgroundImage: "https://i.imgur.com/LouhX6b.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "097", name: "Summoning Tower", type: "minion", attack: 2, health: 4, cost: 4, description: "On play: Summon a 1/1 spirit in Crawl.", backgroundImage: "https://i.imgur.com/aBeF0N8.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "098", name: "Armory", type: "minion", attack: 0, health: 6, cost: 5, description: "Taunt. Gives +1 atk to summoned minions in RTS.", backgroundImage: "https://i.imgur.com/4TFvg1K.png", startingAmount: 1, tribe: null, rarity: null, uniqueId: null },
+            { id: "099", name: "Hero Hall", type: "minion", attack: 0, health: 7, cost: 6, description: "Taunt. Boosts hero atk by 2 in Warlords.", backgroundImage: "https://i.imgur.com/H0EAefW.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+            { id: "100", name: "Tower", type: "minion", attack: 0, health: 8, cost: 7, description: "Taunt. Defensive structure for RTS.", backgroundImage: "https://i.imgur.com/4TFvg1K.png", startingAmount: 0, tribe: null, rarity: null, uniqueId: null },
+        ];
+    
+
+    class Game {
+            constructor() {
+                this.state = {
+                    player: { health: 30, mana: 0, maxMana: 0, hand: [], board: [], deck: [], graveyard: [], armor: 0 },
+                    ai: { health: 30, mana: 0, maxMana: 0, hand: [], board: [], deck: [], graveyard: [], armor: 0 },
+                    turn: 'player',
+                    turnNumber: 1,
+                    selectedCard: null,
+                    attackingMinion: null,
+                    gameOver: false,
+                    startingDeck: [],
+                    swapsLeft: 3,
+                    playerWins: 0,
+                    aiWins: 0
+                };
+                this.elements = {
+                    playerHand: document.getElementById('player-hand'),
+                    playerBoard: document.getElementById('player-minion-board'),
+                    aiBoard: document.getElementById('ai-minion-board'),
+                    aiHand: document.getElementById('ai-hand'),
+                    deck: document.getElementById('deck'),
+                    graveyard: document.getElementById('graveyard'),
+                    aiGraveyard: document.getElementById('ai-graveyard'),
+                    log: document.getElementById('log'),
+                    manaFill: document.getElementById('mana-fill'),
+                    turnIndicator: document.getElementById('turn-indicator'),
+                    endTurnBtn: document.getElementById('end-turn'),
+                    restartBtn: document.getElementById('restart-btn'),
+                    backToCodexBtn: document.getElementById('back-to-codex-btn'),
+                    playerAvatar: document.getElementById('player-avatar'),
+                    tooltip: document.getElementById('tooltip'),
+                    gameOver: document.getElementById('game-over')
+                };
+                this.maxHealth = 100;
+                this.maxArmor = 50;
+                this.maxHandSize = 10;
+                this.maxBoardSize = 7;
+            }
+
+            async init() {
+                const discordUser = JSON.parse(sessionStorage.getItem('discordUser') || '{}');
+                if (discordUser.id && discordUser.avatar) {
+                    this.elements.playerAvatar.src = `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`;
+                }
+                this.state.player.deck = this.shuffle([...season0]);
+                this.state.ai.deck = this.generateAIDeck();
+                this.addLog("AI deck generated with balanced card distribution.");
+                this.state.startingDeck = this.state.player.deck.splice(0, 5);
+                this.setupUI();
+                this.showStartingDeck();
+                this.addLog("Game started! Select up to 3 cards to swap.");
+            }
+
+            shuffle(deck) {
+                return deck.map(card => ({ ...card, uid: Math.random().toString(36).substr(2, 9) }))
+                    .sort(() => Math.random() - 0.5);
+            }
+
+            generateAIDeck() {
+                const lowCost = season0.filter(c => c.cost <= 3);
+                const midCost = season0.filter(c => c.cost === 4 || c.cost === 5);
+                const highCost = season0.filter(c => c.cost >= 6);
+                const deck = [
+                    ...this.shuffle(lowCost).slice(0, 10),
+                    ...this.shuffle(midCost).slice(0, 6),
+                    ...this.shuffle(highCost).slice(0, 4)
+                ];
+                return this.shuffle(deck);
+            }
+
+            setupUI() {
+                this.elements.endTurnBtn.addEventListener('click', () => this.endTurn());
+                this.elements.restartBtn.addEventListener('click', () => this.restart());
+                this.elements.backToCodexBtn.addEventListener('click', () => this.backToCodex());
+                document.querySelectorAll('.drop-target').forEach(target => {
+                    target.addEventListener('dragover', e => {
+                        e.preventDefault();
+                        if (this.state.turn === 'player' && !this.state.gameOver) {
+                            target.classList.add('drag-over');
+                        }
+                    });
+                    target.addEventListener('dragleave', () => target.classList.remove('drag-over'));
+                    target.addEventListener('drop', e => {
+                        target.classList.remove('drag-over');
+                        this.handleDrop(e);
+                    });
+                });
+                this.elements.aiBoard.addEventListener('click', e => this.handleBoardClick(e));
+                document.addEventListener('mousemove', e => this.updateTooltipPosition(e));
+            }
+
+            showStartingDeck() {
+                const container = document.createElement('div');
+                container.id = 'starting-deck';
+                container.innerHTML = `
+                    <div id="selection-text">SELECT CARDS TO SWAP (${this.state.swapsLeft} LEFT)</div>
+                    <div id="starting-deck-cards"></div>
+                    <button id="confirm-selection" type="button">Confirm</button>
+                `;
+                document.getElementById('game').appendChild(container);
+
+                const cardContainer = document.getElementById('starting-deck-cards');
+                this.state.startingDeck.forEach(card => {
+                    const cardEl = this.createCard(card);
+                    cardEl.addEventListener('click', () => this.swapCard(card));
+                    cardContainer.appendChild(cardEl);
+                });
+                document.getElementById('confirm-selection').addEventListener('click', () => this.confirmDeck());
+            }
+
+            swapCard(card) {
+                if (this.state.swapsLeft <= 0) return this.addLog("No swaps left!");
+                const index = this.state.startingDeck.findIndex(c => c.uid === card.uid);
+                if (index !== -1 && this.state.player.deck.length > 0) {
+                    const newCard = this.state.player.deck.shift();
+                    this.state.startingDeck[index] = { ...newCard, uid: Math.random().toString(36).substr(2, 9) };
+                    this.state.player.deck.push(card);
+                    this.state.swapsLeft--;
+                    this.addLog(`Swapped ${card.name} for ${newCard.name}`);
+                    this.updateStartingDeckUI();
+                }
+            }
+
+            updateStartingDeckUI() {
+                const container = document.getElementById('starting-deck');
+                if (!container) return;
+                container.querySelector('#selection-text').textContent = `SELECT CARDS TO SWAP (${this.state.swapsLeft} LEFT)`;
+                const cardContainer = container.querySelector('#starting-deck-cards');
+                cardContainer.innerHTML = '';
+                this.state.startingDeck.forEach(card => {
+                    const cardEl = this.createCard(card);
+                    cardEl.addEventListener('click', () => this.swapCard(card));
+                    cardContainer.appendChild(cardEl);
+                });
+            }
+
+            confirmDeck() {
+                this.state.player.hand = [...this.state.startingDeck];
+                this.state.startingDeck = [];
+                this.state.swapsLeft = 0;
+                document.getElementById('starting-deck')?.remove();
+                this.drawCards('ai', 5);
+                this.startTurn('player');
+                this.update();
+                this.addLog("Game begins! Player's turn.");
+            }
+
+            createCard(card, isPlayer = true) {
+                const minion = this.state[isPlayer ? 'player' : 'ai'].board.find(m => m.card.uid === card.uid);
+                const exhausted = minion?.exhausted || false;
+                const canAttack = isPlayer && this.canAttack(card);
+                const cardEl = document.createElement('div');
+                cardEl.className = `card drop-target ${card.type} ${card.taunt ? 'taunt' : ''} ${exhausted ? 'exhausted' : ''} ${canAttack ? 'can-attack' : ''} ${this.state.selectedCard?.uid === card.uid ? 'selected' : ''}`;
+                cardEl.style.backgroundImage = `url('${card.backgroundImage}')`;
+                cardEl.innerHTML = `
+                    <div class="card-cost">${card.cost}</div>
+                    <div class="card-name">${card.name}</div>
+                    <div class="card-description">${card.description}</div>
+                    ${card.attack !== undefined ? `<div class="card-attack">${minion ? minion.card.attack : card.attack}</div>` : ''}
+                    ${card.health !== undefined ? `<div class="card-health">${minion ? minion.card.health : card.health}</div>` : ''}
+                `;
+                cardEl.dataset.card = JSON.stringify(card);
+
+                if (isPlayer && this.state.turn === 'player' && !this.state.gameOver && !this.state.startingDeck.length) {
+                    cardEl.draggable = true;
+                    cardEl.addEventListener('dragstart', e => this.handleDragStart(card, e));
+                    cardEl.addEventListener('click', () => this.selectCard(card));
+                    cardEl.addEventListener('mouseenter', () => this.showTooltip(card, cardEl));
+                    cardEl.addEventListener('mouseleave', () => this.hideTooltip());
+                }
+                return cardEl;
+            }
+
+            showTooltip(card, cardEl) {
+                const rect = cardEl.getBoundingClientRect();
+                this.elements.tooltip.innerHTML = `
+                    <strong>${card.name}</strong><br>
+                    Cost: ${card.cost}<br>
+                    ${card.attack !== undefined ? `Attack: ${card.attack}<br>` : ''}
+                    ${card.health !== undefined ? `Health: ${card.health}<br>` : ''}
+                    ${card.damage ? `Damage: ${card.damage}<br>` : ''}
+                    ${card.healing ? `Healing: ${card.healing}<br>` : ''}
+                    ${card.ability ? `Ability: ${card.description}<br>` : ''}
+                    Type: ${card.type.charAt(0).toUpperCase() + card.type.slice(1)}
+                `;
+                this.elements.tooltip.style.left = `${rect.right + 10}px`;
+                this.elements.tooltip.style.top = `${rect.top}px`;
+                this.elements.tooltip.classList.add('show');
+            }
+
+            hideTooltip() {
+                this.elements.tooltip.classList.remove('show');
+            }
+
+            updateTooltipPosition(e) {
+                if (this.elements.tooltip.classList.contains('show')) {
+                    this.elements.tooltip.style.left = `${e.clientX + 10}px`;
+                    this.elements.tooltip.style.top = `${e.clientY + 10}px`;
+                }
+            }
+
+            drawCards(player, count) {
+                const target = this.state[player];
+                for (let i = 0; i < count && target.hand.length < this.maxHandSize; i++) {
+                    if (!target.deck.length) {
+                        target.health = Math.max(0, target.health - Math.ceil(this.state.turnNumber / 2));
+                        this.addLog(`${player === 'player' ? 'Player' : 'AI'} takes ${Math.ceil(this.state.turnNumber / 2)} fatigue damage.`);
+                        this.animateDamageCircles(document.getElementById(player === 'player' ? 'hero-health-board' : 'ai-health-board'));
+                    } else {
+                        target.hand.push(target.deck.shift());
+                    }
+                }
+                this.update();
+            }
+
+            startTurn(player) {
+                const target = this.state[player];
+                target.maxMana = Math.min(10, target.maxMana + 1);
+                target.mana = target.maxMana;
+                this.drawCards(player, 1);
+                target.board.forEach(m => {
+                    m.exhausted = false;
+                    m.turnsOnBoard = (m.turnsOnBoard || 0) + 1;
+                    if (m.card.healAll) {
+                        target.board.forEach(min => {
+                            min.card.health = Math.min(this.maxHealth, min.card.health + m.card.healAll);
+                            this.animateHeal(document.getElementById(player === 'player' ? 'player-minion-board' : 'ai-minion-board').querySelector(`[data-card='${JSON.stringify(min.card)}']`));
+                        });
+                        target.health = Math.min(this.maxHealth, target.health + m.card.healAll);
+                        this.addLog(`${player === 'player' ? 'Player' : 'AI'}'s ${m.card.name} heals all for ${m.card.healAll}`);
+                        this.animateHeal(document.getElementById(player === 'player' ? 'hero-health-board' : 'ai-health-board'));
+                    }
+                });
+                this.state.turn = player;
+                this.state.turnNumber++;
+                this.addLog(`${player === 'player' ? 'Player' : 'AI'}'s Turn ${Math.ceil(this.state.turnNumber / 2)}`);
+                this.update();
+                if (player === 'ai') {
+                    setTimeout(() => this.aiTurn(), 1000);
+                }
+            }
+
+            endTurn() {
+                if (this.state.turn !== 'player' || this.state.gameOver || this.state.startingDeck.length) return;
+                this.state.turn = 'ai';
+                this.addLog("Player's turn ends.");
+                this.update();
+                this.startTurn('ai');
+            }
+
+            async aiTurn() {
+                if (this.state.gameOver) return;
+                const boardState = this.evaluateBoardState();
+                const hand = [...this.state.ai.hand].sort((a, b) => {
+                    if (boardState.shouldPlayDefensively) {
+                        return (a.type === 'healing' || a.taunt) ? -1 : 1;
+                    }
+                    return a.cost - b.cost;
+                });
+                const targetPriority = this.calculateAITargetPriority();
+
+                const playProbability = boardState.healthDiff > 10 ? 0.9 : boardState.shouldPlayDefensively ? 0.6 : 0.8;
+                for (let card of hand) {
+                    if (this.state.ai.mana >= card.cost && Math.random() < playProbability) {
+                        await this.playAICard(card, targetPriority);
+                    }
+                }
+
+                const attackableMinions = this.state.ai.board.filter(m => !m.exhausted && m.card.health > 0 && m.card.attack > 0);
+                for (let minion of attackableMinions) {
+                    const priority = this.calculateAITargetPriority();
+                    if (boardState.shouldPlayDefensively && priority.type === 'hero' && Math.random() > 0.3) {
+                        continue;
+                    }
+                    await this.aiAttack(minion, priority);
+                }
+
+                this.checkGameEnd();
+                if (!this.state.gameOver) {
+                    this.state.turn = 'player';
+                    this.startTurn('player');
+                }
+                this.update();
+            }
+
+            evaluateBoardState() {
+                const playerThreat = this.state.player.board.reduce((sum, m) => sum + m.card.attack + m.card.health, 0);
+                const aiThreat = this.state.ai.board.reduce((sum, m) => sum + m.card.attack + m.card.health, 0);
+                const healthDiff = this.state.ai.health - this.state.player.health;
+                return {
+                    playerThreat,
+                    aiThreat,
+                    healthDiff,
+                    boardControl: aiThreat - playerThreat,
+                    shouldPlayDefensively: healthDiff < 0 || playerThreat > aiThreat
+                };
+            }
+
+            calculateAITargetPriority() {
+                const playerMinions = this.state.player.board;
+                const hasTaunt = playerMinions.some(m => m.card.taunt);
+                let priority = hasTaunt ? playerMinions.filter(m => m.card.taunt) : playerMinions;
+
+                if (priority.length === 0 || this.state.player.health <= 10) {
+                    return { type: 'hero', target: null };
+                }
+
+                priority.sort((a, b) => (b.card.attack / b.card.health) - (a.card.attack / a.card.health));
+                return { type: 'minion', target: priority[0]?.card };
+            }
+
+            async playAICard(card, targetPriority) {
+                this.state.ai.mana -= card.cost;
+                this.state.ai.hand = this.state.ai.hand.filter(c => c.uid !== card.uid);
+                const cardEl = this.createCard(card, false);
+                this.elements.aiHand.appendChild(cardEl);
+                await new Promise(resolve => setTimeout(resolve, 800));
+                cardEl.remove();
+
+                if (card.type === 'minion' && this.state.ai.board.length < this.maxBoardSize) {
+                    this.state.ai.board.push({ card, exhausted: true, armor: 0 });
+                    this.addLog(`AI plays ${card.name}`);
+                    if (card.ability === 'dealDamage') {
+                        await this.handleDealDamage(card, 'player', this.elements.playerBoard, targetPriority);
+                    } else if (card.ability === 'boostAllies') {
+                        this.state.ai.board.forEach(m => m.card.attack += card.boostAttack);
+                        this.addLog(`AI's ${card.name} gives all allies +${card.boostAttack} attack`);
+                        await new Promise(resolve => setTimeout(resolve, 800));
+                    } else if (card.ability) {
+                        await this.handleSpecialAbility(card, 'ai', 'ai-minion-board', this.elements.aiBoard);
+                    }
+                } else if (card.type === 'directDamage') {
+                    const targetId = targetPriority.type === 'hero' ? 'hero-health-board' : 'player-minion-board';
+                    const targetEl = document.getElementById(targetId);
+                    this.animateSpellProjectile(this.elements.aiHand, targetEl, true);
+                    this.addLog(`AI casts ${card.name} at ${targetId === 'hero-health-board' ? 'Player' : 'Player’s minions'}`);
+                    await this.handleDirectDamage(card, 'player', targetId, targetEl, targetPriority);
+                } else if (card.type === 'healing') {
+                    const targetId = this.state.ai.health < 20 ? 'ai-health-board' : 'ai-minion-board';
+                    const targetEl = document.getElementById(targetId);
+                    await this.handleHealing(card, 'ai', targetId, targetEl);
+                } else if (card.type === 'spell') {
+                    this.state.ai.mana = Math.min(this.state.ai.maxMana, this.state.ai.mana + 2);
+                    this.addLog(`AI gains 2 mana with ${card.name}`);
+                    this.animateManaGain(document.getElementById('ai-health-board'));
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                } else if (card.type === 'spellDraw') {
+                    this.drawCards('ai', 2);
+                    this.addLog(`AI draws 2 cards with ${card.name}`);
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                }
+                this.state.ai.graveyard.push(card);
+                this.update();
+            }
+
+            async aiAttack(minion, targetPriority) {
+                const cardEl = this.elements.aiBoard.querySelector(`[data-card='${JSON.stringify(minion.card)}']`);
+                cardEl.classList.add('attack-animation');
+                const targetId = targetPriority.type === 'hero' ? 'hero-health-board' : 'player-minion-board';
+                const targetEl = document.getElementById(targetId);
+                this.animateDamageCircles(targetEl);
+                this.attackWithMinion(minion, 'player', targetId, targetPriority);
+                minion.exhausted = true;
+                await new Promise(resolve => setTimeout(() => {
+                    cardEl.classList.remove('attack-animation');
+                    resolve();
+                }, 800));
+            }
+
+            selectCard(card) {
+                if (this.state.turn !== 'player' || this.state.gameOver) return;
+                if (this.state.selectedCard?.uid === card.uid) {
+                    this.state.selectedCard = null;
+                    this.state.attackingMinion = null;
+                } else if (this.state.player.hand.some(c => c.uid === card.uid) && this.state.player.mana >= card.cost) {
+                    this.state.selectedCard = card;
+                    this.state.attackingMinion = null;
+                } else if (this.canAttack(card)) {
+                    this.state.selectedCard = card;
+                    this.state.attackingMinion = this.state.player.board.find(m => m.card.uid === card.uid);
+                }
+                this.update();
+            }
+
+            handleDragStart(card, e) {
+                if (this.state.turn !== 'player' || this.state.gameOver) return;
+                if (this.state.player.hand.some(c => c.uid === card.uid) && this.state.player.mana >= card.cost) {
+                    this.state.selectedCard = card;
+                    this.state.attackingMinion = null;
+                } else if (this.canAttack(card)) {
+                    this.state.selectedCard = card;
+                    this.state.attackingMinion = this.state.player.board.find(m => m.card.uid === card.uid);
+                }
+                e.dataTransfer.setData('text/plain', JSON.stringify(card));
+            }
+
+            handleDrop(e) {
+                e.preventDefault();
+                if (!this.state.selectedCard || this.state.turn !== 'player' || this.state.gameOver) return;
+                const target = e.target.closest('.drop-target');
+                if (!target) return;
+                const targetId = target.id || (target.dataset.card ? 'card' : '');
+
+                if (this.state.player.hand.some(c => c.uid === this.state.selectedCard.uid)) {
+                    this.playCard(targetId, target);
+                } else if (this.state.attackingMinion) {
+                    this.attack(targetId, target);
+                }
+                this.state.selectedCard = null;
+                this.state.attackingMinion = null;
+                this.update();
+            }
+
+            handleBoardClick(e) {
+                if (!this.state.attackingMinion || this.state.turn !== 'player' || this.state.gameOver) return;
+                const targetCardEl = e.target.closest('.card');
+                if (targetCardEl) {
+                    const targetCard = JSON.parse(targetCardEl.dataset.card);
+                    this.attackMinion(targetCard, targetCardEl);
+                }
+            }
+
+            async playCard(targetId, targetEl) {
+                const card = this.state.selectedCard;
+                if (this.state.player.mana < card.cost) return;
+                this.state.player.mana -= card.cost;
+                this.state.player.hand = this.state.player.hand.filter(c => c.uid !== card.uid);
+
+                if (card.type === 'minion' && targetId === 'player-minion-board' && this.state.player.board.length < this.maxBoardSize) {
+                    this.state.player.board.push({ card, exhausted: true, armor: 0 });
+                    this.addLog(`Player plays ${card.name}`);
+                    if (card.ability === 'dealDamage') {
+                        await this.handleDealDamage(card, 'ai', this.elements.aiBoard);
+                    } else if (card.ability === 'boostAllies') {
+                        this.state.player.board.forEach(m => m.card.attack += card.boostAttack);
+                        this.addLog(`Player's ${card.name} gives all allies +${card.boostAttack} attack`);
+                        await new Promise(resolve => setTimeout(resolve, 800));
+                    } else if (card.ability) {
+                        await this.handleSpecialAbility(card, 'player', targetId, targetEl);
+                    }
+                } else if (card.type === 'directDamage') {
+                    await this.handleDirectDamage(card, 'ai', targetId, targetEl);
+                } else if (card.type === 'healing') {
+                    await this.handleHealing(card, targetId.includes('ai') ? 'ai' : 'player', targetId, targetEl);
+                } else if (card.type === 'spell') {
+                    this.state.player.mana = Math.min(this.state.player.maxMana, this.state.player.mana + 2);
+                    this.addLog(`Player gains 2 mana with ${card.name}`);
+                    this.animateManaGain(document.getElementById('hero-health-board'));
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                } else if (card.type === 'spellDraw') {
+                    this.drawCards('player', 2);
+                    this.addLog(`Player draws 2 cards with ${card.name}`);
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                }
+                this.state.player.graveyard.push(card);
+                this.checkGameEnd();
+                this.update();
+            }
+
+            async handleDealDamage(card, targetPlayer, targetEl, targetPriority = null) {
+                const target = this.state[targetPlayer];
+                const damage = card.damage || (card.ability === 'dealDamage' ? card.damage : 0);
+                this.animateSpellProjectile(this.elements.playerHand, targetEl, false);
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                if (target.board.some(m => m.card.taunt) && (!targetPriority || targetPriority.type !== 'minion')) {
+                    const tauntMinion = target.board.find(m => m.card.taunt);
+                    this.applyDamage(tauntMinion, damage, targetPlayer);
+                    this.addLog(`${targetPlayer === 'player' ? 'Player' : 'AI'}'s ${tauntMinion.card.name} takes ${damage} damage`);
+                    this.animateDamageCircles(this.elements[targetPlayer === 'ai' ? 'aiBoard' : 'playerBoard'].querySelector(`[data-card='${JSON.stringify(tauntMinion.card)}']`));
+                    this.checkMinionDeath(targetPlayer);
+                } else if (targetPriority?.type === 'minion' && target.board.some(m => m.card.uid === targetPriority.target.uid)) {
+                    const targetMinion = target.board.find(m => m.card.uid === targetPriority.target.uid);
+                    this.applyDamage(targetMinion, damage, targetPlayer);
+                    this.addLog(`${targetPlayer === 'player' ? 'Player' : 'AI'}'s ${targetMinion.card.name} takes ${damage} damage`);
+                    this.animateDamageCircles(this.elements[targetPlayer === 'ai' ? 'aiBoard' : 'playerBoard'].querySelector(`[data-card='${JSON.stringify(targetMinion.card)}']`));
+                    this.checkMinionDeath(targetPlayer);
+                } else if (target.board.length > 0 && Math.random() > 0.3) {
+                    const targetMinion = target.board[Math.floor(Math.random() * target.board.length)];
+                    this.applyDamage(targetMinion, damage, targetPlayer);
+                    this.addLog(`${targetPlayer === 'player' ? 'Player' : 'AI'}'s ${targetMinion.card.name} takes ${damage} damage`);
+                    this.animateDamageCircles(this.elements[targetPlayer === 'ai' ? 'aiBoard' : 'playerBoard'].querySelector(`[data-card='${JSON.stringify(targetMinion.card)}']`));
+                    this.checkMinionDeath(targetPlayer);
+                } else {
+                    this.applyDamageToHero(target, damage, targetPlayer);
+                    this.addLog(`${targetPlayer === 'player' ? 'Player' : 'AI'} takes ${damage} damage from ${card.name}`);
+                    this.animateDamageCircles(this.elements[targetPlayer === 'ai' ? 'aiBoard' : 'playerBoard']);
+                }
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
+            async handleDirectDamage(card, targetPlayer, targetId, targetEl, targetPriority = null) {
+                const target = this.state[targetPlayer];
+                const actualTargetEl = targetId.includes('card') ? targetEl : document.getElementById(targetId);
+                this.animateSpellProjectile(this.elements.playerHand, actualTargetEl, false);
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                if (targetId.includes('card')) {
+                    const targetCard = JSON.parse(targetEl.dataset.card);
+                    const targetMinion = target.board.find(m => m.card.uid === targetCard.uid);
+                    if (targetMinion) {
+                        this.applyDamage(targetMinion, card.damage, targetPlayer);
+                        this.addLog(`${targetPlayer === 'player' ? 'Player' : 'AI'}'s ${targetMinion.card.name} takes ${card.damage} damage`);
+                        this.animateDamageCircles(targetEl);
+                        this.checkMinionDeath(targetPlayer);
+                    }
+                } else if (target.board.some(m => m.card.taunt) && targetId === (targetPlayer === 'ai' ? 'ai-health-board' : 'hero-health-board')) {
+                    const tauntMinion = target.board.find(m => m.card.taunt);
+                    this.applyDamage(tauntMinion, card.damage, targetPlayer);
+                    this.addLog(`${targetPlayer === 'player' ? 'Player' : 'AI'}'s ${tauntMinion.card.name} takes ${card.damage} damage`);
+                    this.animateDamageCircles(this.elements[targetPlayer === 'ai' ? 'aiBoard' : 'playerBoard'].querySelector(`[data-card='${JSON.stringify(tauntMinion.card)}']`));
+                    this.checkMinionDeath(targetPlayer);
+                } else if (targetId === (targetPlayer === 'ai' ? 'ai-health-board' : 'hero-health-board')) {
+                    this.applyDamageToHero(target, card.damage, targetPlayer);
+                    this.addLog(`${targetPlayer === 'player' ? 'Player' : 'AI'} takes ${card.damage} damage from ${card.name}`);
+                    this.animateDamageCircles(actualTargetEl);
+                } else if (targetId === (targetPlayer === 'ai' ? 'ai-minion-board' : 'player-minion-board') && target.board.length > 0) {
+                    const targetMinion = target.board[Math.floor(Math.random() * target.board.length)];
+                    this.applyDamage(targetMinion, card.damage, targetPlayer);
+                    this.addLog(`${targetPlayer === 'player' ? 'Player' : 'AI'}'s ${targetMinion.card.name} takes ${card.damage} damage`);
+                    this.animateDamageCircles(this.elements[targetPlayer === 'ai' ? 'aiBoard' : 'playerBoard'].querySelector(`[data-card='${JSON.stringify(targetMinion.card)}']`));
+                    this.checkMinionDeath(targetPlayer);
+                }
+                this.update();
+            }
+
+            async handleHealing(card, targetPlayer, targetId, targetEl) {
+                const target = this.state[targetPlayer];
+                this.animateSpellProjectile(this.elements.playerHand, targetEl, false);
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                if (targetId.includes('card')) {
+                    const targetCard = JSON.parse(targetEl.dataset.card);
+                    const targetMinion = target.board.find(m => m.card.uid === targetCard.uid);
+                    if (targetMinion) {
+                        targetMinion.card.health = Math.min(this.maxHealth, targetMinion.card.health + card.healing);
+                        this.addLog(`${targetPlayer === 'player' ? 'Player' : 'AI'}'s ${targetMinion.card.name} healed for ${card.healing}`);
+                        this.animateHeal(targetEl);
+                    }
+                } else if (targetId === (targetPlayer === 'ai' ? 'ai-health-board' : 'hero-health-board')) {
+                    target.health = Math.min(this.maxHealth, target.health + card.healing);
+                    this.addLog(`${targetPlayer === 'player' ? 'Player' : 'AI'} healed for ${card.healing} with ${card.name}`);
+                    this.animateHeal(targetEl);
+                } else if (targetId === (targetPlayer === 'ai' ? 'ai-minion-board' : 'player-minion-board') && target.board.length > 0) {
+                    const targetMinion = target.board.reduce((min, m) => m.card.health < min.card.health ? m : min);
+                    targetMinion.card.health = Math.min(this.maxHealth, targetMinion.card.health + card.healing);
+                    this.addLog(`${targetPlayer === 'player' ? 'Player' : 'AI'}'s ${targetMinion.card.name} healed for ${card.healing}`);
+                    this.animateHeal(this.elements[targetPlayer === 'ai' ? 'aiBoard' : 'playerBoard'].querySelector(`[data-card='${JSON.stringify(targetMinion.card)}']`));
+                }
+                this.update();
+            }
+
+            async handleSpecialAbility(card, player, targetId, targetEl) {
+                if (card.ability === 'summon') {
+                    const summonCount = card.summonCount || 2;
+                    const summonedCard = season0.find(c => c.cost === 1 && c.type === 'minion');
+                    if (summonedCard && this.state[player].board.length + summonCount <= this.maxBoardSize) {
+                        for (let i = 0; i < summonCount; i++) {
+                            const newCard = { ...summonedCard, uid: Math.random().toString(36).substr(2, 9) };
+                            this.state[player].board.push({ card: newCard, exhausted: true, armor: 0 });
+                            this.addLog(`${player === 'player' ? 'Player' : 'AI'} summons ${newCard.name}`);
+                            this.animateSpellProjectile(this.elements[player === 'player' ? 'playerHand' : 'aiHand'], targetEl, player !== 'player');
+                            await new Promise(resolve => setTimeout(resolve, 800));
+                        }
+                    }
+                }
+                this.update();
+            }
+
+            applyDamage(minion, damage, player) {
+                if (minion.armor > 0) {
+                    const armorDamage = Math.min(minion.armor, damage);
+                    minion.armor -= armorDamage;
+                    damage -= armorDamage;
+                    this.addLog(`${player === 'player' ? 'Player' : 'AI'}'s ${minion.card.name} loses ${armorDamage} armor`);
+                }
+                if (damage > 0) {
+                    minion.card.health = Math.max(0, minion.card.health - damage);
+                }
+            }
+
+            applyDamageToHero(target, damage, player) {
+                if (target.armor > 0) {
+                    const armorDamage = Math.min(target.armor, damage);
+                    target.armor -= armorDamage;
+                    damage -= armorDamage;
+                    this.addLog(`${player === 'player' ? 'Player' : 'AI'} loses ${armorDamage} armor`);
+                }
+                if (damage > 0) {
+                    target.health = Math.max(0, target.health - damage);
+                }
+            }
+
+            attack(targetId, targetEl) {
+                const minion = this.state.attackingMinion;
+                if (!minion || minion.exhausted) return;
+                const cardEl = this.elements.playerBoard.querySelector(`[data-card='${JSON.stringify(minion.card)}']`);
+                const actualTargetEl = targetId.includes('card') ? targetEl : document.getElementById(targetId);
+                cardEl.classList.add('attack-animation');
+                this.animateDamageCircles(actualTargetEl);
+
+                if ((targetId === 'ai-health-board' || targetId === 'ai-hero-image' || targetId === 'ai-stats-box') && !this.state.ai.board.some(m => m.card.taunt)) {
+                    this.applyDamageToHero(this.state.ai, minion.card.attack, 'ai');
+                    this.addLog(`Player's ${minion.card.name} attacks AI for ${minion.card.attack}`);
+                    minion.exhausted = true;
+                } else if (targetId === 'ai-minion-board' && this.state.ai.board.length > 0) {
+                    const targetMinion = this.state.ai.board[Math.floor(Math.random() * this.state.ai.board.length)];
+                    this.attackMinion(targetMinion.card, this.elements.aiBoard.querySelector(`[data-card='${JSON.stringify(targetMinion.card)}']`));
+                } else if (targetId.includes('card')) {
+                    const targetCard = JSON.parse(targetEl.dataset.card);
+                    this.attackMinion(targetCard, targetEl);
+                }
+
+                setTimeout(() => cardEl.classList.remove('attack-animation'), 500);
+                this.checkGameEnd();
+                this.update();
+            }
+
+            attackMinion(targetCard, targetEl) {
+                const minion = this.state.attackingMinion;
+                if (!minion || minion.exhausted) return;
+                const targetMinion = this.state.ai.board.find(m => m.card.uid === targetCard.uid);
+                if (!targetMinion || (this.state.ai.board.some(m => m.card.taunt) && !targetMinion.card.taunt)) return;
+
+                const cardEl = this.elements.playerBoard.querySelector(`[data-card='${JSON.stringify(minion.card)}']`);
+                cardEl.classList.add('attack-animation');
+                this.animateDamageCircles(targetEl);
+
+                this.applyDamage(targetMinion, minion.card.attack, 'ai');
+                this.applyDamage(minion, targetMinion.card.attack, 'player');
+                this.addLog(`Player's ${minion.card.name} attacks ${targetMinion.card.name} for ${minion.card.attack}`);
+                minion.exhausted = true;
+
+                this.checkMinionDeath('player');
+                this.checkMinionDeath('ai');
+                setTimeout(() => cardEl.classList.remove('attack-animation'), 500);
+                this.checkGameEnd();
+                this.update();
+            }
+
+            attackWithMinion(minion, targetPlayer, targetId, targetPriority) {
+                const target = this.state[targetPlayer];
+                if (target.board.some(m => m.card.taunt) && targetId !== 'player-minion-board') {
+                    const tauntMinion = target.board.find(m => m.card.taunt);
+                    this.applyDamage(tauntMinion, minion.card.attack, targetPlayer);
+                    this.applyDamage(minion, tauntMinion.card.attack, 'ai');
+                    this.addLog(`AI's ${minion.card.name} attacks ${tauntMinion.card.name} for ${minion.card.attack}`);
+                    this.checkMinionDeath(targetPlayer);
+                    this.checkMinionDeath('ai');
+                } else if (targetPriority?.type === 'minion' && target.board.some(m => m.card.uid === targetPriority.target.uid)) {
+                    const targetMinion = target.board.find(m => m.card.uid === targetPriority.target.uid);
+                    this.applyDamage(targetMinion, minion.card.attack, targetPlayer);
+                    this.applyDamage(minion, targetMinion.card.attack, 'ai');
+                    this.addLog(`AI's ${minion.card.name} attacks ${targetMinion.card.name} for ${minion.card.attack}`);
+                    this.checkMinionDeath(targetPlayer);
+                    this.checkMinionDeath('ai');
+                } else {
+                    this.applyDamageToHero(target, minion.card.attack, targetPlayer);
+                    this.addLog(`AI's ${minion.card.name} attacks ${targetPlayer === 'player' ? 'Player' : 'AI'} for ${minion.card.attack}`);
+                }
+            }
+
+            checkMinionDeath(player) {
+                const target = this.state[player];
+                target.board = target.board.filter(m => {
+                    if (m.card.health <= 0) {
+                        target.graveyard.push(m.card);
+                        this.addLog(`${player === 'player' ? 'Player' : 'AI'}'s ${m.card.name} dies`);
+                        return false;
+                    }
+                    return true;
+                });
+                this.update();
+            }
+
+            canAttack(card) {
+                const minion = this.state.player.board.find(m => m.card.uid === card.uid);
+                return minion && !minion.exhausted && minion.card.attack > 0 && minion.card.health > 0 && (minion.turnsOnBoard || 0) >= 1;
+            }
+
+            checkGameEnd() {
+                if (this.state.player.health <= 0) {
+                    this.state.gameOver = true;
+                    this.state.aiWins++;
+                    this.showEndGame(false);
+                } else if (this.state.ai.health <= 0) {
+                    this.state.gameOver = true;
+                    this.state.playerWins++;
+                    this.showEndGame(true);
+                }
+            }
+
+            showEndGame(playerWon) {
+                this.elements.gameOver.style.display = 'block';
+                this.elements.gameOver.innerHTML = `
+                    <h2>${playerWon ? 'Victory!' : 'Defeat!'}</h2>
+                    <p>${playerWon ? 'You defeated the AI!' : 'The AI has bested you.'}</p>
+                    <p>Player Wins: ${this.state.playerWins} | AI Wins: ${this.state.aiWins}</p>
+                    <button onclick="document.querySelector('#restart-btn').click()">Play Again</button>
+                    <button onclick="document.querySelector('#back-to-codex-btn').click()">Back to Codex</button>
+                `;
+                this.elements.backToCodexBtn.style.display = 'block';
+                this.elements.backToCodexBtn.dataset.result = playerWon ? 'win' : 'loss';
+            }
+
+            backToCodex() {
+                const result = this.elements.backToCodexBtn.dataset.result;
+                const gBux = result === 'win' ? 10 : 5;
+                window.location.href = `https://www.grudgeplatform.com/Season0?result=${result}&gBux=${gBux}`;
+            }
+
+            restart() {
+                this.state = {
+                    player: { health: 30, mana: 0, maxMana: 0, hand: [], board: [], deck: [], graveyard: [], armor: 0 },
+                    ai: { health: 30, mana: 0, maxMana: 0, hand: [], board: [], deck: [], graveyard: [], armor: 0 },
+                    turn: 'player',
+                    turnNumber: 1,
+                    selectedCard: null,
+                    attackingMinion: null,
+                    gameOver: false,
+                    startingDeck: [],
+                    swapsLeft: 3,
+                    playerWins: this.state.playerWins,
+                    aiWins: this.state.aiWins
+                };
+                this.elements.log.innerHTML = 'Battle Log';
+                this.elements.gameOver.style.display = 'none';
+                this.elements.backToCodexBtn.style.display = 'none';
+                this.init();
+            }
+
+            update() {
+                document.getElementById('player-health').textContent = this.state.player.health;
+                document.getElementById('player-mana').textContent = this.state.player.mana;
+                document.getElementById('player-max-mana').textContent = this.state.player.maxMana;
+                document.getElementById('ai-health').textContent = this.state.ai.health;
+                document.getElementById('ai-mana').textContent = this.state.ai.mana;
+                document.getElementById('ai-max-mana').textContent = this.state.ai.maxMana;
+                this.elements.endTurnBtn.disabled = this.state.turn !== 'player' || this.state.gameOver || this.state.startingDeck.length;
+                this.elements.turnIndicator.textContent = `${this.state.turn === 'player' ? 'Player' : 'AI'}'s Turn`;
+                this.elements.manaFill.style.width = `${(this.state.player.mana / this.state.player.maxMana) * 100 || 0}%`;
+
+                this.elements.playerHand.innerHTML = '';
+                this.state.player.hand.forEach(card => {
+                    const cardEl = this.createCard(card);
+                    this.elements.playerHand.appendChild(cardEl);
+                });
+
+                this.elements.playerBoard.innerHTML = '';
+                this.state.player.board.forEach(m => {
+                    const cardEl = this.createCard(m.card);
+                    this.elements.playerBoard.appendChild(cardEl);
+                });
+
+                this.elements.aiBoard.innerHTML = '';
+                this.state.ai.board.forEach(m => {
+                    const cardEl = this.createCard(m.card, false);
+                    this.elements.aiBoard.appendChild(cardEl);
+                });
+
+                this.elements.aiHand.innerHTML = '';
+                this.state.ai.hand.forEach(() => {
+                    const cardBack = document.createElement('div');
+                    cardBack.className = 'ai-card-back';
+                    this.elements.aiHand.appendChild(cardBack);
+                });
+
+                this.elements.deck.textContent = `Deck: ${this.state.player.deck.length}`;
+                this.elements.graveyard.innerHTML = this.state.player.graveyard.map(c => `<div class="graveyard-card">${c.name}</div>`).join('');
+                this.elements.aiGraveyard.innerHTML = this.state.ai.graveyard.map(c => `<div class="graveyard-card">${c.name}</div>`).join('');
+            }
+
+            addLog(message) {
+                const logEntry = document.createElement('p');
+                logEntry.textContent = message;
+                this.elements.log.appendChild(logEntry);
+                this.elements.log.scrollTop = this.elements.log.scrollHeight;
+            }
+
+            animateHeal(targetEl) {
+                if (targetEl) {
+                    targetEl.classList.add('heal-animation');
+                    setTimeout(() => targetEl.classList.remove('heal-animation'), 1000);
+                }
+            }
+
+            animateSpellProjectile(startEl, targetEl, isAI) {
+                const projectile = document.createElement('div');
+                projectile.className = 'spell-projectile';
+                const startRect = startEl.getBoundingClientRect();
+                const targetRect = targetEl.getBoundingClientRect();
+                projectile.style.left = `${startRect.left + startRect.width / 2}px`;
+                projectile.style.top = `${startRect.top + startRect.height / 2}px`;
+                document.body.appendChild(projectile);
+
+                const dx = targetRect.left + targetRect.width / 2 - (startRect.left + startRect.width / 2);
+                const dy = targetRect.top + targetRect.height / 2 - (startRect.top + startRect.height / 2);
+                projectile.style.transform = `translate(${dx}px, ${dy}px)`;
+                setTimeout(() => {
+                    projectile.remove();
+                    this.animateSpellImpact(targetEl);
+                }, 800);
+            }
+
+            animateSpellImpact(targetEl) {
+                const impact = document.createElement('div');
+                impact.className = 'spell-impact';
+                const targetRect = targetEl.getBoundingClientRect();
+                impact.style.left = `${targetRect.left + targetRect.width / 2 - 50}px`;
+                impact.style.top = `${targetRect.top + targetRect.height / 2 - 50}px`;
+                document.body.appendChild(impact);
+                setTimeout(() => impact.remove(), 600);
+            }
+
+            animateDamageCircles(targetEl) {
+                const container = document.createElement('div');
+                container.className = 'damage-circles';
+                const targetRect = targetEl.getBoundingClientRect();
+                container.style.left = `${targetRect.left + targetRect.width / 2 - 40}px`;
+                container.style.top = `${targetRect.top + targetRect.height / 2 - 40}px`;
+                document.body.appendChild(container);
+
+                for (let i = 0; i < 3; i++) {
+                    const circle = document.createElement('div');
+                    circle.className = 'damage-circle';
+                    circle.style.left = `${Math.random() * 40}px`;
+                    circle.style.top = `${Math.random() * 40}px`;
+                    container.appendChild(circle);
+                }
+                setTimeout(() => container.remove(), 500);
+            }
+
+            animateManaGain(targetEl) {
+                targetEl.classList.add('mana-gain');
+                setTimeout(() => targetEl.classList.remove('mana-gain'), 700);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => new Game().init());
+    </script>
+</body>
+</html>
