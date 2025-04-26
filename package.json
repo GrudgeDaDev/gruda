@@ -7,7 +7,7 @@
     "deploy": "netlify deploy --prod --dir=public"
   },
   "dependencies": {
-    "parse": "4.10.0",
+    "parse": "^6.0.0",
     "dotenv": "^16.4.5",
     "@supabase/supabase-js": "^2.45.4",
     "boardgame.io": "^0.50.2"

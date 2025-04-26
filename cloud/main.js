@@ -215,3 +215,13 @@ Parse.Cloud.define("getLeaderboard", async (request) => {
     throw new Parse.Error(error.code || 141, error.message || "Failed to retrieve leaderboard");
   }
 });
+
+Parse.Cloud.define("getSeason0Data", async (request) => {
+  try {
+    const query = new Parse.Query("Season0");
+    const results = await query.find({ useMasterKey: true });
+    return results.map((result) => result.toJSON());
+  } catch (error) {
+    throw new Parse.Error(error.code || 141, error.message || "Failed to fetch Season0 data");
+  }
+});
