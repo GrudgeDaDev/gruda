@@ -1597,68 +1597,68 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Supabase initialization
+        document.addEventListener('DOMContentLoaded', async function () {
             const SUPABASE_URL = 'https://ikzhueoilmcajkfdqdst.supabase.co';
-            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlremh1ZW9pbG1jYWprZmRxZHN0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NTQ0Nzk4NSwiZXhwIjoyMDYxMDIzOTg1fQ.Sgn4tSf4psvGDmJ0S3PSWyzYzg5Y8gQEiFY3QPD7lyw';
-            let supabase;
-            try {
-                supabase = window.Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            } catch (error) {
-                console.error('Failed to initialize Supabase:', error);
-                alert('Database connection failed. Offline mode enabled.');
+            const SUPABASE_KEY = 'YOUR_SUPABASE_KEY';
+            const supabase = window.Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+            let user = null;
+            let userBalance = 0;
+            let wins = 0;
+            let losses = 0;
+
+            // Initialize user session
+            async function initializeUser() {
+                const { data: session } = await supabase.auth.getSession();
+                if (session?.user) {
+                    user = session.user;
+                    await loadUserData();
+                } else {
+                    document.getElementById('login-btn').addEventListener('click', login);
+                }
             }
 
-            // Game state
-            let userBalance = 1000;
-            let packCount = 5;
-            let ownedCards = [];
-            let walletAddress = localStorage.getItem('wallet') || '0x' + Math.random().toString(16).slice(2, 42);
-            localStorage.setItem('wallet', walletAddress);
-            let isOnline = navigator.onLine;
-            let mintedCards = 0;
-            let showOwnedOnly = false;
-            let selectedCards = [];
-            let currentDeckSlot = '1';
+            // Login with Discord
+            async function login() {
+                const { error } = await supabase.auth.signInWithOAuth({
+                    provider: 'discord',
+                });
+                if (error) {
+                    console.error('Login failed:', error.message);
+                }
+            }
 
-            // Local storage for offline cards
-            const localCards = JSON.parse(localStorage.getItem('localCards')) || [];
-            const localBalance = parseInt(localStorage.getItem('localBalance')) || userBalance;
-            const localPacks = parseInt(localStorage.getItem('localPacks')) || packCount;
+            // Load user data
+            async function loadUserData() {
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('gbux_balance, wins, losses')
+                    .eq('id', user.id)
+                    .single();
 
-            // Season 0 cards
-            const season0 = [
-                { id: 1, name: "Grudge", mana_cost: 3, attack: 2, health: 2, description: "A basic fighter.", backgroundImage: "https://i.imgur.com/3SkE6VG.png", uid: "grudge", type: "minion" },
-                { id: 2, name: "Stealth Drone", type: "minion", attack: 1, health: 1, mana_cost: 1, description: "Quick scouting unit cloaked in shadow.", backgroundImage: "https://i.imgur.com/zMFckYB.png", startingAmount: 2 },
-                { id: 3, name: "A Coward Priest", type: "minion", attack: 1, health: 1, mana_cost: 1, description: "Basic reconnaissance unit.", backgroundImage: "https://i.imgur.com/DHS25YU.jpeg", startingAmount: 2 },
-                { id: 4, name: "Starborn Light", type: "minion", attack: 1, health: 1, mana_cost: 1, description: "Summons structures.", backgroundImage: "https://i.imgur.com/AvsiFog.png", startingAmount: 2 },
-                { id: 5, name: "Arcane Mystic", type: "minion", attack: 2, health: 3, mana_cost: 2, description: "Casts arcane spells with finesse.", backgroundImage: "https://i.imgur.com/Enu1T7Y.png", startingAmount: 2 },
-                { id: 6, name: "Alpha Skiff", type: "minion", attack: 1, health: 2, mana_cost: 2, description: "On play: Deal 2 damage to an enemy.", backgroundImage: "https://i.imgur.com/z1fbkXx.png", startingAmount: 2 },
-                { id: 7, name: "Orcish Sniper", type: "minion", attack: 2, health: 1, mana_cost: 2, description: "Ranged attacker.", backgroundImage: "https://i.imgur.com/nlkfMpI.png", startingAmount: 2 },
-                { id: 8, name: "Mace Assassin", type: "minion", attack: 4, health: 2, mana_cost: 3, description: "Strikes with venomous precision.", backgroundImage: "https://i.imgur.com/3SkE6VG.png", startingAmount: 2 },
-                { id: 9, name: "Swarm Legion", type: "minion", attack: 3, health: 3, mana_cost: 3, description: "Overruns the enemy in numbers.", backgroundImage: "https://i.imgur.com/Wn84v6I.png", startingAmount: 2 },
-                { id: 10, name: "Ethereal Phantom", type: "minion", attack: 2, health: 3, mana_cost: 3, description: "Haunts the battlefield.", backgroundImage: "https://i.imgur.com/v0RBTiV.png", startingAmount: 2 },
-                { id: 11, name: "Crimson Shade", type: "minion", attack: 2, health: 3, mana_cost: 3, description: "Burns with crimson energy.", backgroundImage: "https://i.imgur.com/36iR3J8.png", startingAmount: 2 },
-                { id: 12, name: "Logs Much", type: "minion", attack: 2, health: 3, mana_cost: 3, description: "Wooden with steel presence.", backgroundImage: "https://i.imgur.com/PFbnxct.png", startingAmount: 2 },
-                { id: 13, name: "Luminous Watcher", type: "minion", attack: 2, health: 3, mana_cost: 3, description: "Heals all for 1 each turn.", backgroundImage: "https://i.imgur.com/eg8FESL.png", startingAmount: 2 },
-                { id: 14, name: "Patrol Frigate", type: "minion", attack: 2, health: 3, mana_cost: 3, description: "Standard patrol vessel.", backgroundImage: "https://i.imgur.com/nJMY8NA.png", startingAmount: 2 },
-                { id: 15, name: "Battle Commander", type: "minion", attack: 2, health: 4, mana_cost: 3, description: "Leads the charge.", backgroundImage: "https://i.imgur.com/ABsno64.png", startingAmount: 2 },
-                { id: 16, name: "Night Wraith", type: "minion", attack: 4, health: 3, mana_cost: 4, description: "Strikes from the shadows.", backgroundImage: "https://i.imgur.com/PSpj7sO.png", startingAmount: 1 },
-                { id: 17, name: "Night Lord", type: "minion", attack: 4, health: 3, mana_cost: 4, description: "Roams from the shadows.", backgroundImage: "https://i.imgur.com/qpsLIcS.png", startingAmount: 1 },
-                { id: 18, name: "Crimson Revenant", type: "minion", attack: 4, health: 3, mana_cost: 4, description: "Strikes with fiery intent.", backgroundImage: "https://i.imgur.com/8YIqCl5.png", startingAmount: 1 },
-                { id: 19, name: "Emerald Stalker", type: "minion", attack: 4, health: 3, mana_cost: 4, description: "Strikes with emerald fury.", backgroundImage: "https://i.imgur.com/5t6kGOi.jpeg", startingAmount: 1 },
-                { id: 20, name: "Storm Cavalier", type: "minion", attack: 4, health: 4, mana_cost: 4, description: "Rides the storm into battle.", backgroundImage: "https://i.imgur.com/nBUKWdy.png", startingAmount: 1 },
-                { id: 21, name: "Flame Charger", type: "minion", attack: 4, health: 4, mana_cost: 4, description: "Charges with fiery speed.", backgroundImage: "https://i.imgur.com/cep6ytB.png", startingAmount: 1 },
-                { id: 22, name: "Ra Cal Vin", type: "minion", attack: 4, health: 4, mana_cost: 4, description: "Glides with icy language.", backgroundImage: "https://i.imgur.com/XbSuPyC.png", startingAmount: 1 },
-                { id: 23, name: "Beta Cruiser", type: "minion", attack: 3, health: 3, mana_cost: 4, description: "On play: Deal 5 damage to an enemy.", backgroundImage: "https://i.imgur.com/JuxTEX9.png", startingAmount: 1 },
-                { id: 24, name: "Enigmatic Warrior", type: "minion", attack: 3, health: 3, mana_cost: 4, description: "Mysterious combatant.", backgroundImage: "https://i.imgur.com/JwcxWth.png", startingAmount: 1 },
-                { id: 25, name: "Barrier Sentinel", type: "minion", attack: 0, health: 7, mana_cost: 5, description: "Unyielding defense with Taunt.", backgroundImage: "https://i.imgur.com/klAa6aX.png", startingAmount: 1 },
-                { id: 26, name: "Void Sorcerer", type: "minion", attack: 3, health: 4, mana_cost: 5, description: "Casts protective dark magic.", backgroundImage: "https://i.imgur.com/2XhqS6d.png", startingAmount: 1 },
-                { id: 27, name: "Light Mage", type: "minion", attack: 3, health: 4, mana_cost: 5, description: "Shields with radiant magic.", backgroundImage: "https://i.imgur.com/cMLK4Oq.png", startingAmount: 1 },
-                { id: 28, name: "Spectral Warrior", type: "minion", attack: 5, health: 4, mana_cost: 5, description: "Fights with ghostly strength.", backgroundImage: "https://i.imgur.com/n2b1ugT.png", startingAmount: 1 },
-                { id: 29, name: "Radiant Paladin", type: "minion", attack: 5, health: 4, mana_cost: 5, description: "Shines with radiant power.", backgroundImage: "https://i.imgur.com/TalRqz3.png", startingAmount: 1 },
-                { id: 30, name: "Vitality Totem", type: "minion", attack: 3, health: 5, mana_cost: 5, description: "Heals all for 2 each turn.", backgroundImage: "https://i.imgur.com/SAL2oQY.png", startingAmount: 1 },
-                { id: 31, name: "Ironclad Titan", type: "minion", attack: 4, health: 4, mana_cost: 5, description: "Heavy armored enforcer.", backgroundImage: "https://i.imgur.com/yUzjTDm.png", startingAmount: 1 },
+                if (error) {
+                    console.error('Failed to load user data:', error.message);
+                    return;
+                }
+
+                userBalance = data.gbux_balance || 0;
+                wins = data.wins || 0;
+                losses = data.losses || 0;
+
+                updateUI();
+            }
+
+            // Update UI with user data
+            function updateUI() {
+                document.getElementById('username-display').textContent = user.email || 'Logged In';
+                document.getElementById('gbux-balance').textContent = `Balance: ${userBalance} $GBuX`;
+            }
+
+            // Save deck to Supabase
+            async function saveDeck(deckName, cards) {
+                const { error } = await supabase
+                    .from('decks')
+                    .upsert({
                 { id: 32, name: "Overlord Mind", type: "minion", attack: 4, health: 4, mana_cost: 5, description: "Taunt.", backgroundImage: "https://i.imgur.com/LspYMpz.png", startingAmount: 1 },
                 { id: 33, name: "Celestial Warden", type: "minion", attack: 5, health: 5, mana_cost: 6, description: "Heals all for 1 each turn.", backgroundImage: "https://i.imgur.com/6CXJn5s.png", startingAmount: 0 },
                 { id: 34, name: "Abyssal Keeper", type: "minion", attack: 5, health: 5, mana_cost: 6, description: "Heals all with dark energy.", backgroundImage: "https://i.imgur.com/3b2RmGQ.png", startingAmount: 0 },
