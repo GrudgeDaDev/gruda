@@ -136,6 +136,7 @@ app.post('/api/auth', async (req, res) => {
         success: true,
         user: user.toJSON(),
         sessionToken: user.getSessionToken(),
+        redirectUrl: '/card-minter'
       });
     } else if (username && email && password && isSignup) {
       // Local signup
@@ -154,6 +155,7 @@ app.post('/api/auth', async (req, res) => {
         success: true,
         user: user.toJSON(),
         sessionToken: user.getSessionToken(),
+        redirectUrl: '/card-minter'
       });
     } else if (username && password) {
       // Local login
@@ -162,6 +164,7 @@ app.post('/api/auth', async (req, res) => {
         success: true,
         user: user.toJSON(),
         sessionToken: user.getSessionToken(),
+        redirectUrl: '/card-minter'
       });
     } else {
       res.status(400).json({ success: false, error: 'Invalid request parameters' });
@@ -641,8 +644,21 @@ app.post('/api/pvp/enter', async (req, res) => {
 });
 
 // Serve card-minter.html
-app.get('/card-minter', (req, res) => {
-  res.sendFile(__dirname + '/public/card-minter.html');
+app.get('/card-minter', async (req, res) => {
+  const sessionToken = req.cookies['sessionToken'];
+  if (!sessionToken) {
+    return res.redirect('/index');
+  }
+
+  try {
+    const user = await Parse.User.become(sessionToken);
+    if (!user) {
+      return res.redirect('/index');
+    }
+    res.sendFile(__dirname + '/public/card-minter.html');
+  } catch (error) {
+    return res.redirect('/index');
+  }
 });
 
 // Serve nexus.html
