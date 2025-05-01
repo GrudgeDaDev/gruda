@@ -297,6 +297,8 @@
                                     >
                                 </div>
 
+                                <input type="hidden" id="redirect-url" name="redirect-url" value="https://www.grudgeplatform.com/card-minter">
+
                                 <div class="pt-2">
                                     <button 
                                         type="submit"
@@ -763,6 +765,7 @@
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const redirectUrl = document.getElementById('redirect-url').value;
             
             try {
                 // Login with Back4app
@@ -777,7 +780,7 @@
                 localStorage.setItem('sessionToken', user.getSessionToken());
                 
                 // Redirect to card-minter
-                window.location.href = "https://www.grudgeplatform.com/card-minter";
+                window.location.href = redirectUrl;
             } catch (error) {
                 console.error("Login error:", error);
                 alert("Login failed: " + error.message);

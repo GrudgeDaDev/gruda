@@ -2118,6 +2118,11 @@
             updateUserInfo();
             await loadUserCards();
         });
+
+        // Redirect to index.html if not logged in
+        if (!user.id) {
+            window.location.href = 'index.html';
+        }
     </script>
     </body>
 
