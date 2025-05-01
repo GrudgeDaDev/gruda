@@ -1,5 +1,6 @@
 require('dotenv').config();
 const Parse = require('parse/node');
+const axios = require('axios');
 
 Parse.initialize(
   process.env.PARSE_APP_ID,
@@ -29,5 +30,18 @@ async function testGetSeason0Data() {
   }
 }
 
+async function testRoute(route) {
+  try {
+    const response = await axios.get(`http://localhost:3000${route}`);
+    console.log(`${route} route test passed with status:`, response.status);
+  } catch (error) {
+    console.error(`Error while testing ${route} route:`, error);
+  }
+}
+
 testDatabase();
 testGetSeason0Data();
+testRoute('/card-minter');
+testRoute('/nexus');
+testRoute('/season0');
+testRoute('/index');

@@ -2,7 +2,7 @@
   "name": "gruda",
   "version": "1.0.0",
   "scripts": {
-    "start": "npx serve public/",
+    "start": "node server.js",
     "build": "echo 'Copying files to public/' && cp -r src/* public/ || true",
     "deploy": "netlify deploy --prod --dir=public"
   },

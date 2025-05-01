@@ -51,6 +51,9 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static frontend files from dist/
 app.use(express.static('dist'));
 
+// Serve static files from public directory
+app.use(express.static('public'));
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Grudge Codex server is running' });
@@ -635,6 +638,26 @@ app.post('/api/pvp/enter', async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, error: error.message || 'Failed to enter game server' });
   }
+});
+
+// Serve card-minter.html
+app.get('/card-minter', (req, res) => {
+  res.sendFile(__dirname + '/public/card-minter.html');
+});
+
+// Serve nexus.html
+app.get('/nexus', (req, res) => {
+  res.sendFile(__dirname + '/public/nexus.html');
+});
+
+// Serve season0.html
+app.get('/season0', (req, res) => {
+  res.sendFile(__dirname + '/public/season0.html');
+});
+
+// Serve index.html
+app.get('/index', (req, res) => {
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 // Start Server
