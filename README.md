@@ -71,6 +71,35 @@ npm run build
 
 This will use Grunt to minify JavaScript and CSS files.
 
+## Running the App
+
+To run the app, use the following command:
+
+```
+npm start
+```
+
+This will start the server and serve the static files from the `public` directory.
+
+## Accessing Different Routes
+
+The app provides the following routes:
+
+- `/card-minter`: Access the card minter page.
+- `/nexus`: Access the nexus page.
+- `/season0`: Access the Season0 page.
+- `/index`: Access the index page.
+
+## Deploying to Netlify
+
+To deploy the app to Netlify, use the following command:
+
+```
+npm run deploy
+```
+
+This will deploy the contents of the `public` directory to Netlify.
+
 ## Contact
 
 [grudgeplatform.com/contact](https://grudgeplatform.com/contact)
