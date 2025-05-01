@@ -1,101 +1,103 @@
-cardId,name,type,atk,hp,cost,description,image,tribe,specialTrait,startingAmount
-001,Stealth Drone,minion,1,1,1,Quick scouting unit cloaked in shadow.,https://i.imgur.com/zMFckYB.png,,,2
-002,A Coward Priest,minion,1,1,1,Basic reconnaissance unit.,https://i.imgur.com/DHS25YU.jpeg,,,2
-003,Starborn Light,minion,1,1,1,Summons structures.,https://i.imgur.com/AvsiFog.png,,,2
-004,Arcane Mystic,minion,2,3,2,Casts arcane spells with finesse.,https://i.imgur.com/Enu1T7Y.png,,,2
-005,Alpha Skiff,minion,1,2,2,On play: Deal 2 damage to an enemy.,https://i.imgur.com/z1fbkXx.png,,,2
-006,Orcish Sniper,minion,2,1,2,Ranged attacker.,https://i.imgur.com/nlkfMpI.png,,,2
-007,Mace Assassin,minion,4,2,3,Strikes with venomous precision.,https://i.imgur.com/3SkE6VG.png,,,2
-008,Swarm Legion,minion,3,3,3,Overruns the enemy in numbers.,https://i.imgur.com/Wn84v6I.png,,,2
-009,Ethereal Phantom,minion,2,3,3,Haunts the battlefield.,https://i.imgur.com/v0RBTiV.png,,,2
-010,Crimson Shade,minion,2,3,3,Burns with crimson energy.,https://i.imgur.com/36iR3J8.png,,,2
-011,Logs Much,minion,2,3,3,Wooden with Steel presence.,https://i.imgur.com/PFbnxct.png,,,2
-012,Luminous Watcher,minion,2,3,3,Heals all for 1 each turn.,https://i.imgur.com/eg8FESL.png,,,2
-013,Patrol Frigate,minion,2,3,3,Standard patrol vessel.,https://i.imgur.com/nJMY8NA.png,,,2
-014,Battle Commander,minion,2,4,3,Leads the charge.,https://i.imgur.com/ABsno64.png,,,2
-015,Night Wraith,minion,4,3,4,Strikes from the shadows.,https://i.imgur.com/PSpj7sO.png,,,1
-016,Night Lord,minion,4,3,4,Roams from the shadows.,https://i.imgur.com/qpsLIcS.png,,,1
-017,Crimson Revenant,minion,4,3,4,Strikes with fiery intent.,https://i.imgur.com/8YIqCl5.png,,,1
-018,Emerald Stalker,minion,4,3,4,Strikes with emerald fury.,https://i.imgur.com/5t6kGOi.jpeg,,,1
-019,Storm Cavalier,minion,4,4,4,Rides the storm into battle.,https://i.imgur.com/nBUKWdy.png,,,1
-020,Flame Charger,minion,4,4,4,Charges with fiery speed.,https://i.imgur.com/cep6ytB.png,,,1
-021,Ra Cal Vin,minion,4,4,4,Glides with icy Language.,https://i.imgur.com/XbSuPyC.png,,,1
-022,Beta Cruiser,minion,3,3,4,On play: Deal 5 damage to an enemy.,https://i.imgur.com/JuxTEX9.png,,,1
-023,Enigmatic Warrior,minion,3,3,4,Mysterious combatant.,https://i.imgur.com/JwcxWth.png,,,1
-024,Barrier Sentinel,minion,0,7,5,Unyielding defense with Taunt.,https://i.imgur.com/klAa6aX.png,,,1
-025,Void Sorcerer,minion,3,4,5,Casts protective dark magic.,https://i.imgur.com/2XhqS6d.png,,,1
-026,Light Mage,minion,3,4,5,Shields with radiant magic.,https://i.imgur.com/cMLK4Oq.png,,,1
-027,Spectral Warrior,minion,5,4,5,Fights with ghostly strength.,https://i.imgur.com/n2b1ugT.png,,,1
-028,Radiant Paladin,minion,5,4,5,Shines with radiant power.,https://i.imgur.com/TalRqz3.png,,,1
-029,Vitality Totem,minion,3,5,5,Heals all for 2 each turn.,https://i.imgur.com/SAL2oQY.png,,,1
-030,Ironclad Titan,minion,4,4,5,Heavy armored enforcer.,https://i.imgur.com/yUzjTDm.png,,,1
-031,Overlord Mind,minion,4,4,5,Taunt.,https://i.imgur.com/LspYMpz.png,,,1
-032,Celestial Warden,minion,5,5,6,Heals all for 1 each turn.,https://i.imgur.com/6CXJn5s.png,,,0
-033,Abyssal Keeper,minion,5,5,6,Heals all with dark energy.,https://i.imgur.com/3b2RmGQ.png,,,0
-034,Arcane Missile,spell,,1,Deal 3 damage to a random enemy.,https://i.imgur.com/jQbF07m.png,,,1
-035,Shadow Strike,spell,,2,Deal 4 damage to a target enemy.,https://i.imgur.com/oPFVuMN.png,,,1
-036,Healing Wave,spell,,3,Restore 6 health to a friendly character.,https://i.imgur.com/PgLXUx8.png,,,1
-037,Mind Control,spell,,8,Take control of an enemy minion.,https://i.imgur.com/dC1AKPu.png,,,0
-038,Starship Alpha,minion,2,2,2,Stealth. Gains +1 atk in space-themed games.,https://i.imgur.com/scyPIUs.png,,,1
-039,Star Hut,minion,0,5,3,Taunt. Heals adjacent allies for 1 in Island.,https://i.imgur.com/TCYVocs.png,,,1
-040,Engineer Prime,minion,4,4,6,Super Rare. On play: Give all allies +2 atk in Warlords.,https://i.imgur.com/KpHvcmW.mp4,,,0
-041,Starship Beta,minion,3,3,4,Deals +2 damage to structures in RTS.,https://i.imgur.com/BSurWbZ.png,,,1
-042,Starship Gamma,minion,2,4,4,Heals allies for 1 in Crawl.,https://i.imgur.com/5PSOVVc.png,,,1
+cardId,name,type,atack,health,cost,description,image,tribe,ability,rare
+001,Stealth Drone,minion,1,1,1,Quick scouting unit cloaked in shadow.,https://i.imgur.com/zMFckYB.png,,N/A,2
+002,A Coward Priest,minion,1,1,1,Basic reconnaissance unit.,https://i.imgur.com/DHS25YU.jpeg,,N/A,2
+003,Starborn Light,minion,1,1,1,Summons structures.,https://i.imgur.com/AvsiFog.png,,N/A,2
+004,Arcane Mystic,minion,2,3,2,Casts arcane spells with finesse.,https://i.imgur.com/Enu1T7Y.png,,N/A,2
+005,Alpha Skiff,minion,1,2,2,On play: Deal 2 damage to an enemy.,https://i.imgur.com/z1fbkXx.png,,N/A,2
+006,Orcish Sniper,minion,2,1,2,Ranged attacker.,https://i.imgur.com/nlkfMpI.png,,N/A,2
+007,Mace Assassin,minion,4,2,3,Strikes with venomous precision.,https://i.imgur.com/3SkE6VG.png,,N/A,2
+008,Swarm Legion,minion,3,3,3,Overruns the enemy in numbers.,https://i.imgur.com/Wn84v6I.png,,N/A,2
+009,Ethereal Phantom,minion,2,3,3,Haunts the battlefield.,https://i.imgur.com/v0RBTiV.png,,N/A,2
+010,Crimson Shade,minion,2,3,3,Burns with crimson energy.,https://i.imgur.com/36iR3J8.png,,N/A,2
+011,Logs Much,minion,2,3,3,Wooden with Steel presence.,https://i.imgur.com/PFbnxct.png,,N/A,2
+012,Luminous Watcher,minion,2,3,3,Heals all for 1 each turn.,https://i.imgur.com/eg8FESL.png,,N/A,2
+013,Patrol Frigate,minion,2,3,3,Standard patrol vessel.,https://i.imgur.com/nJMY8NA.png,,N/A,2
+014,Battle Commander,minion,2,4,3,Leads the charge.,https://i.imgur.com/ABsno64.png,,N/A,2
+015,Night Wraith,minion,4,3,4,Strikes from the shadows.,https://i.imgur.com/PSpj7sO.png,,N/A,1
+016,Night Lord,minion,4,3,4,Roams from the shadows.,https://i.imgur.com/qpsLIcS.png,,N/A,1
+017,Crimson Revenant,minion,4,3,4,Strikes with fiery intent.,https://i.imgur.com/8YIqCl5.png,,N/A,1
+018,Emerald Stalker,minion,4,3,4,Strikes with emerald fury.,https://i.imgur.com/5t6kGOi.jpeg,,N/A,1
+019,Storm Cavalier,minion,4,4,4,Rides the storm into battle.,https://i.imgur.com/nBUKWdy.png,,N/A,1
+020,Flame Charger,minion,4,4,4,Charges with fiery speed.,https://i.imgur.com/cep6ytB.png,,N/A,1
+021,Ra Cal Vin,minion,4,4,4,Glides with icy Language.,https://i.imgur.com/XbSuPyC.png,,N/A,1
+022,Beta Cruiser,minion,3,3,4,On play: Deal 5 damage to an enemy.,https://i.imgur.com/JuxTEX9.png,,N/A,1
+023,Enigmatic Warrior,minion,3,3,4,Mysterious combatant.,https://i.imgur.com/JwcxWth.png,,N/A,1
+024,Barrier Sentinel,minion,0,7,5,Unyielding defense with Taunt.,https://i.imgur.com/klAa6aX.png,,N/A,1
+025,Void Sorcerer,minion,3,4,5,Casts protective dark magic.,https://i.imgur.com/2XhqS6d.png,,N/A,1
+026,Light Mage,minion,3,4,5,Shields with radiant magic.,https://i.imgur.com/cMLK4Oq.png,,N/A,1
+027,Spectral Warrior,minion,5,4,5,Fights with ghostly strength.,https://i.imgur.com/n2b1ugT.png,,N/A,1
+028,Radiant Paladin,minion,5,4,5,Shines with radiant power.,https://i.imgur.com/TalRqz3.png,,N/A,1
+029,Vitality Totem,minion,3,5,5,Heals all for 2 each turn.,https://i.imgur.com/SAL2oQY.png,,N/A,1
+030,Ironclad Titan,minion,4,4,5,Heavy armored enforcer.,https://i.imgur.com/yUzjTDm.png,,N/A,1
+031,Overlord Mind,minion,4,4,5,Taunt.,https://i.imgur.com/LspYMpz.png,,N/A,1
+032,Celestial Warden,minion,5,5,6,Heals all for 1 each turn.,https://i.imgur.com/6CXJn5s.png,,N/A,0
+033,Abyssal Keeper,minion,5,5,6,Heals all with dark energy.,https://i.imgur.com/3b2RmGQ.png,,N/A,0
+034,Arcane Missile,spell,N/A,N/A,1,Deal 3 damage to a random enemy.,https://i.imgur.com/jQbF07m.png,,N/A,1
+035,Shadow Strike,spell,N/A,N/A,2,Deal 4 damage to a target enemy.,https://i.imgur.com/oPFVuMN.png,,N/A,1
+036,Healing Wave,spell,N/A,N/A,3,Restore 6 health to a friendly character.,https://i.imgur.com/PgLXUx8.png,,N/A,1
+037,Mind Control,spell,N/A,N/A,8,Take control of an enemy minion.,https://i.imgur.com/dC1AKPu.png,,N/A,0
+038,Starship Alpha,minion,2,2,2,Stealth. Gains +1 atk in space-themed games.,https://i.imgur.com/scyPIUs.png,,N/A,1
+039,Star Hut,minion,0,5,3,Taunt. Heals adjacent allies for 1 in Island.,https://i.imgur.com/TCYVocs.png,,N/A,1
+040,Engineer Prime,minion,4,4,6,Super Rare. On play: Give all allies +2 atk in Warlords.,https://i.imgur.com/KpHvcmW.mp4,,N/A,0
+041,Starship Beta,minion,3,3,4,Deals +2 damage to structures in RTS.,https://i.imgur.com/BSurWbZ.png,,N/A,1
+042,Starship Gamma,minion,2,4,4,Heals allies for 1 in Crawl.,https://i.imgur.com/5PSOVVc.png,,N/A,1
+043,Star Cruiser,minion,6,5,7,On play: Deal 3 damage to all enemies in Battle.,https://i.imgur.com/Ldfm3An.png,,N/A,0
+044,Fireball,spell,N/A,N/A,4,Deal 6 damage to a target. +2 damage in Warlords.,https://i.imgur.com/V1HCiAI.jpg,,N/A,1
 043,Star Cruiser,minion,6,5,7,On play: Deal 3 damage to all enemies in Battle.,https://i.imgur.com/Ldfm3An.png,,,0
-044,Fireball,spell,,4,Deal 6 damage to a target. +2 damage in Warlords.,https://i.imgur.com/V1HCiAI.jpg,,,1
-045,Undead,minion,3,3,3,Grants Undead Hardcore Island character. +1 hp in Island.,https://i.imgur.com/8YIqCl5.png,,,0
-046,Human,minion,3,3,3,Grants Human Hardcore Island character. +1 atk in Warlords.,https://i.imgur.com/0XcU175.png,,,0
-047,Orc,minion,4,2,3,Grants Orc Hardcore Island character. Haste in Battle.,https://i.imgur.com/nlkfMpI.png,,,0
-048,Elf,minion,2,4,3,Grants Elf Hardcore Island character. +1 cost reduction in Crawl.,https://i.imgur.com/6CXJn5s.png,,,0
-049,Dwarf,minion,3,3,3,Grants Dwarf Hardcore Island character. +2 hp in Tower.,https://i.imgur.com/nBUKWdy.png,,,0
-050,Barbarian,minion,4,3,3,Grants Barbarian Hardcore Island character. +1 atk in Island.,https://i.imgur.com/a9H86By.png,,,0
-051,Skeleton NB,minion,2,3,2,Swift skeletal fighter with a mace.,https://i.imgur.com/Dh99XuH.png,,,2
-052,Scourge Warrior,minion,4,3,4,Dark warrior with a cursed blade.,https://i.imgur.com/NFjvmxO.png,,,1
-053,Orc NB,minion,2,2,2,Stealthy orc scout.,https://i.imgur.com/zMFckYB.png,,,2
-054,Barbarian Mace,minion,4,2,3,Barbarian wielding a heavy mace.,https://i.imgur.com/3SkE6VG.png,,,2
-055,Human NB,minion,3,4,4,Versatile human defender with a shield.,https://i.imgur.com/klAa6aX.png,,,1
-056,Dwarf,minion,3,5,4,Sturdy dwarf with a hammer.,https://i.imgur.com/Wn84v6I.png,,,1
-057,Elf Archer,minion,3,2,3,Precise elf archer with a bow.,https://i.imgur.com/Enu1T7Y.png,,,2
-058,Knight,minion,5,5,6,Armored knight with a greatsword.,https://i.imgur.com/s0cMpSi.png,,,0
-059,Dwarf Knight NB,minion,4,5,5,Heavily armored dwarf knight.,https://i.imgur.com/TalRqz3.png,,,1
-060,Yorda,minion,5,4,6,Bats with thunderous force.,https://i.imgur.com/UvZsOLQ.png,,,0
-061,Magician NB,minion,3,3,4,Casts arcane spells with a staff.,https://i.imgur.com/PSpj7sO.png,,,1
-062,Calvin,minion,4,4,4,Glides with icy magic.,https://i.imgur.com/XbSuPyC.png,,,1
-063,NB Undead,minion,3,3,3,Undead soldier with enduring spirit.,https://i.imgur.com/8YIqCl5.png,,,1
-064,NB Human Wizard,minion,3,3,4,Human wizard casting powerful spells.,https://i.imgur.com/0XcU175.png,,,1
-065,Human Archer NB,minion,3,2,3,Human archer with deadly aim.,https://i.imgur.com/jKE3ClI.png,,,2
-066,Undead NB,minion,2,4,3,Undead warrior with a shield.,https://i.imgur.com/XJ8Saun.png,,,2
-067,NB Undead Archer,minion,3,2,3,Undead archer with ghostly arrows.,https://i.imgur.com/fGDbB5o.png,,,2
-068,Barrel Weapon,minion,2,3,3,Explosive barrel used as a weapon.,https://i.imgur.com/PFbnxct.png,,,2
-069,Orc Archer NB,minion,3,2,3,Orc archer with a heavy bow.,https://i.imgur.com/nlkfMpI.png,,,2
-070,Priest NB,minion,2,4,4,Heals allies with divine light.,https://i.imgur.com/6CXJn5s.png,,,1
-071,Paladin NB,minion,5,5,6,Protects with holy power.,https://i.imgur.com/3b2RmGQ.png,,,0
-072,Orc Heavy,minion,5,4,5,Heavy orc with a massive axe.,https://i.imgur.com/cep6ytB.png,,,1
-073,Human Heavy,minion,4,5,5,Heavily armored human warrior.,https://i.imgur.com/UT8Yfo2.png,,,1
-074,Undead Heavy,minion,4,5,5,Undead giant with a spiked club.,https://i.imgur.com/9Prc8Md.png,,,1
-075,WareTree,minion,3,6,5,Living tree that attacks with roots.,https://i.imgur.com/gA5V2vd.png,,,1
-076,Small Troll,minion,3,3,3,Small troll with regenerative powers.,https://i.imgur.com/R5AKvO4.png,,,2
-077,Human Upgrade,minion,4,4,5,Upgraded human with enhanced armor.,https://i.imgur.com/9lhozCz.png,,,1
-078,Dwarf Heavy,minion,4,6,5,Heavy dwarf with a warhammer.,https://i.imgur.com/oGautmG.png,,,1
-079,Scourge Familiar,minion,2,2,2,Dark familiar that boosts spells.,https://i.imgur.com/FcwHTwA.png,,,2
-080,Faitherbearer,minion,5,5,6,Bearer of faith with divine strength.,https://i.imgur.com/ENXGMbn.jpg,,,0
-081,Explosion 2,spell,,5,Deal 8 damage to a target and 2 to adjacent enemies.,https://i.imgur.com/vUfG5PJ.png,,,1
-082,Explosion 1,spell,,3,Deal 5 damage to a target and 1 to adjacent enemies.,https://i.imgur.com/lAUM1L7.png,,,1
-083,Spell Ball,spell,,2,Deal 3 damage to a random enemy and draw a card.,https://i.imgur.com/1iicyne.png,,,1
-084,Fire Swirl,spell,,4,Deal 4 damage to all enemies.,https://i.imgur.com/dramBbf.png,,,1
-085,Fire Ball,spell,,4,Deal 6 damage to a target.,https://i.imgur.com/KfE0K3N.png,,,1
-086,Purple Swipe,spell,,3,Deal 4 damage and reduce target atk by 1.,https://i.imgur.com/X4uVLBC.png,,,1
-087,Sword,spell,,2,Give a minion +2 atk this turn.,https://i.imgur.com/u95mHRc.png,,,1
-088,Pick Axe Efforts,spell,,3,Deal 3 damage and gain 2 armor.,https://i.imgur.com/OaIxVfq.png,,,1
-089,Book,spell,,1,Draw 2 cards.,https://i.imgur.com/LhKeIUk.png,,,1
-090,Light,spell,,2,Restore 4 health to a friendly character.,https://i.imgur.com/8fYU7nG.png,,,1
-091,Light 2,spell,,3,Restore 6 health to a friendly character.,https://i.imgur.com/FGmWArp.png,,,1
-092,Arcane,spell,,5,Deal 5 damage to a target and stun it.,https://i.imgur.com/dU3QrVi.png,,,1
-093,Mystic Green,spell,,4,Restore 5 health to all friendly characters.,https://i.imgur.com/ra2S7o0.png,,,1
-094,Red Skull Magic,spell,,6,Deal 6 damage to a target and summon a 2/2 skull.,https://i.imgur.com/KjBYZ7L.png,,,0
-095,Green Skull Magic,spell,,6,Deal 5 damage to a target and heal for 5.,https://i.imgur.com/dWpBsru.png,,,0
-096,Small Building,minion,0,5,3,Taunt. Defensive structure for RTS.,https://i.imgur.com/LouhX6b.png,,,1
-097,Summoning Tower,minion,2,4,4,On play: Summon a 1/1 spirit in Crawl.,https://i.imgur.com/aBeF0N8.png,,,1
-098,Armory,minion,0,6,5,Taunt. Gives +1 atk to summoned minions in RTS.,https://i.imgur.com/4TFvg1K.png,,,1
-099,Hero Hall,minion,0,7,6,Taunt. Boosts hero atk by 2 in Warlords.,https://i.imgur.com/H0EAefW.png,,,0
-100,Farm,minion,0,4,3,At end of turn: Gain 1 GBuX in Island.,https://i.imgur.com/U2pPssy.png,,,1
+044,Fireball,spell,N/A,N/A,4,Deal 6 damage to a target. +2 damage in Warlords.,https://i.imgur.com/V1HCiAI.jpg,,N/A,1
+045,Undead,minion,3,3,3,Grants Undead Hardcore Island character. +1 hp in Island.,https://i.imgur.com/8YIqCl5.png,,N/A,0
+046,Human,minion,3,3,3,Grants Human Hardcore Island character. +1 atk in Warlords.,https://i.imgur.com/0XcU175.png,,N/A,0
+047,Orc,minion,4,2,3,Grants Orc Hardcore Island character. Haste in Battle.,https://i.imgur.com/nlkfMpI.png,,N/A,0
+048,Elf,minion,2,4,3,Grants Elf Hardcore Island character. +1 cost reduction in Crawl.,https://i.imgur.com/6CXJn5s.png,,N/A,0
+049,Dwarf,minion,3,3,3,Grants Dwarf Hardcore Island character. +2 hp in Tower.,https://i.imgur.com/nBUKWdy.png,,N/A,0
+050,Barbarian,minion,4,3,3,Grants Barbarian Hardcore Island character. +1 atk in Island.,https://i.imgur.com/a9H86By.png,,N/A,0
+051,Skeleton NB,minion,2,3,2,Swift skeletal fighter with a mace.,https://i.imgur.com/Dh99XuH.png,,N/A,2
+052,Scourge Warrior,minion,4,3,4,Dark warrior with a cursed blade.,https://i.imgur.com/NFjvmxO.png,,N/A,1
+053,Orc NB,minion,2,2,2,Stealthy orc scout.,https://i.imgur.com/zMFckYB.png,,N/A,2
+054,Barbarian Mace,minion,4,2,3,Barbarian wielding a heavy mace.,https://i.imgur.com/3SkE6VG.png,,N/A,2
+055,Human NB,minion,3,4,4,Versatile human defender with a shield.,https://i.imgur.com/klAa6aX.png,,N/A,1
+056,Dwarf,minion,3,5,4,Sturdy dwarf with a hammer.,https://i.imgur.com/Wn84v6I.png,,N/A,1
+057,Elf Archer,minion,3,2,3,Precise elf archer with a bow.,https://i.imgur.com/Enu1T7Y.png,,N/A,2
+058,Knight,minion,5,5,6,Armored knight with a greatsword.,https://i.imgur.com/s0cMpSi.png,,N/A,0
+059,Dwarf Knight NB,minion,4,5,5,Heavily armored dwarf knight.,https://i.imgur.com/TalRqz3.png,,N/A,1
+060,Yorda,minion,5,4,6,Bats with thunderous force.,https://i.imgur.com/UvZsOLQ.png,,N/A,0
+061,Magician NB,minion,3,3,4,Casts arcane spells with a staff.,https://i.imgur.com/PSpj7sO.png,,N/A,1
+062,Calvin,minion,4,4,4,Glides with icy magic.,https://i.imgur.com/XbSuPyC.png,,N/A,1
+063,NB Undead,minion,3,3,3,Undead soldier with enduring spirit.,https://i.imgur.com/8YIqCl5.png,,N/A,1
+064,NB Human Wizard,minion,3,3,4,Human wizard casting powerful spells.,https://i.imgur.com/0XcU175.png,,N/A,1
+065,Human Archer NB,minion,3,2,3,Human archer with deadly aim.,https://i.imgur.com/jKE3ClI.png,,N/A,2
+066,Undead NB,minion,2,4,3,Undead warrior with a shield.,https://i.imgur.com/XJ8Saun.png,,N/A,2
+067,NB Undead Archer,minion,3,2,3,Undead archer with ghostly arrows.,https://i.imgur.com/fGDbB5o.png,,N/A,2
+068,Barrel Weapon,minion,2,3,3,Explosive barrel used as a weapon.,https://i.imgur.com/PFbnxct.png,,N/A,2
+069,Orc Archer NB,minion,3,2,3,Orc archer with a heavy bow.,https://i.imgur.com/nlkfMpI.png,,N/A,2
+070,Priest NB,minion,2,4,4,Heals allies with divine light.,https://i.imgur.com/6CXJn5s.png,,N/A,1
+071,Paladin NB,minion,5,5,6,Protects with holy power.,https://i.imgur.com/3b2RmGQ.png,,N/A,0
+072,Orc Heavy,minion,5,4,5,Heavy orc with a massive axe.,https://i.imgur.com/cep6ytB.png,,N/A,1
+073,Human Heavy,minion,4,5,5,Heavily armored human warrior.,https://i.imgur.com/UT8Yfo2.png,,N/A,1
+074,Undead Heavy,minion,4,5,5,Undead giant with a spiked club.,https://i.imgur.com/9Prc8Md.png,,N/A,1
+075,WareTree,minion,3,6,5,Living tree that attacks with roots.,https://i.imgur.com/gA5V2vd.png,,N/A,1
+076,Small Troll,minion,3,3,3,Small troll with regenerative powers.,https://i.imgur.com/R5AKvO4.png,,N/A,2
+077,Human Upgrade,minion,4,4,5,Upgraded human with enhanced armor.,https://i.imgur.com/9lhozCz.png,,N/A,1
+078,Dwarf Heavy,minion,4,6,5,Heavy dwarf with a warhammer.,https://i.imgur.com/oGautmG.png,,N/A,1
+079,Scourge Familiar,minion,2,2,2,Dark familiar that boosts spells.,https://i.imgur.com/FcwHTwA.png,,N/A,2
+080,Faitherbearer,minion,5,5,6,Bearer of faith with divine strength.,https://i.imgur.com/ENXGMbn.jpg,,N/A,0
+081,Explosion 2,spell,N/A,N/A,5,Deal 8 damage to a target and 2 to adjacent enemies.,https://i.imgur.com/vUfG5PJ.png,,N/A,1
+082,Explosion 1,spell,N/A,N/A,3,Deal 5 damage to a target and 1 to adjacent enemies.,https://i.imgur.com/lAUM1L7.png,,N/A,1
+083,Spell Ball,spell,N/A,N/A,2,Deal 3 damage to a random enemy and draw a card.,https://i.imgur.com/1iicyne.png,,N/A,1
+084,Fire Swirl,spell,N/A,N/A,4,Deal 4 damage to all enemies.,https://i.imgur.com/dramBbf.png,,N/A,1
+085,Fire Ball,spell,N/A,N/A,4,Deal 6 damage to a target.,https://i.imgur.com/KfE0K3N.png,,N/A,1
+086,Purple Swipe,spell,N/A,N/A,3,Deal 4 damage and reduce target atk by 1.,https://i.imgur.com/X4uVLBC.png,,N/A,1
+087,Sword,spell,N/A,N/A,2,Give a minion +2 atk this turn.,https://i.imgur.com/u95mHRc.png,,N/A,1
+088,Pick Axe Efforts,spell,N/A,N/A,3,Deal 3 damage and gain 2 armor.,https://i.imgur.com/OaIxVfq.png,,N/A,1
+089,Book,spell,N/A,N/A,1,Draw 2 cards.,https://i.imgur.com/LhKeIUk.png,,N/A,1
+090,Light,spell,N/A,N/A,2,Restore 4 health to a friendly character.,https://i.imgur.com/8fYU7nG.png,,N/A,1
+091,Light 2,spell,N/A,N/A,3,Restore 6 health to a friendly character.,https://i.imgur.com/FGmWArp.png,,N/A,1
+092,Arcane,spell,N/A,N/A,5,Deal 5 damage to a target and stun it.,https://i.imgur.com/dU3QrVi.png,,N/A,1
+093,Mystic Green,spell,N/A,N/A,4,Restore 5 health to all friendly characters.,https://i.imgur.com/ra2S7o0.png,,N/A,1
+094,Red Skull Magic,spell,N/A,N/A,6,Deal 6 damage to a target and summon a 2/2 skull.,https://i.imgur.com/KjBYZ7L.png,,N/A,0
+095,Green Skull Magic,spell,N/A,N/A,6,Deal 5 damage to a target and heal for 5.,https://i.imgur.com/dWpBsru.png,,N/A,0
+096,Small Building,minion,0,5,3,Taunt. Defensive structure for RTS.,https://i.imgur.com/LouhX6b.png,,N/A,1
+097,Summoning Tower,minion,2,4,4,On play: Summon a 1/1 spirit in Crawl.,https://i.imgur.com/aBeF0N8.png,,N/A,1
+098,Armory,minion,0,6,5,Taunt. Gives +1 atk to summoned minions in RTS.,https://i.imgur.com/4TFvg1K.png,,N/A,1
+099,Hero Hall,minion,0,7,6,Taunt. Boosts hero atk by 2 in Warlords.,https://i.imgur.com/H0EAefW.png,,N/A,0
+100,Farm,minion,0,4,3,At end of turn: Gain 1 GBuX in Island.,https://i.imgur.com/U2pPssy.png,,N/A,1

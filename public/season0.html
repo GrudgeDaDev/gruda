@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Season 0 Minting</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Season 0 Minting</h1>
+    </header>
+    <main>
+        <section id="minting">
+            <h2>Mint Your Cards</h2>
+            <button id="mintButton">Mint 3 Cards</button>
+            <div id="mintingResult"></div>
+        </section>
+    </main>
+    <script src="scripts.js"></script>
+    <script>
+        document.getElementById('mintButton').addEventListener('click', async () => {
+            const response = await fetch('/api/cards/mint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-parse-session-token': 'YOUR_SESSION_TOKEN'
+                },
+                body: JSON.stringify({
+                    userId: 'YOUR_USER_ID',
+                    cardId: 'YOUR_CARD_ID',
+                    gbuxCost: 10
+                })
+            });
+            const result = await response.json();
+            document.getElementById('mintingResult').innerText = JSON.stringify(result, null, 2);
+        });
+    </script>
+</body>
+</html>

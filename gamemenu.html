@@ -1,0 +1,2900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chain Nexus Codex</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=MedievalSharp&family=Rajdhani:wght@500;600&family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-sha256@0.9.0/sha256.min.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #111111 url('https://i.imgur.com/KzcmBtg.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .bg-overlay {
+            background: rgba(0, 0, 0, 0.85);
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+        }
+        #codex-ui {
+            width: 95%;
+            max-width: 1800px;
+            height: 95vh;
+            background: url('https://i.imgur.com/amFdI1I.jpeg') no-repeat center center;
+            background-size: cover;
+            border: 12px solid #4A2F1A;
+            border-radius: 25px;
+            box-shadow: 0 0 70px rgba(0, 0, 0, 0.826);
+            display: flex;
+            flex-direction: column;
+            padding: 2.5rem;
+            overflow: hidden;
+            position: relative;
+        }
+        header {
+            background: url('https://i.imgur.com/qdcHcAl.png') no-repeat center center;
+            background-size: cover;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-radius: 12px 12px 0 0;
+            height: 100px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+        }
+        .tab-buttons-left, .tab-buttons-right {
+            display: flex;
+            gap: 1rem;
+        }
+        .tab-button {
+            padding: 0.8rem 1.5rem;
+            background: rgba(74, 47, 26, 0.95);
+            border: 3px solid #D4A017;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 6px #D4A017;
+            font-size: 1rem;
+            transform: perspective(500px) translateZ(0);
+        }
+        .tab-button:hover {
+            background: #D4A017;
+            color: #000;
+            transform: perspective(500px) translateZ(10px);
+            box-shadow: 0 0 15px #D4A017;
+        }
+        .tab-button.active {
+            background: #D4A017;
+            color: #000;
+            transform: perspective(500px) translateZ(5px);
+            box-shadow: 0 0 20px #D4A017;
+        }
+        .tab-content {
+            display: none;
+            flex: 1;
+            padding: 2.5rem;
+            background: rgba(66, 57, 23, 0.762);
+            border-radius: 20px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.9);
+            margin-top: 120px;
+        }
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+        #library, #create-card, #build, #packs {
+            background: url('https://i.imgur.com/amFdI1I.jpeg') no-repeat center center;
+            background-size: cover;
+        }
+        #pvp, #pve, #events, #auction-house {
+            background: url('https://i.imgur.com/9O1aUCN.png') no-repeat center center;
+            background-size: cover;
+        }
+        .sub-tabs {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+        .sub-tab-button {
+            padding: 0.9rem 1.8rem;
+            background: rgba(74, 47, 26, 0.9);
+            border: 4px solid #D4A017;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 4px #D4A017;
+            font-size: 1rem;
+        }
+        .sub-tab-button:hover, .sub-tab-button.active {
+            background: #D4A017;
+            color: #000;
+            transform: scale(1.1);
+            box-shadow: 0 0 18px #D4A017;
+        }
+        .btn {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            padding: 0.9rem 1.8rem;
+            font-weight: bold;
+            font-size: 1rem;
+            background: #D4A017;
+            color: #000;
+        }
+        .btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 18px #D4A017;
+        }
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 1.5rem;
+            justify-items: center;
+            align-items: center;
+            flex: 1;
+        }
+        .card-display {
+            width: 300px;
+            height: 450px;
+            position: relative;
+            border: 5px solid;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(212, 160, 23, 0.8);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .card-display:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px #D4A017;
+        }
+        .card-display.unowned {
+            filter: grayscale(100%);
+        }
+        .card-display.unowned:hover .buy-button {
+            opacity: 1;
+        }
+        .buy-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #D4A017;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .card-preview {
+            width: 300px;
+            height: 450px;
+            position: relative;
+            margin: 0 auto;
+            transition: all 0.5s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .card-preview.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .card-front {
+            z-index: 1;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            background: url('https://i.imgur.com/nZgPzzk.png') no-repeat center center;
+            background-size: cover;
+        }
+        .card-layers {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .card-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+        .card-rarity-effect {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        .tribe-effect {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+        .card-ability-icons {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 5px;
+        }
+        .ability-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-size: contain;
+        }
+        .card-minion {
+            position: absolute;
+            width: 80%;
+            height: 60%;
+            left: 10%;
+            top: 20%;
+            object-fit: contain;
+            border-radius: 8px;
+            z-index: 5;
+        }
+        .card-stats {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+        .stat {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid gold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'MedievalSharp', cursive;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 5px gold;
+        }
+        .card-cost {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 102, 204, 0.9);
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'MedievalSharp', cursive;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 5px blue;
+        }
+        .card-name {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 70px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-family: 'MedievalSharp', cursive;
+            font-size: 1.2rem;
+            color: gold;
+            text-shadow: 0 0 3px black;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .card-description {
+            position: absolute;
+            bottom: 80px;
+            left: 10%;
+            width: 80%;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            color: white;
+            text-align: center;
+        }
+        .card-serial {
+            position: absolute;
+            bottom: 5px;
+            right: 15px;
+            font-size: 0.7rem;
+            color: silver;
+        }
+        .glow-effect {
+            animation: glow 2s infinite alternate;
+        }
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px gold); }
+            to { filter: drop-shadow(0 0 15px gold); }
+        }
+        .rotate-effect {
+            animation: rotate 10s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .pulse-effect {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .fade-effect {
+            animation: fade 3s infinite alternate;
+        }
+        @keyframes fade {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
+        }
+        .flicker-effect {
+            animation: flicker 0.5s infinite alternate;
+        }
+        @keyframes flicker {
+            from { opacity: 0.7; }
+            to { opacity: 1; }
+        }
+        .shimmer-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-effect::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            to { transform: rotate(45deg) translate(100%, 100%); }
+        }
+        .btn-mint {
+            background: linear-gradient(135deg, #D4A017, #FF8C00);
+            color: #fff;
+            font-weight: bold;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: none;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 15px rgba(212, 160, 23, 0.7);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-mint:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(212, 160, 23, 0.9);
+        }
+        .btn-mint:active {
+            transform: translateY(1px);
+        }
+        .btn-mint::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(45deg);
+            animation: buttonShimmer 3s infinite;
+        }
+        @keyframes buttonShimmer {
+            to { transform: rotate(45deg) translate(100%, 100%); }
+        }
+        .card-bounce {
+            animation: bounce 0.5s ease;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .pack-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pack-card {
+            width: 200px;
+            height: 300px;
+            background: url('https://i.imgur.com/nZgPzzk.png') no-repeat center center;
+            background-size: cover;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .pack-card:hover {
+            transform: scale(1.05) rotateY(20deg);
+            box-shadow: 0 0 30px rgba(212, 160, 23, 0.8);
+        }
+        .hidden {
+            display: none;
+        }
+        .range-slider {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .range-slider input {
+            width: 100%;
+            -webkit-appearance: none;
+            background: linear-gradient(to right, #8B4513, #D4A017);
+            border-radius: 10px;
+            height: 10px;
+            outline: none;
+        }
+        .range-slider input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #D4A017;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #4A2F1A;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        .stat-label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            color: #D4A017;
+            margin-bottom: 5px;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .fancy-checkbox {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #D4A017;
+            border-radius: 5px;
+            margin-right: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+        .fancy-checkbox:checked {
+            background: #D4A017;
+        }
+        .fancy-checkbox:checked::before {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #000;
+            font-weight: bold;
+        }
+        .checkbox-label {
+            color: #fff;
+            font-weight: bold;
+        }
+        .gbux-amount {
+            color: #D4A017;
+            font-weight: bold;
+        }
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 3px dashed #D4A017;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        .file-upload:hover {
+            background: rgba(212, 160, 23, 0.1);
+            border-color: #FFC107;
+        }
+        .file-upload-icon {
+            font-size: 3rem;
+            color: #D4A017;
+            margin-bottom: 10px;
+        }
+        .file-upload-text {
+            color: #fff;
+            font-weight: bold;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .pack-opening {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1100;
+        }
+        .pack-cards {
+            display: flex;
+            gap: 20px;
+        }
+        .pack-reveal-card {
+            width: 225px;
+            height: 300px;
+            background: url('https://i.imgur.com/nZgPzzk.png') no-repeat center center;
+            background-size: cover;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        .pack-reveal-card.revealed {
+            transform: rotateY(180deg);
+        }
+        .pack-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .pack-card-front, .pack-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .pack-card-front {
+            background: url('https://i.imgur.com/nZgPzzk.png') no-repeat center center;
+            background-size: cover;
+        }
+        .pack-card-back {
+            transform: rotateY(180deg);
+        }
+        /* Profile Modal Styles */
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid rgba(255, 0, 0, 0.6);
+            transition: border-color 0.3s ease;
+        }
+        .user-avatar:hover {
+            border-color: rgba(255, 0, 0, 1);
+        }
+        .user-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            -webkit-backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .profile-container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(10, 10, 10, 0.9);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            overflow: hidden;
+            margin: 0 20px;
+        }
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .profile-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .profile-tab:hover {
+            background: rgba(255, 0, 0, 0.1);
+            color: white;
+        }
+        .profile-tab.active {
+            background: rgba(255, 0, 0, 0.2);
+            color: white;
+        }
+        .profile-tab.active:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #600 0%, #f00 100%);
+        }
+        .profile-content {
+            display: none;
+            padding: 20px;
+        }
+        .profile-content.active {
+            display: block;
+        }
+        .profile-section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .profile-form {
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(30, 30, 30, 0.7);
+            border: 1px solid rgba(80, 80, 80, 0.6);
+            border-radius: 4px;
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .form-input:focus {
+            border-color: rgba(255, 0, 0, 0.6);
+            outline: none;
+        }
+        .form-input.readonly {
+            background: rgba(20, 20, 20, 0.7);
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .primary-button {
+            background: rgba(200, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .primary-button:hover {
+            background: rgba(255, 0, 0, 0.8);
+        }
+        .secondary-button {
+            background: rgba(40, 40, 40, 0.7);
+            color: white;
+            border: 1px solid rgba(80, 80, 80, 0.6);
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .secondary-button:hover {
+            background: rgba(60, 60, 60, 0.8);
+            border-color: rgba(255, 0, 0, 0.4);
+        }
+        .text-button {
+            background: none;
+            border: none;
+            color: rgba(255, 0, 0, 0.7);
+            font-size: 14px;
+            cursor: pointer;
+            padding: 0;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .text-button:hover {
+            color: rgba(255, 0, 0, 1);
+            text-decoration: underline;
+        }
+        .button.full {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-item {
+            background: rgba(20, 20, 20, 0.7);
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .ai-options {
+            display: flex;
+            gap: 15px;
+        }
+        .ai-option {
+            text-align: center;
+            cursor: pointer;
+        }
+        .ai-option-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+        .ai-option.active .ai-option-img {
+            border-color: rgba(255, 0, 0, 0.8);
+        }
+        .ai-option:hover .ai-option-img {
+            border-color: rgba(255, 0, 0, 0.4);
+        }
+        .ai-option-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .search-container {
+            margin-bottom: 15px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(30, 30, 30, 0.7);
+            border: 1px solid rgba(80, 80, 80, 0.6);
+            border-radius: 4px;
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .message-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        .message-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(80, 80, 80, 0.3);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .message-item:hover {
+            background: rgba(40, 40, 40, 0.5);
+        }
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .message-sender {
+            font-weight: bold;
+            color: white;
+        }
+        .message-time {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .message-preview {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .wallet-details {
+            background: rgba(20, 20, 20, 0.7);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .wallet-detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .wallet-detail-row:last-child {
+            margin-bottom: 0;
+        }
+        .wallet-detail-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .wallet-detail-value {
+            color: white;
+        }
+        .wallet-detail-value.mono {
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .wallet-detail-value.balance {
+            color: rgba(255, 120, 0, 1);
+            font-weight: bold;
+        }
+        .wallet-actions {
+            margin-bottom: 20px;
+        }
+        .transaction-list {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        .transaction-item {
+            background: rgba(20, 20, 20, 0.7);
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .transaction-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .transaction-type {
+            font-weight: bold;
+            color: white;
+        }
+        .transaction-amount {
+            font-weight: bold;
+        }
+        .transaction-amount.positive {
+            color: rgba(0, 200, 0, 0.8);
+        }
+        .transaction-amount.negative {
+            color: rgba(255, 0, 0, 0.8);
+        }
+        .transaction-time {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .profile-footer {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(80, 80, 80, 0.3);
+            display: flex;
+            justify-content: flex-end;
+        }
+        /* AI Assistant Styles */
+        .ai-assistant {
+            position: fixed;
+            left: 15%;
+            top: 75%;
+            width: 120px;
+            height: 120px;
+            z-index: 1000;
+            cursor: pointer;
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+        }
+        .ai-assistant-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.3));
+        }
+        .chat-bubble {
+            position: absolute;
+            top: -80px;
+            left: 130px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            max-width: 200px;
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .chat-bubble.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .chat-bubble:before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 10px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid rgba(0, 0, 0, 0.8);
+        }
+        .chat-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 15%;
+            width: 300px;
+            height: 400px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 8px;
+            padding: 12px;
+            z-index: 1001;
+            display: none;
+            flex-direction: column;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            font-family: 'Rajdhani', sans-serif;
+        }
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+        }
+        .ai-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .chat-title {
+            font-weight: bold;
+            color: white;
+        }
+        .close-chat-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .close-chat-btn:hover {
+            color: white;
+        }
+        .chat-content {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding-right: 5px;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 16px;
+            max-width: 80%;
+            word-break: break-word;
+        }
+        .user-message {
+            background: rgba(255, 0, 0, 0.2);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        .ai-message {
+            background: rgba(50, 50, 50, 0.5);
+            color: white;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-input-container {
+            display: flex;
+            margin-top: auto;
+        }
+        .chat-input {
+            flex: 1;
+            background: rgba(40, 40, 40, 0.8);
+            border: 1px solid rgba(80, 80, 80, 0.6);
+            border-radius: 4px 0 0 4px;
+            padding: 8px 12px;
+            color: white;
+            outline: none;
+        }
+        .chat-input:focus {
+            border-color: rgba(255, 0, 0, 0.4);
+        }
+        .send-chat-btn {
+            background: rgba(255, 0, 0, 0.6);
+            border: none;
+            border-radius: 0 4px 4px 0;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+        }
+        .send-chat-btn:hover {
+            background: rgba(255, 0, 0, 0.8);
+        }
+        .send-icon {
+            width: 20px;
+            height: 20px;
+        }
+        /* Guilds/Wallet/Chat Icon */
+        .guilds-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            z-index: 1000;
+            cursor: pointer;
+            filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.3));
+            transition: transform 0.3s ease;
+        }
+        .guilds-icon:hover {
+            transform: scale(1.2);
+        }
+        /* Deck Builder Styles */
+        .deck-slots {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .deck-slot {
+            padding: 0.9rem 1.8rem;
+            background: rgba(74, 47, 26, 0.9);
+            border: 4px solid #D4A017;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 4px #D4A017;
+            font-size: 1rem;
+        }
+        .deck-slot:hover, .deck-slot.active {
+            background: #D4A017;
+            color: #000;
+            transform: scale(1.1);
+            box-shadow: 0 0 18px #D4A017;
+        }
+        /* Library Toggle Button */
+        .toggle-owned {
+            padding: 0.8rem 1.5rem;
+            background: rgba(74, 47, 26, 0.9);
+            border: 3px solid #D4A017;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 6px #D4A017;
+            font-size: 1rem;
+            margin-left: 1rem;
+        }
+        .toggle-owned:hover {
+            background: #D4A017;
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px #D4A017;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-overlay"></div>
+    <div id="codex-ui">
+        <header>
+            <div class="tab-buttons-left">
+                <button class="tab-button active" data-tab="library">Library</button>
+                <button class="tab-button" data-tab="create-card">Create Card</button>
+                <button class="tab-button" data-tab="build">Build</button>
+            </div>
+            <div class="tab-buttons-right">
+                <button class="tab-button" data-tab="pvp">PvP</button>
+                <button class="tab-button" data-tab="pve">PvE</button>
+                <button class="tab-button" data-tab="packs">Packs (<span id="pack-count">5</span>)</button>
+                <button class="tab-button" data-tab="events">Events</button>
+                <button class="tab-button" data-tab="auction-house">Auction House</button>
+            </div>
+            <div class="flex items-center gap-5" id="user-section">
+                <div class="flex items-center gap-4 text-[#D4A017] text-xl">
+                    <div id="user-avatar" class="user-avatar">
+                        <img src="https://i.imgur.com/SRoq392.png" alt="User Avatar" class="user-avatar-img">
+                    </div>
+                    <div id="user-info">
+                        <span id="username-display">Not logged in</span>
+                        <span id="gbux-balance">Balance: 1000 $GBuX</span>
+                    </div>
+                </div>
+                <button id="login-btn" class="btn">Login with Discord</button>
+            </div>
+        </header>
+
+        <!-- Library Tab -->
+        <div class="tab-content active" id="library">
+            <div class="sub-tabs">
+                <button class="sub-tab-button active" data-sub-tab="all">All</button>
+                <button class="sub-tab-button" data-sub-tab="owned">Owned</button>
+                <button class="sub-tab-button" data-sub-tab="minions">Minions</button>
+                <button class="sub-tab-button" data-sub-tab="spells">Spells</button>
+                <button class="sub-tab-button" data-sub-tab="mana-low">Mana 0-3</button>
+                <button class="sub-tab-button" data-sub-tab="mana-high">Mana 4+</button>
+                <input type="text" id="search-bar" class="input-field w-1/3" placeholder="Search cards...">
+                <button id="toggle-owned" class="toggle-owned">Show Owned Only</button>
+            </div>
+            <div class="carousel flex items-center">
+                <button class="carousel-btn" id="library-left">◄</button>
+                <div id="library-cards" class="cards-container flex-1"></div>
+                <button class="carousel-btn" id="library-right">►</button>
+            </div>
+        </div>
+
+        <!-- Create Card Tab -->
+        <div class="tab-content" id="create-card">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-black bg-opacity-75 p-5 rounded-xl border-4 border-[#4A2F1A]">
+                    <h2 class="text-3xl font-bold text-center text-[#D4A017] mb-5 font-['MedievalSharp']">Card Minter</h2>
+                    <div class="mb-5">
+                        <label class="block text-[#D4A017] mb-2 font-bold">Image for Card</label>
+                        <div class="file-upload" id="file-upload">
+                            <div class="file-upload-icon">📁</div>
+                            <div class="file-upload-text">Click to Upload Image</div>
+                        </div>
+                        <input type="file" id="card-image-input" accept="image/*">
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-[#D4A017] mb-2 font-bold">Attack</label>
+                        <div class="stat-label">
+                            <span>Power</span>
+                            <span id="attack-value">1</span>
+                        </div>
+                        <div class="range-slider">
+                            <input type="range" id="attack-slider" min="1" max="10" value="1">
+                        </div>
+                        <div class="text-sm text-gray-400">+10 $GBuX per attack point</div>
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-[#D4A017] mb-2 font-bold">Health</label>
+                        <div class="stat-label">
+                            <span>Durability</span>
+                            <span id="health-value">1</span>
+                        </div>
+                        <div class="range-slider">
+                            <input type="range" id="health-slider" min="1" max="10" value="1">
+                        </div>
+                        <div class="text-sm text-gray-400">+10 $GBuX per health point</div>
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-[#D4A017] mb-2 font-bold">Additional Abilities</label>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="ability-taunt" class="fancy-checkbox">
+                            <label for="ability-taunt" class="checkbox-label">Add Taunt <span class="gbux-amount">(+20 $GBuX)</span></label>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="ability-heal" class="fancy-checkbox">
+                            <label for="ability-heal" class="checkbox-label">Add +1 Health to Allies <span class="gbux-amount">(+20 $GBuX)</span></label>
+                        </div>
+                    </div>
+                    <div class="text-center mt-8">
+                        <div id="cost-display" class="mb-3 text-xl text-[#D4A017] font-bold">Total Cost: 20 $GBuX</div>
+                        <button id="mint-button" class="btn-mint">Mint Card</button>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center justify-center">
+                    <h2 class="text-3xl font-bold text-center text-[#D4A017] mb-5 font-['MedievalSharp']">Card Preview</h2>
+                    <div class="card-preview" id="card-preview">
+                        <div class="card-face card-front">
+                            <div class="card-layers">
+                                <img src="https://i.imgur.com/QPQXtX5.png" class="card-background" id="card-bg">
+                                <div class="tribe-effect" id="tribe-effect">
+                                    <img src="https://i.imgur.com/6Qg5nyG.png" class="flicker-effect" style="width: 100%; height: 100%; object-fit: contain;">
+                                </div>
+                                <div id="rare-effect" class="card-rarity-effect hidden"></div>
+                                <img src="https://i.imgur.com/KzcmBtg.png" class="card-minion hidden" id="card-minion-img">
+                                <div class="card-name" id="card-name">Your Card</div>
+                                <div class="card-stats">
+                                    <div class="stat" id="card-attack">1</div>
+                                    <div class="stat" id="card-health">1</div>
+                                </div>
+                                <div class="card-cost" id="card-cost">1</div>
+                                <div class="card-description" id="card-description">
+                                    No special abilities yet.
+                                </div>
+                                <div class="card-ability-icons" id="ability-icons"></div>
+                                <div class="card-serial" id="card-serial">Season 0 #???/100,000</div>
+                            </div>
+                        </div>
+                        <div class="card-face card-back"></div>
+                    </div>
+                    <div class="mt-5 text-center text-gray-300">
+                        <p>Your card will be randomly assigned to one of the four tribes:</p>
+                        <p class="mt-2">Iron Will - Blood For Conquest - Fabled - Tribal War</p>
+                        <p class="mt-4 text-sm text-gray-400">Cards have a chance to gain rare traits and abilities!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Build Tab -->
+        <div class="tab-content" id="build">
+            <div class="flex flex-col h-full">
+                <div class="deck-slots mb-5 flex gap-4 justify-center">
+                    <button class="deck-slot active" data-slot="1">Deck 1</button>
+                    <button class="deck-slot" data-slot="2">Deck 2</button>
+                    <button class="deck-slot" data-slot="3">Deck 3</button>
+                </div>
+                <div class="flex gap-5 flex-1 h-full">
+                    <div class="bg-gray-800 bg-opacity-95 rounded-lg p-5 border-4 border-[#4A2F1A] flex-1 flex flex-col">
+                        <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center">Selected Cards (<span id="deck-count">0</span>/20)</h2>
+                        <input type="text" id="deck-name" class="input-field mb-5 w-full" placeholder="Deck Name">
+                        <div id="selected-cards" class="grid grid-cols-4 gap-2.5 flex-1 overflow-y-auto"></div>
+                        <button id="save-deck-btn" class="w-full mt-5 btn">Save Deck</button>
+                    </div>
+                    <div class="bg-gray-800 bg-opacity-95 rounded-lg p-5 border-4 border-[#4A2F1A] flex-1 flex flex-col">
+                        <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center">Available Cards</h2>
+                        <input type="text" id="deck-search" class="input-field mb-5 w-full" placeholder="Search available cards...">
+                        <div id="deck-builder-cards" class="grid grid-cols-4 gap-2.5 flex-1 overflow-y-auto"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PvP Tab -->
+        <div class="tab-content" id="pvp">
+            <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center">PvP Arena</h2>
+            <div class="text-center">
+                <button id="start-pvp-btn" class="btn py-3 px-8 text-xl">Start PvP Match</button>
+                <div id="pvp-status" class="mt-3 text-[#ADD8E6] hidden"></div>
+            </div>
+        </div>
+
+        <!-- PvE Tab -->
+        <div class="tab-content" id="pve">
+            <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center">PvE Battles</h2>
+            <div class="text-center">
+                <button id="start-pve-btn" class="btn py-3 px-8 text-xl">Start PvE Match</button>
+                <div id="pve-status" class="mt-3 text-[#ADD8E6] hidden"></div>
+            </div>
+        </div>
+
+        <!-- Packs Tab -->
+        <div class="tab-content" id="packs">
+            <h2 class="text-3xl font-bold text-center text-[#D4A017] mb-5 font-['MedievalSharp']">Open Card Packs</h2>
+            <div class="text-center mb-8">
+                <p class="text-xl text-gray-300 mb-4">Opening a pack gives you 3 random Season 0 cards with a chance for rare traits and Ethereal Signatures!</p>
+                <button id="buy-pack-button" class="btn-mint">Open Pack (100 $GBuX)</button>
+            </div>
+            <div class="pack-container" id="pack-container"></div>
+        </div>
+
+        <!-- Events Tab -->
+        <div class="tab-content" id="events">
+            <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center">Events</h2>
+            <p class="text-center">Coming soon! Check back for exciting events and challenges.</p>
+        </div>
+
+        <!-- Auction House Tab -->
+        <div class="tab-content" id="auction-house">
+            <h2 class="text-3xl font-bold text-[#D4A017] mb-5 text-center">Auction House</h2>
+            <p class="text-center">Coming soon! Bid on rare cards and items.</p>
+        </div>
+
+        <!-- Pack Opening Overlay -->
+        <div class="pack-opening hidden" id="pack-opening">
+            <div class="pack-cards">
+                <div class="pack-reveal-card" id="pack-card-1">
+                    <div class="pack-card-inner">
+                        <div class="pack-card-front"></div>
+                        <div class="pack-card-back" id="pack-card-back-1"></div>
+                    </div>
+                </div>
+                <div class="pack-reveal-card" id="pack-card-2">
+                    <div class="pack-card-inner">
+                        <div class="pack-card-front"></div>
+                        <div class="pack-card-back" id="pack-card-back-2"></div>
+                    </div>
+                </div>
+                <div class="pack-reveal-card" id="pack-card-3">
+                    <div class="pack-card-inner">
+                        <div class="pack-card-front"></div>
+                        <div class="pack-card-back" id="pack-card-back-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Modal -->
+        <div id="profile-modal" class="profile-modal">
+            <div class="profile-container">
+                <div class="profile-tabs">
+                    <div class="profile-tab active" data-tab="account">ACCOUNT</div>
+                    <div class="profile-tab" data-tab="messages">MESSAGES</div>
+                    <div class="profile-tab" data-tab="wallet">WALLET</div>
+                </div>
+                <div class="profile-content active" data-tab="account">
+                    <div class="profile-grid">
+                        <div class="profile-column">
+                            <h3 class="profile-section-title">Account Details</h3>
+                            <div class="profile-form">
+                                <div class="form-group">
+                                    <label class="form-label">Username</label>
+                                    <input type="text" id="username-input" class="form-input" value="GrudgeWarlord_42">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" id="email-input" class="form-input" value="warlord@example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Wallet Address</label>
+                                    <input type="text" id="wallet-input" class="form-input readonly" value="0x123f456a789b123f456a789b123f456a789f" readonly>
+                                </div>
+                            </div>
+                            <button id="update-profile-btn" class="primary-button">Update Profile</button>
+                        </div>
+                        <div class="profile-column">
+                            <h3 class="profile-section-title">Game Statistics</h3>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-value">12</div>
+                                    <div class="stat-label">Wins</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">8</div>
+                                    <div class="stat-label">Losses</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">148</div>
+                                    <div class="stat-label">Cards Owned</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">3</div>
+                                    <div class="stat-label">Packs Available</div>
+                                </div>
+                            </div>
+                            <h3 class="profile-section-title">AI Assistant Preference</h3>
+                            <div class="ai-options">
+                                <div class="ai-option active" id="ai-option-1" data-image="https://i.imgur.com/klAa6aX.png">
+                                    <img src="https://i.imgur.com/klAa6aX.png" alt="Cyber Guide" class="ai-option-img">
+                                    <div class="ai-option-label">Cyber Guide</div>
+                                </div>
+                                <div class="ai-option" id="ai-option-2" data-image="https://i.imgur.com/zMFckYB.png">
+                                    <img src="https://i.imgur.com/zMFckYB.png" alt="Magic Advisor" class="ai-option-img">
+                                    <div class="ai-option-label">Magic Advisor</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-content" data-tab="messages">
+                    <h3 class="profile-section-title">Messages</h3>
+                    <div class="search-container">
+                        <input type="text" placeholder="Search by wallet address or username..." class="search-input">
+                    </div>
+                    <div class="message-list">
+                        <div class="message-item">
+                            <div class="message-header">
+                                <div class="message-sender">CryptoWarrior_98</div>
+                                <div class="message-time">2 hours ago</div>
+                            </div>
+                            <div class="message-preview">Hey, do you want to trade that legendary card?</div>
+                        </div>
+                        <div class="message-item">
+                            <div class="message-header">
+                                <div class="message-sender">ETH_Master</div>
+                                <div class="message-time">Yesterday</div>
+                            </div>
+                            <div class="message-preview">Thanks for the game! That was an epic battle.</div>
+                        </div>
+                        <div class="message-item">
+                            <div class="message-header">
+                                <div class="message-sender">CardCollector42</div>
+                                <div class="message-time">3 days ago</div>
+                            </div>
+                            <div class="message-preview">Would you sell your Blood For Conquest cards?</div>
+                        </div>
+                    </div>
+                    <button id="new-message-btn" class="primary-button">New Message</button>
+                </div>
+                <div class="profile-content" data-tab="wallet">
+                    <div class="profile-grid">
+                        <div class="profile-column">
+                            <h3 class="profile-section-title">Wallet Details</h3>
+                            <div class="wallet-details">
+                                <div class="wallet-detail-row">
+                                    <span class="wallet-detail-label">Address:</span>
+                                    <span class="wallet-detail-value mono">0x123f456a789b123f456a789b123f456a789f</span>
+                                </div>
+                                <div class="wallet-detail-row">
+                                    <span class="wallet-detail-label">GBUX Balance:</span>
+                                    <span class="wallet-detail-value balance">5,280</span>
+                                </div>
+                                <div class="wallet-detail-row">
+                                    <span class="wallet-detail-label">Connected Since:</span>
+                                    <span class="wallet-detail-value">Mar 15, 2023</span>
+                                </div>
+                            </div>
+                            <h3 class="profile-section-title">Actions</h3>
+                            <div class="wallet-actions">
+                                <button id="buy-gbux-btn" class="primary-button full">Buy GBUX</button>
+                                <button id="transfer-btn" class="secondary-button full">Transfer to Another Wallet</button>
+                            </div>
+                        </div>
+                        <div class="profile-column">
+                            <h3 class="profile-section-title">Transaction History</h3>
+                            <div class="transaction-list">
+                                <div class="transaction-item">
+                                    <div class="transaction-header">
+                                        <span class="transaction-type">Pack Purchase</span>
+                                        <span class="transaction-amount negative">-500 GBUX</span>
+                                    </div>
+                                    <div class="transaction-time">Today, 14:32</div>
+                                </div>
+                                <div class="transaction-item">
+                                    <div class="transaction-header">
+                                        <span class="transaction-type">Card Sale</span>
+                                        <span class="transaction-amount positive">+780 GBUX</span>
+                                    </div>
+                                    <div class="transaction-time">Yesterday, 09:17</div>
+                                </div>
+                                <div class="transaction-item">
+                                    <div class="transaction-header">
+                                        <span class="transaction-type">Tournament Reward</span>
+                                        <span class="transaction-amount positive">+1,500 GBUX</span>
+                                    </div>
+                                    <div class="transaction-time">Mar 20, 2023</div>
+                                </div>
+                                <div class="transaction-item">
+                                    <div class="transaction-header">
+                                        <span class="transaction-type">GBUX Purchase</span>
+                                        <span class="transaction-amount positive">+5,000 GBUX</span>
+                                    </div>
+                                    <div class="transaction-time">Mar 15, 2023</div>
+                                </div>
+                            </div>
+                            <button id="view-history-btn" class="text-button">View Full Transaction History →</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-footer">
+                    <button id="close-profile-btn" class="secondary-button">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Assistant -->
+        <div id="ai-assistant" class="ai-assistant">
+            <img src="https://i.imgur.com/klAa6aX.png" alt="AI Assistant" class="ai-assistant-img">
+            <div class="chat-bubble" id="ai-bubble">Need help? Click to chat with me!</div>
+        </div>
+
+        <!-- Chat Panel -->
+        <div id="chat-panel" class="chat-panel">
+            <div class="chat-header">
+                <div class="chat-header-left">
+                    <img src="https://i.imgur.com/klAa6aX.png" alt="AI Assistant" class="ai-avatar">
+                    <span class="chat-title">Grudge Assistant</span>
+                </div>
+                <button id="close-chat" class="close-chat-btn">×</button>
+            </div>
+            <div id="chat-content" class="chat-content">
+                <div class="ai-message message">
+                    Hello Warlord! I'm your Grudge Assistant. How can I help you today?
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="chat-input" placeholder="Ask me anything..." class="chat-input">
+                <button id="send-chat" class="send-chat-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="send-icon" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Guilds/Wallet/Chat Icon -->
+        <img src="https://i.imgur.com/KC3aQid.png" alt="Guilds/Wallet/Chat" class="guilds-icon" id="guilds-icon">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const SUPABASE_URL = 'https://ikzhueoilmcajkfdqdst.supabase.co';
+            const SUPABASE_KEY = 'YOUR_SUPABASE_KEY';
+            const supabase = window.Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+            let user = null;
+            let userBalance = 0;
+            let wins = 0;
+            let losses = 0;
+
+            // Initialize user session
+            async function initializeUser() {
+                const { data: session } = await supabase.auth.getSession();
+                if (session?.user) {
+                    user = session.user;
+                    await loadUserData();
+                } else {
+                    document.getElementById('login-btn').addEventListener('click', login);
+                }
+            }
+
+            // Login with Discord
+            async function login() {
+                const { error } = await supabase.auth.signInWithOAuth({
+                    provider: 'discord',
+                });
+                if (error) {
+                    console.error('Login failed:', error.message);
+                }
+            }
+
+            // Load user data
+            async function loadUserData() {
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('gbux_balance, wins, losses')
+                    .eq('id', user.id)
+                    .single();
+
+                if (error) {
+                    console.error('Failed to load user data:', error.message);
+                    return;
+                }
+
+                userBalance = data.gbux_balance || 0;
+                wins = data.wins || 0;
+                losses = data.losses || 0;
+
+                updateUI();
+            }
+
+            // Update UI with user data
+            function updateUI() {
+                document.getElementById('username-display').textContent = user.email || 'Logged In';
+                document.getElementById('gbux-balance').textContent = `Balance: ${userBalance} $GBuX`;
+            }
+
+            // Save deck to Supabase
+            async function saveDeck(deckName, cards) {
+                const { error } = await supabase
+                    .from('decks')
+                    .upsert({
+                { id: 32, name: "Overlord Mind", type: "minion", attack: 4, health: 4, mana_cost: 5, description: "Taunt.", backgroundImage: "https://i.imgur.com/LspYMpz.png", startingAmount: 1 },
+                { id: 33, name: "Celestial Warden", type: "minion", attack: 5, health: 5, mana_cost: 6, description: "Heals all for 1 each turn.", backgroundImage: "https://i.imgur.com/6CXJn5s.png", startingAmount: 0 },
+                { id: 34, name: "Abyssal Keeper", type: "minion", attack: 5, health: 5, mana_cost: 6, description: "Heals all with dark energy.", backgroundImage: "https://i.imgur.com/3b2RmGQ.png", startingAmount: 0 },
+                { id: 35, name: "Arcane Missile", type: "spell", mana_cost: 1, description: "Deal 3 damage to a random enemy.", backgroundImage: "https://i.imgur.com/jQbF07m.png", startingAmount: 1 },
+                { id: 36, name: "Shadow Strike", type: "spell", mana_cost: 2, description: "Deal 4 damage to a target enemy.", backgroundImage: "https://i.imgur.com/oPFVuMN.png", startingAmount: 1 },
+                { id: 37, name: "Healing Wave", type: "spell", mana_cost: 3, description: "Restore 6 health to a friendly character.", backgroundImage: "https://i.imgur.com/PgLXUx8.png", startingAmount: 1 },
+                { id: 38, name: "Mind Control", type: "spell", mana_cost: 8, description: "Take control of an enemy minion.", backgroundImage: "https://i.imgur.com/dC1AKPu.png", startingAmount: 0 },
+                { id: 39, name: "Starship Alpha", type: "minion", attack: 2, health: 2, mana_cost: 2, description: "Stealth. Gains +1 atk in space-themed games.", backgroundImage: "https://i.imgur.com/scyPIUs.png", startingAmount: 1 },
+                { id: 40, name: "Star Hut", type: "minion", attack: 0, health: 5, mana_cost: 3, description: "Taunt. Heals adjacent allies for 1 in Island.", backgroundImage: "https://i.imgur.com/TCYVocs.png", startingAmount: 1 },
+                { id: 41, name: "Engineer Prime", type: "minion", attack: 4, health: 4, mana_cost: 6, description: "Super Rare. On play: Give all allies +2 atk in Warlords.", backgroundImage: "https://i.imgur.com/KpHvcmW.mp4", startingAmount: 0 },
+                { id: 42, name: "Starship Beta", type: "minion", attack: 3, health: 3, mana_cost: 4, description: "Deals +2 damage to structures in RTS.", backgroundImage: "https://i.imgur.com/BSurWbZ.png", startingAmount: 1 },
+                { id: 43, name: "Starship Gamma", type: "minion", attack: 2, health: 4, mana_cost: 4, description: "Heals allies for 1 in Crawl.", backgroundImage: "https://i.imgur.com/5PSOVVc.png", startingAmount: 1 },
+                { id: 44, name: "Star Cruiser", type: "minion", attack: 6, health: 5, mana_cost: 7, description: "On play: Deal 3 damage to all enemies in Battle.", backgroundImage: "https://i.imgur.com/Ldfm3An.png", startingAmount: 0 },
+                { id: 45, name: "Fireball", type: "spell", mana_cost: 4, description: "Deal 6 damage to a target. +2 damage in Warlords.", backgroundImage: "https://i.imgur.com/V1HCiAI.jpg", startingAmount: 1 },
+                { id: 46, name: "Undead", type: "minion", attack: 3, health: 3, mana_cost: 3, description: "Grants Undead Hardcore Island character. +1 hp in Island.", backgroundImage: "https://i.imgur.com/8YIqCl5.png", startingAmount: 0 },
+                { id: 47, name: "Human", type: "minion", attack: 3, health: 3, mana_cost: 3, description: "Grants Human Hardcore Island character. +1 atk in Warlords.", backgroundImage: "https://i.imgur.com/0XcU175.png", startingAmount: 0 },
+                { id: 48, name: "Orc", type: "minion", attack: 4, health: 2, mana_cost: 3, description: "Grants Orc Hardcore Island character. Haste in Battle.", backgroundImage: "https://i.imgur.com/nlkfMpI.png", startingAmount: 0 },
+                { id: 49, name: "Elf", type: "minion", attack: 2, health: 4, mana_cost: 3, description: "Grants Elf Hardcore Island character. +1 cost reduction in Crawl.", backgroundImage: "https://i.imgur.com/6CXJn5s.png", startingAmount: 0 },
+                { id: 50, name: "Dwarf", type: "minion", attack: 3, health: 3, mana_cost: 3, description: "Grants Dwarf Hardcore Island character. +2 hp in Tower.", backgroundImage: "https://i.imgur.com/nBUKWdy.png", startingAmount: 0 },
+                { id: 51, name: "Barbarian", type: "minion", attack: 4, health: 3, mana_cost: 3, description: "Grants Barbarian Hardcore Island character. +1 atk in Island.", backgroundImage: "https://i.imgur.com/a9H86By.png", startingAmount: 0 },
+                { id: 52, name: "Skeleton NB", type: "minion", attack: 2, health: 3, mana_cost: 2, description: "Swift skeletal fighter with a mace.", backgroundImage: "https://i.imgur.com/Dh99XuH.png", startingAmount: 2 },
+                { id: 53, name: "Scourge Warrior", type: "minion", attack: 4, health: 3, mana_cost: 4, description: "Dark warrior with a cursed blade.", backgroundImage: "https://i.imgur.com/NFjvmxO.png", startingAmount: 1 },
+                { id: 54, name: "Orc NB", type: "minion", attack: 2, health: 2, mana_cost: 2, description: "Stealthy orc scout.", backgroundImage: "https://i.imgur.com/zMFckYB.png", startingAmount: 2 },
+                { id: 55, name: "Barbarian Mace", type: "minion", attack: 4, health: 2, mana_cost: 3, description: "Barbarian wielding a heavy mace.", backgroundImage: "https://i.imgur.com/3SkE6VG.png", startingAmount: 2 },
+                { id: 56, name: "Human NB", type: "minion", attack: 3, health: 4, mana_cost: 4, description: "Versatile human defender with a shield.", backgroundImage: "https://i.imgur.com/klAa6aX.png", startingAmount: 1 },
+                { id: 57, name: "Dwarf Hammer", type: "minion", attack: 3, health: 5, mana_cost: 4, description: "Sturdy dwarf with a hammer.", backgroundImage: "https://i.imgur.com/Wn84v6I.png", startingAmount: 1 },
+                { id: 58, name: "Elf Archer", type: "minion", attack: 3, health: 2, mana_cost: 3, description: "Precise elf archer with a bow.", backgroundImage: "https://i.imgur.com/Enu1T7Y.png", startingAmount: 2 },
+                { id: 59, name: "Knight", type: "minion", attack: 5, health: 5, mana_cost: 6, description: "Armored knight with a greatsword.", backgroundImage: "https://i.imgur.com/s0cMpSi.png", startingAmount: 0 },
+                { id: 60, name: "Dwarf Knight", type: "minion", attack: 4, health: 5, mana_cost: 5, description: "Heavily armored dwarf knight.", backgroundImage: "https://i.imgur.com/TalRqz3.png", startingAmount: 1 },
+                { id: 61, name: "Yorda", type: "minion", attack: 5, health: 4, mana_cost: 6, description: "Bats with thunderous force.", backgroundImage: "https://i.imgur.com/UvZsOLQ.png", startingAmount: 0 },
+                { id: 62, name: "Magician NB", type: "minion", attack: 3, health: 3, mana_cost: 4, description: "Casts arcane spells with a staff.", backgroundImage: "https://i.imgur.com/PSpj7sO.png", startingAmount: 1 },
+                { id: 63, name: "Calvin", type: "minion", attack: 4, health: 4, mana_cost: 4, description: "Glides with icy magic.", backgroundImage: "https://i.imgur.com/XbSuPyC.png", startingAmount: 1 },
+                { id: 64, name: "Undead Soldier", type: "minion", attack: 3, health: 3, mana_cost: 3, description: "Undead soldier with enduring spirit.", backgroundImage: "https://i.imgur.com/8YIqCl5.png", startingAmount: 1 },
+                { id: 65, name: "Human Wizard", type: "minion", attack: 3, health: 3, mana_cost: 4, description: "Human wizard casting powerful spells.", backgroundImage: "https://i.imgur.com/0XcU175.png", startingAmount: 1 },
+                { id: 66, name: "Human Archer", type: "minion", attack: 3, health: 2, mana_cost: 3, description: "Human archer with deadly aim.", backgroundImage: "https://i.imgur.com/jKE3ClI.png", startingAmount: 2 },
+                { id: 67, name: "Undead Warrior", type: "minion", attack: 2, health: 4, mana_cost: 3, description: "Undead warrior with a shield.", backgroundImage: "https://i.imgur.com/XJ8Saun.png", startingAmount: 2 },
+                { id: 68, name: "Undead Archer", type: "minion", attack: 3, health: 2, mana_cost: 3, description: "Undead archer with ghostly arrows.", backgroundImage: "https://i.imgur.com/fGDbB5o.png", startingAmount: 2 },
+                { id: 69, name: "Barrel Weapon", type: "minion", attack: 2, health: 3, mana_cost: 3, description: "Explosive barrel used as a weapon.", backgroundImage: "https://i.imgur.com/PFbnxct.png", startingAmount: 2 },
+                { id: 70, name: "Orc Archer", type: "minion", attack: 3, health: 2, mana_cost: 3, description: "Orc archer with a heavy bow.", backgroundImage: "https://i.imgur.com/nlkfMpI.png", startingAmount: 2 },
+                { id: 71, name: "Priest", type: "minion", attack: 2, health: 4, mana_cost: 4, description: "Heals allies with divine light.", backgroundImage: "https://i.imgur.com/6CXJn5s.png", startingAmount: 1 },
+                { id: 72, name: "Paladin", type: "minion", attack: 5, health: 5, mana_cost: 6, description: "Protects with holy power.", backgroundImage: "https://i.imgur.com/3b2RmGQ.png", startingAmount: 0 },
+                { id: 73, name: "Orc Heavy", type: "minion", attack: 5, health: 4, mana_cost: 5, description: "Heavy orc with a massive axe.", backgroundImage: "https://i.imgur.com/cep6ytB.png", startingAmount: 1 },
+                { id: 74, name: "Human Heavy", type: "minion", attack: 4, health: 5, mana_cost: 5, description: "Heavily armored human warrior.", backgroundImage: "https://i.imgur.com/UT8Yfo2.png", startingAmount: 1 },
+                { id: 75, name: "Undead Heavy", type: "minion", attack: 4, health: 5, mana_cost: 5, description: "Undead giant with a spiked club.", backgroundImage: "https://i.imgur.com/9Prc8Md.png", startingAmount: 1 },
+                { id: 76, name: "WareTree", type: "minion", attack: 3, health: 6, mana_cost: 5, description: "Living tree that attacks with roots.", backgroundImage: "https://i.imgur.com/gA5V2vd.png", startingAmount: 1 },
+                { id: 77, name: "Small Troll", type: "minion", attack: 3, health: 3, mana_cost: 3, description: "Small troll with regenerative powers.", backgroundImage: "https://i.imgur.com/R5AKvO4.png", startingAmount: 2 },
+                { id: 78, name: "Human Upgrade", type: "minion", attack: 4, health: 4, mana_cost: 5, description: "Upgraded human with enhanced armor.", backgroundImage: "https://i.imgur.com/9lhozCz.png", startingAmount: 1 },
+                { id: 79, name: "Dwarf Heavy", type: "minion", attack: 4, health: 6, mana_cost: 5, description: "Heavy dwarf with a warhammer.", backgroundImage: "https://i.imgur.com/oGautmG.png", startingAmount: 1 },
+                { id: 80, name: "Scourge Familiar", type: "minion", attack: 2, health: 2, mana_cost: 2, description: "Dark familiar that boosts spells.", backgroundImage: "https://i.imgur.com/FcwHTwA.png", startingAmount: 2 },
+                { id: 81, name: "Faitherbearer", type: "minion", attack: 5, health: 5, mana_cost: 6, description: "Bearer of faith with divine strength.", backgroundImage: "https://i.imgur.com/ENXGMbn.jpg", startingAmount: 0 },
+                { id: 82, name: "Explosion 2", type: "spell", mana_cost: 5, description: "Deal 8 damage to a target and 2 to adjacent enemies.", backgroundImage: "https://i.imgur.com/vUfG5PJ.png", startingAmount: 1 },
+                { id: 83, name: "Explosion 1", type: "spell", mana_cost: 3, description: "Deal 5 damage to a target and 1 to adjacent enemies.", backgroundImage: "https://i.imgur.com/lAUM1L7.png", startingAmount: 1 },
+                { id: 84, name: "Spell Ball", type: "spell", mana_cost: 2, description: "Deal 3 damage to a random enemy and draw a card.", backgroundImage: "https://i.imgur.com/1iicyne.png", startingAmount: 1 },
+                { id: 85, name: "Fire Swirl", type: "spell", mana_cost: 4, description: "Deal 4 damage to all enemies.", backgroundImage: "https://i.imgur.com/dramBbf.png", startingAmount: 1 },
+                { id: 86, name: "Fire Ball", type: "spell", mana_cost: 4, description: "Deal 6 damage to a target.", backgroundImage: "https://i.imgur.com/KfE0K3N.png", startingAmount: 1 },
+                { id: 87, name: "Purple Swipe", type: "spell", mana_cost: 3, description: "Deal 4 damage and reduce target atk by 1.", backgroundImage: "https://i.imgur.com/X4uVLBC.png", startingAmount: 1 },
+                { id: 88, name: "Sword", type: "spell", mana_cost: 2, description: "Give a minion +2 atk this turn.", backgroundImage: "https://i.imgur.com/u95mHRc.png", startingAmount: 1 },
+                { id: 89, name: "Pick Axe Efforts", type: "spell", mana_cost: 3, description: "Deal 3 damage and gain 2 armor.", backgroundImage: "https://i.imgur.com/OaIxVfq.png", startingAmount: 1 },
+                { id: 90, name: "Book", type: "spell", mana_cost: 1, description: "Draw 2 cards.", backgroundImage: "https://i.imgur.com/LhKeIUk.png", startingAmount: 1 },
+                { id: 91, name: "Light", type: "spell", mana_cost: 2, description: "Restore 4 health to a friendly character.", backgroundImage: "https://i.imgur.com/8fYU7nG.png", startingAmount: 1 },
+                { id: 92, name: "Light 2", type: "spell", mana_cost: 3, description: "Restore 6 health to a friendly character.", backgroundImage: "https://i.imgur.com/FGmWArp.png", startingAmount: 1 },
+                { id: 93, name: "Arcane", type: "spell", mana_cost: 5, description: "Deal 5 damage to a target and stun it.", backgroundImage: "https://i.imgur.com/dU3QrVi.png", startingAmount: 1 },
+                { id: 94, name: "Mystic Green", type: "spell", mana_cost: 4, description: "Restore 5 health to all friendly characters.", backgroundImage: "https://i.imgur.com/ra2S7o0.png", startingAmount: 1 },
+                { id: 95, name: "Red Skull Magic", type: "spell", mana_cost: 6, description: "Deal 6 damage to a target and summon a 2/2 skull.", backgroundImage: "https://i.imgur.com/KjBYZ7L.png", startingAmount: 0 },
+                { id: 96, name: "Green Skull Magic", type: "spell", mana_cost: 6, description: "Deal 5 damage to a target and heal for 5.", backgroundImage: "https://i.imgur.com/dWpBsru.png", startingAmount: 0 },
+                { id: 97, name: "Small Building", type: "minion", attack: 0, health: 5, mana_cost: 3, description: "Taunt. Defensive structure for RTS.", backgroundImage: "https://i.imgur.com/LouhX6b.png", startingAmount: 1 },
+                { id: 98, name: "Summoning Tower", type: "minion", attack: 2, health: 4, mana_cost: 4, description: "On play: Summon a 1/1 spirit in Crawl.", backgroundImage: "https://i.imgur.com/aBeF0N8.png", startingAmount: 1 },
+                { id: 99, name: "Armory", type: "minion", attack: 0, health: 6, mana_cost: 5, description: "Taunt. Gives +1 atk to summoned minions in RTS.", backgroundImage: "https://i.imgur.com/4TFvg1K.png", startingAmount: 1 },
+                { id: 100, name: "Hero Hall", type: "minion", attack: 0, health: 7, mana_cost: 6, description: "Taunt. Boosts hero atk by 2 in Warlords.", backgroundImage: "https://i.imgur.com/H0EAefW.png", startingAmount: 0 }
+            ];
+
+            // Tribe configurations
+            const tribes = {
+                IronWill: {
+                    name: 'IronWill',
+                    ability: 'Gives other Iron Will minions +0/+1',
+                    background: 'https://i.imgur.com/QPQXtX5.png',
+                    effect: 'https://i.imgur.com/6Qg5nyG.png',
+                    effectClass: 'flicker-effect',
+                    probability: 0.25,
+                    borderColor: '#C0C0C0'
+                },
+                BloodForConquest: {
+                    name: 'BloodForConquest',
+                    ability: 'Gives other Blood For Conquest minions +1 attack on turn played and has haste',
+                    background: 'https://i.imgur.com/FqkZqZb.png',
+                    effect: 'https://i.imgur.com/7N3EjUe.png',
+                    effectClass: 'pulse-effect',
+                    probability: 0.25,
+                    borderColor: '#8B0000'
+                },
+                Fabled: {
+                    name: 'Fabled',
+                    ability: 'Lowers mana cost of all cards in hand (min 0)',
+                    background: 'https://i.imgur.com/G0hXKXn.png',
+                    effect: 'https://i.imgur.com/JtgsWxOb.png',
+                    effectClass: 'fade-effect',
+                    probability: 0.25,
+                    borderColor: '#800080'
+                },
+                TribalWar: {
+                    name: 'TribalWar',
+                    ability: 'Summons a 1/1 with taunt',
+                    background: 'https://i.imgur.com/X8dIi5T.png',
+                    effect: 'https://i.imgur.com/VgHtim9.png',
+                    effectClass: 'pulse-effect',
+                    probability: 0.25,
+                    borderColor: '#FFA500'
+                },
+                EtherealSignature: {
+                    name: 'EtherealSignature',
+                    ability: 'Has +2/+2 of the normal card',
+                    background: 'https://i.imgur.com/o0d99bB.png',
+                    effect: 'https://i.imgur.com/QqLfZMb.png',
+                    effectClass: 'rotate-effect',
+                    probability: 0.02,
+                    borderColor: '#00B7EB'
+                }
+            };
+
+            // Additional abilities
+            const abilities = [
+                { name: 'Haste', icon: 'https://i.imgur.com/OaIxVfq.png', probability: 0.1, field: 'has_haste', desc: 'Can attack the turn it\'s played.' },
+                { name: 'Allies Boost', icon: 'https://i.imgur.com/u95mHRc.png', probability: 0.1, field: 'has_allies_boost', desc: 'When played, all allied cards gain +1 attack until end of turn.' },
+                { name: 'Double Strike', icon: 'https://i.imgur.com/t50dV5F.png', probability: 0.1, field: 'has_double_strike', desc: 'Attacks twice per combat.' },
+                { name: 'Stealth', icon: 'https://i.imgur.com/nDfL41t.png', probability: 0.1, field: 'has_stealth', desc: 'Invisible until it attacks.' },
+                { name: 'Gold Shield', icon: 'https://i.imgur.com/OaIxVfq.png', probability: 0.1, field: 'has_gold_shield', desc: 'Absorbs first damage (once per game).' }
+            ];
+
+            // Rare traits
+            const rareTraits = [
+                { name: 'rare_glyph_life', icon: 'https://i.imgur.com/t5mq84x.png', ability: 'Gives 2 HP to all allies and player.', probability: 0.05, fields: { has_rare_glyph: true, glyph_ability: 'life' }, effectClass: 'pulse-effect' },
+                { name: 'rare_glyph_fire', icon: 'https://i.imgur.com/VJeVEqw.png', ability: 'Deals 2 damage to all enemies on play.', probability: 0.05, fields: { has_rare_glyph: true, glyph_ability: 'fire' }, effectClass: 'pulse-effect' },
+                { name: 'legendary_foil', icon: 'https://i.imgur.com/iA0cqGn.png', ability: '+2 health, immune to ability destruction.', probability: 0.05, fields: { has_legendary_foil: true }, effectClass: 'shimmer-effect' }
+            ];
+
+            // DOM elements
+            const attackSlider = document.getElementById('attack-slider');
+            const healthSlider = document.getElementById('health-slider');
+            const attackValueDisplay = document.getElementById('attack-value');
+            const healthValueDisplay = document.getElementById('health-value');
+            const tauntCheckbox = document.getElementById('ability-taunt');
+            const healAlliesCheckbox = document.getElementById('ability-heal');
+            const costDisplay = document.getElementById('cost-display');
+            const mintButton = document.getElementById('mint-button');
+            const fileUpload = document.getElementById('file-upload');
+            const fileInput = document.getElementById('card-image-input');
+            const cardPreview = document.getElementById('card-preview');
+            const cardMinionImg = document.getElementById('card-minion-img');
+            const cardAttack = document.getElementById('card-attack');
+            const cardHealth = document.getElementById('card-health');
+            const cardCost = document.getElementById('card-cost');
+            const cardDescription = document.getElementById('card-description');
+            const cardName = document.getElementById('card-name');
+            const cardBg = document.getElementById('card-bg');
+            const cardSerial = document.getElementById('card-serial');
+            const tribeEffect = document.getElementById('tribe-effect');
+            const rareEffect = document.getElementById('rare-effect');
+            const abilityIcons = document.getElementById('ability-icons');
+            const buyPackButton = document.getElementById('buy-pack-button');
+            const packContainer = document.getElementById('pack-container');
+            const packOpening = document.getElementById('pack-opening');
+            const packCards = document.querySelectorAll('.pack-reveal-card');
+            const gbuxBalanceDisplay = document.getElementById('gbux-balance');
+            const packCountDisplay = document.getElementById('pack-count');
+            const loginButton = document.getElementById('login-btn');
+            const toggleOwnedButton = document.getElementById('toggle-owned');
+            const searchBar = document.getElementById('search-bar');
+            const deckSlots = document.querySelectorAll('.deck-slot');
+            const deckNameInput = document.getElementById('deck-name');
+            const deckCountDisplay = document.getElementById('deck-count');
+            const selectedCardsContainer = document.getElementById('selected-cards');
+            const deckBuilderCardsContainer = document.getElementById('deck-builder-cards');
+            const saveDeckButton = document.getElementById('save-deck-btn');
+            const deckSearch = document.getElementById('deck-search');
+            const startPvpButton = document.getElementById('start-pvp-btn');
+            const pvpStatus = document.getElementById('pvp-status');
+            const startPveButton = document.getElementById('start-pve-btn');
+            const pveStatus = document.getElementById('pve-status');
+            const userAvatar = document.getElementById('user-avatar');
+            const profileModal = document.getElementById('profile-modal');
+            const closeProfileBtn = document.getElementById('close-profile-btn');
+            const profileTabs = document.querySelectorAll('.profile-tab');
+            const profileContents = document.querySelectorAll('.profile-content');
+            const updateProfileBtn = document.getElementById('update-profile-btn');
+            const usernameInput = document.getElementById('username-input');
+            const emailInput = document.getElementById('email-input');
+            const walletInput = document.getElementById('wallet-input');
+            const aiOption1 = document.getElementById('ai-option-1');
+            const aiOption2 = document.getElementById('ai-option-2');
+            const newMessageBtn = document.getElementById('new-message-btn');
+            const buyGbuxBtn = document.getElementById('buy-gbux-btn');
+            const transferBtn = document.getElementById('transfer-btn');
+            const viewHistoryBtn = document.getElementById('view-history-btn');
+            const aiAssistant = document.getElementById('ai-assistant');
+            const aiBubble = document.getElementById('ai-bubble');
+            const chatPanel = document.getElementById('chat-panel');
+            const closeChatBtn = document.getElementById('close-chat');
+            const chatContent = document.getElementById('chat-content');
+            const chatInput = document.getElementById('chat-input');
+            const sendChatBtn = document.getElementById('send-chat');
+            const guildsIcon = document.getElementById('guilds-icon');
+
+            // Utility functions
+            function safeClassToggle(elementId, className, add = true) {
+                const element = document.getElementById(elementId);
+                if (element && element.classList) {
+                    add ? element.classList.add(className) : element.classList.remove(className);
+                }
+            }
+
+            function getRandom(arr, probabilityKey) {
+                const rand = Math.random();
+                let sum = 0;
+                for (const item of arr) {
+                    sum += item[probabilityKey] || 1 / arr.length;
+                    if (rand <= sum) return item;
+                }
+                return arr[0];
+            }
+
+            function generateCardId(wallet, timestamp) {
+                return sha256(wallet + timestamp + Math.random());
+            }
+
+            async function checkDuplicate(season0Id, tribe, wallet) {
+                if (!isOnline) {
+                    return localCards.some(card => card.season0_id === season0Id && card.tribe === tribe && card.owner_wallet === wallet);
+                }
+                const { data } = await supabase
+                    .from('cards')
+                    .select('card_id')
+                    .eq('season0_id', season0Id)
+                    .eq('tribe', tribe)
+                    .eq('owner_wallet', wallet);
+                return data.length > 0;
+            }
+
+            async function saveCard(card) {
+                if (!isOnline) {
+                    localCards.push(card);
+                    localStorage.setItem('localCards', JSON.stringify(localCards));
+                    return true;
+                }
+                const { error } = await supabase.from('cards').insert([card]);
+                if (error) {
+                    console.error('Supabase save error:', error);
+                    return false;
+                }
+                return true;
+            }
+
+            async function updatePlayerBalance(wallet, gbux) {
+                if (!isOnline) {
+                    localStorage.setItem('localBalance', gbux);
+                    return;
+                }
+                const { error } = await supabase
+                    .from('players')
+                    .update({ gbux_balance: gbux })
+                    .eq('wallet_address', wallet);
+                if (error) console.error('Supabase balance update error:', error);
+            }
+
+            async function syncLocalCards() {
+                if (!isOnline) return;
+                for (const card of localCards) {
+                    if (card.tribe === 'EtherealSignature') continue;
+                    if (!(await checkDuplicate(card.season0_id, card.tribe, card.owner_wallet))) {
+                        await saveCard(card);
+                    } else {
+                        userBalance += card.season0_id <= 50 ? 10 : 50;
+                    }
+                }
+                localCards.length = 0;
+                localStorage.setItem('localCards', JSON.stringify(localCards));
+                await updatePlayerBalance(walletAddress, userBalance);
+                updateBalanceDisplay();
+            }
+
+            // Card rendering
+            function createCardElement(card, isOwned = true) {
+                const tribe = tribes[card.tribe];
+                const ability = abilities.find(a => card[a.field]);
+                const rareTrait = rareTraits.find(r => card[r.fields.has_rare_glyph ? 'glyph_ability' : 'has_legendary_foil'] === (r.fields.glyph_ability || true));
+                const cardEl = document.createElement('div');
+                cardEl.className = `card-display ${isOwned ? '' : 'unowned'}`;
+                cardEl.style.borderColor = tribe.borderColor;
+                cardEl.innerHTML = `
+                    <div class="card-layers">
+                        <img src="${tribe.background}" class="card-background">
+                        <div class="tribe-effect">
+                            <img src="${tribe.effect}" class="${tribe.effectClass}" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        ${rareTrait ? `<div class="card-rarity-effect"><img src="${rareTrait.icon}" class="${rareTrait.effectClass}" style="width: 100%; height: 100%; object-fit: contain;"></div>` : ''}
+                        <img src="${card.backgroundImage}" class="card-minion">
+                        <div class="card-name">${card.name}</div>
+                        <div class="card-stats">
+                            <div class="stat">${card.attack}</div>
+                            <div class="stat">${card.health}</div>
+                        </div>
+                        <div class="card-cost">${card.mana_cost}</div>
+                        <div class="card-description">${card.description || tribe.ability}${ability ? ', ' + ability.desc : ''}${rareTrait ? ', ' + rareTrait.ability : ''}${card.has_taunt ? ', Taunt' : ''}${card.has_allies_health ? ', +1 Health to Allies' : ''}</div>
+                        <div class="card-ability-icons">${ability ? `<div class="ability-icon" style="background-image: url('${ability.icon}')"></div>` : ''}</div>
+                        <div class="card-serial">Season 0 #${card.serial_number}/100,000</div>
+                        ${isOwned ? '' : '<button class="buy-button">Buy</button>'}
+                    </div>
+                `;
+                cardEl.classList.add('card-bounce');
+                setTimeout(() => cardEl.classList.remove('card-bounce'), 500);
+                if (!isOwned) {
+                    cardEl.querySelector('.buy-button').addEventListener('click', () => buyCard(card));
+                }
+                return cardEl;
+            }
+
+            function updateBalanceDisplay() {
+                gbuxBalanceDisplay.textContent = `Balance: ${userBalance} $GBuX`;
+                packCountDisplay.textContent = packCount;
+                localStorage.setItem('localBalance', userBalance);
+                localStorage.setItem('localPacks', packCount);
+            }
+
+            function renderLibrary() {
+                const container = document.getElementById('library-cards');
+                if (container) {
+                    container.innerHTML = '';
+                    const cardsToShow = showOwnedOnly ? ownedCards : season0.map(base => {
+                        const owned = ownedCards.find(owned => owned.season0_id === base.id);
+                        return owned || { ...base, tribe: 'IronWill', serial_number: Math.floor(Math.random() * 100000) + 1 };
+                    });
+                    const searchQuery = searchBar.value.toLowerCase();
+                    cardsToShow.filter(card => card.name.toLowerCase().includes(searchQuery)).forEach(card => {
+                        const isOwned = ownedCards.some(owned => owned.season0_id === card.season0_id && owned.tribe === card.tribe);
+                        const cardEl = createCardElement(card, isOwned);
+                        container.appendChild(cardEl);
+                    });
+                }
+                updateBalanceDisplay();
+            }
+
+            async function buyCard(card) {
+                const cost = card.season0_id <= 50 ? 50 : 200;
+                if (userBalance < cost) {
+                    alert('Not enough $GBuX to buy this card!');
+                    return;
+                }
+                userBalance -= cost;
+                const newCard = {
+                    ...card,
+                    card_id: generateCardId(walletAddress, Date.now()),
+                    owner_wallet: walletAddress,
+                    serial_number: mintedCards + 1,
+                    created_at: new Date().toISOString()
+                };
+                if (await saveCard(newCard)) {
+                    ownedCards.push(newCard);
+                    mintedCards++;
+                    updatePlayerBalance(walletAddress, userBalance);
+                    renderLibrary();
+                } else {
+                    userBalance += cost;
+                    alert('Failed to buy card. Please try again.');
+                    updateBalanceDisplay();
+                }
+            }
+
+            function applyCardVisuals(cardElement, card) {
+                const background = cardElement.querySelector('.card-background');
+                const tribeEffectEl = cardElement.querySelector('.tribe-effect');
+                const rareEffectEl = cardElement.querySelector('.card-rarity-effect');
+                const minionImg = cardElement.querySelector('.card-minion');
+                const attackEl = cardElement.querySelector('.stat:first-child');
+                const healthEl = cardElement.querySelector('.stat:last-child');
+                const costEl = cardElement.querySelector('.card-cost');
+                const nameEl = cardElement.querySelector('.card-name');
+                const descriptionEl = cardElement.querySelector('.card-description');
+                const serialEl = cardElement.querySelector('.card-serial');
+                const abilityIconsEl = cardElement.querySelector('.card-ability-icons');
+                const tribe = tribes[card.tribe];
+                const ability = abilities.find(a => card[a.field]);
+                const rareTrait = rareTraits.find(r => card[r.fields.has_rare_glyph ? 'glyph_ability' : 'has_legendary_foil'] === (r.fields.glyph_ability || true));
+
+                background.src = tribe.background;
+                tribeEffectEl.innerHTML = `<img src="${tribe.effect}" class="${tribe.effectClass}" style="width: 100%; height: 100%; object-fit: contain;">`;
+                if (rareTrait) {
+                    rareEffectEl.innerHTML = `<img src="${rareTrait.icon}" class="${rareTrait.effectClass}" style="width: 100%; height: 100%; object-fit: contain;">`;
+                    rareEffectEl.classList.remove('hidden');
+                } else {
+                    rareEffectEl.classList.add('hidden');
+                }
+                minionImg.src = card.backgroundImage;
+                minionImg.classList.remove('hidden');
+                attackEl.textContent = card.attack;
+                healthEl.textContent = card.health;
+                costEl.textContent = card.mana_cost;
+                nameEl.textContent = card.name;
+                let description = card.description || tribe.ability;
+                if (card.has_taunt) description += ', Taunt';
+                if (card.has_allies_health) description += ', +1 Health to Allies';
+                if (ability) description += ', ' + ability.desc;
+                if (rareTrait) description += ', ' + rareTrait.ability;
+                descriptionEl.textContent = description;
+                serialEl.textContent = `Season 0 #${card.serial_number}/100,000`;
+                abilityIconsEl.innerHTML = ability ? `<div class="ability-icon" style="background-image: url(${ability.icon})"></div>` : '';
+            }
+
+            function renderCreateCard() {
+                let attackValue = 1;
+                let healthValue = 1;
+                let hasTaunt = false;
+                let hasHealAllies = false;
+                let totalMintCost = 20;
+
+                attackSlider.addEventListener('input', function() {
+                    attackValue = parseInt(this.value);
+                    attackValueDisplay.textContent = attackValue;
+                    cardAttack.textContent = attackValue;
+                    updateCost();
+                });
+
+                healthSlider.addEventListener('input', function() {
+                    healthValue = parseInt(this.value);
+                    healthValueDisplay.textContent = healthValue;
+                    cardHealth.textContent = healthValue;
+                    updateCost();
+                });
+
+                tauntCheckbox.addEventListener('change', function() {
+                    hasTaunt = this.checked;
+                    updateCost();
+                    updateCardDescription();
+                });
+
+                healAlliesCheckbox.addEventListener('change', function() {
+                    hasHealAllies = this.checked;
+                    updateCost();
+                    updateCardDescription();
+                });
+
+                fileUpload.addEventListener('click', function() {
+                    fileInput.click();
+                });
+
+                fileInput.addEventListener('change', function(e) {
+                    if (e.target.files && e.target.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            cardMinionImg.src = e.target.result;
+                            cardMinionImg.classList.remove('hidden');
+                            cardName.textContent = `Custom Card #${mintedCards + 1}`;
+                        };
+                        reader.readAsDataURL(e.target.files[0]);
+                    }
+                });
+
+                function updateCost() {
+                    totalMintCost = (attackValue * 10) + (healthValue * 10);
+                    if (hasTaunt) totalMintCost += 20;
+                    if (hasHealAllies) totalMintCost += 20;
+                    costDisplay.textContent = `Total Cost: ${totalMintCost} $GBuX`;
+                    cardCost.textContent = Math.max(1, Math.round((attackValue + healthValue) / 2));
+                    mintButton.disabled = userBalance < totalMintCost;
+                    mintButton.classList.toggle('opacity-50', userBalance < totalMintCost);
+                }
+
+                function updateCardDescription() {
+                    let description = 'Tribe ability will be revealed on mint.';
+                    if (hasTaunt) description += ', Taunt';
+                    if (hasHealAllies) description += ', +1 Health to Allies';
+                    cardDescription.textContent = description;
+                }
+
+                mintButton.addEventListener('click', async function() {
+                    if (userBalance < totalMintCost) {
+                        alert('Not enough $GBuX to mint this card!');
+                        return;
+                    }
+                    if (fileInput.files.length === 0) {
+                        alert('Please upload an image for your card!');
+                        return;
+                    }
+                    if (mintedCards >= 100000) {
+                        alert('Global card limit reached!');
+                        mintButton.disabled = true;
+                        return;
+                    }
+
+                    const imageFile = fileInput.files[0];
+                    const reader = new FileReader();
+                    reader.onload = async function(e) {
+                        const imageUrl = e.target.result;
+                        const season0Id = Math.floor(Math.random() * 100) + 1;
+                        const tribeObj = getRandom(Object.values(tribes).filter(t => t.name !== 'EtherealSignature'), 'probability');
+                        const cardId = generateCardId(walletAddress, Date.now());
+                        const serialNumber = mintedCards + 1;
+
+                        let extraAbility = null;
+                        if (Math.random() < 0.1) {
+                            extraAbility = getRandom(abilities, 'probability');
+                        }
+
+                        let rareTrait = null;
+                        if (Math.random() < 0.15) {
+                            rareTrait = getRandom(rareTraits, 'probability');
+                        }
+
+                        const card = {
+                            card_id: cardId,
+                            season0_id: season0Id,
+                            tribe: tribeObj.name,
+                            owner_wallet: walletAddress,
+                            serial_number: serialNumber,
+                            attack: attackValue,
+                            health: rareTrait?.name === 'legendary_foil' ? healthValue + 2 : healthValue,
+                            mana_cost: Math.max(1, Math.round((attackValue + healthValue) / 2)),
+                            backgroundImage: imageUrl,
+                            has_haste: extraAbility?.field === 'has_haste',
+                            has_allies_boost: extraAbility?.field === 'has_allies_boost',
+                            has_double_strike: extraAbility?.field === 'has_double_strike',
+                            has_stealth: extraAbility?.field === 'has_stealth',
+                            has_gold_shield: extraAbility?.field === 'has_gold_shield',
+                            has_rare_glyph: !!rareTrait?.fields?.has_rare_glyph,
+                            glyph_ability: rareTrait?.fields?.glyph_ability || null,
+                            has_legendary_foil: !!rareTrait?.fields?.has_legendary_foil,
+                            has_taunt: hasTaunt,
+                            has_allies_health: hasHealAllies,
+                            created_at: new Date().toISOString(),
+                            name: `Custom Card ${serialNumber}`,
+                            description: '',
+                            type: 'minion'
+                        };
+
+                        if (await checkDuplicate(season0Id, tribeObj.name, walletAddress)) {
+                            userBalance += season0Id <= 50 ? 10 : 50;
+                            alert(`Duplicate card! Credited ${season0Id <= 50 ? 10 : 50} $GBuX.`);
+                            updatePlayerBalance(walletAddress, userBalance);
+                            updateBalanceDisplay();
+                            return;
+                        }
+
+                        if (await saveCard(card)) {
+                            userBalance -= totalMintCost;
+                            mintedCards++;
+                            ownedCards.push(card);
+                            updatePlayerBalance(walletAddress, userBalance);
+                            applyCardVisuals(cardPreview, card);
+                            cardPreview.classList.add('card-bounce');
+                            setTimeout(() => cardPreview.classList.remove('card-bounce'), 500);
+                            resetMintForm();
+                            renderLibrary();
+                        } else {
+                            userBalance += totalMintCost;
+                            alert('Failed to mint card. Please try again.');
+                            updatePlayerBalance(walletAddress, userBalance);
+                            updateBalanceDisplay();
+                        }
+                    };
+                    reader.readAsDataURL(imageFile);
+                });
+
+                function resetMintForm() {
+                    attackSlider.value = 1;
+                    healthSlider.value = 1;
+                    attackValue = 1;
+                    healthValue = 1;
+                    attackValueDisplay.textContent = '1';
+                    healthValueDisplay.textContent = '1';
+                    tauntCheckbox.checked = false;
+                    healAlliesCheckbox.checked = false;
+                    hasTaunt = false;
+                    hasHealAllies = false;
+                    fileInput.value = '';
+                    updateCost();
+                    updateCardDescription();
+                    cardMinionImg.classList.add('hidden');
+                    cardName.textContent = 'Your Card';
+                    cardBg.src = 'https://i.imgur.com/QPQXtX5.png';
+                    tribeEffect.innerHTML = `<img src="https://i.imgur.com/6Qg5nyG.png" class="flicker-effect" style="width: 100%; height: 100%; object-fit: contain;">`;
+                    rareEffect.classList.add('hidden');
+                    abilityIcons.innerHTML = '';
+                }
+
+                updateCost();
+                updateCardDescription();
+            }
+
+            function renderBuild() {
+                deckSlots.forEach(slot => {
+                    slot.addEventListener('click', () => {
+                        deckSlots.forEach(s => s.classList.remove('active'));
+                        slot.classList.add('active');
+                        currentDeckSlot = slot.dataset.slot;
+                        selectedCards = JSON.parse(localStorage.getItem(`deck${currentDeckSlot}`)) || [];
+                        renderSelectedCards();
+                    });
+                });
+
+                deckSearch.addEventListener('input', () => {
+                    renderAvailableCards();
+                });
+
+                saveDeckButton.addEventListener('click', () => {
+                    if (selectedCards.length > 20) {
+                        alert('Deck cannot have more than 20 cards!');
+                        return;
+                    }
+                    localStorage.setItem(`deck${currentDeckSlot}`, JSON.stringify(selectedCards));
+                    alert('Deck saved successfully!');
+                });
+
+                function renderSelectedCards() {
+                    selectedCardsContainer.innerHTML = '';
+                    deckCountDisplay.textContent = selectedCards.length;
+                    selectedCards.forEach(card => {
+                        const cardEl = createCardElement(card);
+                        cardEl.addEventListener('click', () => {
+                            selectedCards = selectedCards.filter(c => c.card_id !== card.card_id);
+                            renderSelectedCards();
+                        });
+                        selectedCardsContainer.appendChild(cardEl);
+                    });
+                }
+
+                function renderAvailableCards() {
+                    deckBuilderCardsContainer.innerHTML = '';
+                    const searchQuery = deckSearch.value.toLowerCase();
+                    ownedCards.filter(card => card.name.toLowerCase().includes(searchQuery)).forEach(card => {
+                        const cardEl = createCardElement(card);
+                        cardEl.addEventListener('click', () => {
+                            if (selectedCards.length < 20) {
+                                selectedCards.push(card);
+                                renderSelectedCards();
+                            } else {
+                                alert('Deck is full (20 cards max)!');
+                            }
+                        });
+                        deckBuilderCardsContainer.appendChild(cardEl);
+                    });
+                }
+
+                renderSelectedCards();
+                renderAvailableCards();
+            }
+
+            function renderPacks() {
+                packContainer.innerHTML = `
+                    <div class="pack-card"></div>
+                    <div class="pack-card"></div>
+                    <div class="pack-card"></div>
+                    <div class="pack-card"></div>
+                    <div class="pack-card"></div>
+                `;
+
+                buyPackButton.addEventListener('click', async function() {
+                    if (userBalance < 100) {
+                        alert('Not enough $GBuX to buy a pack!');
+                        return;
+                    }
+                    if (mintedCards >= 100000) {
+                        alert('Global card limit reached!');
+                        buyPackButton.disabled = true;
+                        return;
+                    }
+
+                    userBalance -= 100;
+                    packCount -= 1;
+                    updateBalanceDisplay();
+                    packOpening.classList.remove('hidden');
+
+                    const cards = [];
+                    for (let i = 0; i < 3; i++) {
+                        let tribeObj, isEthereal = false;
+                        if (isOnline && Math.random() < 0.02) {
+                            const { data } = await supabase.from('ethereal_signature_tracker').select('*').eq('is_minted', false);
+                            if (data.length > 0) {
+                                tribeObj = tribes.EtherealSignature;
+                                isEthereal = true;
+                            } else {
+                                tribeObj = getRandom(Object.values(tribes).filter(t => t.name !== 'EtherealSignature'), 'probability');
+                            }
+                        } else {
+                            tribeObj = getRandom(Object.values(tribes).filter(t => t.name !== 'EtherealSignature'), 'probability');
+                        }
+
+                        const season0Id = Math.floor(Math.random() * 100) + 1;
+                        const cardId = generateCardId(walletAddress, Date.now() + i);
+                        const serialNumber = mintedCards + i + 1;
+
+                        let extraAbility = null;
+                        if (Math.random() < 0.1) {
+                            extraAbility = getRandom(abilities, 'probability');
+                        }
+
+                        let rareTrait = null;
+                        if (Math.random() < 0.15) {
+                            rareTrait = getRandom(rareTraits, 'probability');
+                        }
+
+                        const baseCard = season0.find(c => c.id === season0Id) || { attack: 1, health: 1, mana_cost: 1, backgroundImage: 'https://i.imgur.com/KzcmBtg.png', name: `Card ${season0Id}`, description: '', type: 'minion' };
+                        const card = {
+                            card_id: cardId,
+                            season0_id: season0Id,
+                            tribe: tribeObj.name,
+                            owner_wallet: walletAddress,
+                            serial_number: serialNumber,
+                            attack: isEthereal ? baseCard.attack + 2 : baseCard.attack,
+                            health: isEthereal ? baseCard.health + 2 : (rareTrait?.name === 'legendary_foil' ? baseCard.health + 2 : baseCard.health),
+                            mana_cost: baseCard.mana_cost,
+                            backgroundImage: baseCard.backgroundImage,
+                            has_haste: extraAbility?.field === 'has_haste',
+                            has_allies_boost: extraAbility?.field === 'has_allies_boost',
+                            has_double_strike: extraAbility?.field === 'has_double_strike',
+                            has_stealth: extraAbility?.field === 'has_stealth',
+                            has_gold_shield: extraAbility?.field === 'has_gold_shield',
+                            has_rare_glyph: !!rareTrait?.fields?.has_rare_glyph,
+                            glyph_ability: rareTrait?.fields?.glyph_ability || null,
+                            has_legendary_foil: !!rareTrait?.fields?.has_legendary_foil,
+                            created_at: new Date().toISOString(),
+                            name: baseCard.name,
+                            description: baseCard.description,
+                            type: baseCard.type
+                        };
+
+                        if (await checkDuplicate(season0Id, tribeObj.name, walletAddress)) {
+                            userBalance += season0Id <= 50 ? 10 : (isEthereal ? 200 : 50);
+                            updatePlayerBalance(walletAddress, userBalance);
+                            updateBalanceDisplay();
+                            document.getElementById(`pack-card-back-${i+1}`).innerHTML = `<p class="text-center text-[#D4A017] mt-20">Duplicate! Credited ${season0Id <= 50 ? 10 : (isEthereal ? 200 : 50)} $GBuX</p>`;
+                            continue;
+                        }
+
+                        if (await saveCard(card)) {
+                            if (isEthereal && isOnline) {
+                                await supabase.from('ethereal_signature_tracker').update({ is_minted: true, owner_wallet: walletAddress }).eq('season0_id', season0Id);
+                            }
+                            ownedCards.push(card);
+                            cards.push(card);
+                            mintedCards++;
+                            const cardBackEl = document.getElementById(`pack-card-back-${i+1}`);
+                            cardBackEl.innerHTML = `
+                                <div class="card-layers">
+                                    <img src="${tribeObj.background}" class="card-background">
+                                    <div class="tribe-effect">
+                                        <img src="${tribeObj.effect}" class="${tribeObj.effectClass}" style="width: 100%; height: 100%; object-fit: contain;">
+                                    </div>
+                                    ${rareTrait ? `<div class="card-rarity-effect"><img src="${rareTrait.icon}" class="${rareTrait.effectClass}" style="width: 100%; height: 100%; object-fit: contain;"></div>` : ''}
+                                    <img src="${card.backgroundImage}" class="card-minion">
+                                    <div class="card-name">${card.name}</div>
+                                    <div class="card-stats">
+                                        <div class="stat">${card.attack}</div>
+                                        <div class="stat">${card.health}</div>
+                                    </div>
+                                    <div class="card-cost">${card.mana_cost}</div>
+                                    <div class="card-description">${card.description || tribeObj.ability}${extraAbility ? ', ' + extraAbility.desc : ''}${rareTrait ? ', ' + rareTrait.ability : ''}</div>
+                                    <div class="card-ability-icons">${extraAbility ? `<div class="ability-icon" style="background-image: url(${extraAbility.icon})"></div>` : ''}</div>
+                                    <div class="card-serial">Season 0 #${card.serial_number}/100,000</div>
+                                </div>
+                            `;
+                        } else {
+                            document.getElementById(`pack-card-back-${i+1}`).innerHTML = `<p class="text-center text-red-500 mt-20">Failed to save card!</p>`;
+                        }
+                    }
+
+                    packCards.forEach(card => {
+                        card.addEventListener('click', function() {
+                            if (!this.classList.contains('revealed')) {
+                                this.classList.add('revealed');
+                                this.querySelector('.pack-card-inner').style.transform = 'rotateY(180deg)';
+                                checkAllCardsRevealed();
+                            }
+                        });
+                    });
+
+                    function checkAllCardsRevealed() {
+                        const revealedCards = document.querySelectorAll('.pack-reveal-card.revealed');
+                        if (revealedCards.length === 3) {
+                            setTimeout(() => {
+                                packOpening.classList.add('hidden');
+                                packCards.forEach(card => {
+                                    card.classList.remove('revealed');
+                                    card.querySelector('.pack-card-inner').style.transform = '';
+                                });
+                                packContainer.innerHTML = '';
+                                cards.forEach(c => {
+                                    const finalCard = createCardElement(c);
+                                    packContainer.appendChild(finalCard);
+                                });
+                                updatePlayerBalance(walletAddress, userBalance);
+                                renderLibrary();
+                            }, 3000);
+                        }
+                    }
+                });
+            }
+
+            // Profile Account Tabs Implementation
+            class GrudgeAccountSystem {
+                constructor(options = {}) {
+                    this.userAvatarEl = userAvatar;
+                    this.profileModalEl = profileModal;
+                    this.closeProfileBtn = closeProfileBtn;
+                    this.profileTabs = profileTabs;
+                    this.profileContents = profileContents;
+                    this.updateProfileBtn = updateProfileBtn;
+                    this.usernameInput = usernameInput;
+                    this.emailInput = emailInput;
+                    this.walletInput = walletInput;
+                    this.aiOption1 = aiOption1;
+                    this.aiOption2 = aiOption2;
+                    this.newMessageBtn = newMessageBtn;
+                    this.buyGbuxBtn = buyGbuxBtn;
+                    this.transferBtn = transferBtn;
+                    this.viewHistoryBtn = viewHistoryBtn;
+                    this.parseAppId = options.parseAppId || 'gweV5ZdFH1KoB5UjbMWaL1p3ibrWwP60x3h209wN';
+                    this.parseClientKey = options.parseClientKey || 'KufWUA0fkXcnax61fjSBUvvbgR3VMnC8iVBpohi';
+                    this.parseServerURL = options.parseServerURL || 'https://parseapi.back4app.com/';
+                    this.onAiChange = options.onAiChange || null;
+                    this.userData = {
+                        objectId: '',
+                        username: '',
+                        email: '',
+                        walletAddress: ''
+                    };
+                    this.init();
+                }
+
+                init() {
+                    if (window.Parse) {
+                        Parse.initialize(this.parseAppId, this.parseClientKey);
+                        Parse.serverURL = this.parseServerURL;
+                    }
+
+                    this.userAvatarEl.addEventListener('click', () => this.openProfile());
+                    this.closeProfileBtn.addEventListener('click', () => this.closeProfile());
+                    this.profileTabs.forEach(tab => {
+                        tab.addEventListener('click', () => this.switchTab(tab));
+                    });
+                    this.aiOption1.addEventListener('click', () => this.selectAiOption(this.aiOption1));
+                    this.aiOption2.addEventListener('click', () => this.selectAiOption(this.aiOption2));
+                    this.updateProfileBtn.addEventListener('click', () => this.updateProfile());
+                    this.newMessageBtn.addEventListener('click', () => this.createNewMessage());
+                    this.buyGbuxBtn.addEventListener('click', () => this.buyGbux());
+                    this.transferBtn.addEventListener('click', () => this.transferGbux());
+                    this.viewHistoryBtn.addEventListener('click', () => this.viewFullHistory());
+                    this.profileModalEl.addEventListener('click', (e) => {
+                        if (e.target === this.profileModalEl) {
+                            this.closeProfile();
+                        }
+                    });
+                    guildsIcon.addEventListener('click', () => {
+                        this.openProfile('wallet');
+                    });
+                    this.loadUserData();
+                }
+
+                async loadUserData() {
+                    if (window.Parse) {
+                        const currentUser = Parse.User.current();
+                        if (currentUser) {
+                            this.userData = {
+                                objectId: currentUser.id,
+                                username: currentUser.get('username') || '',
+                                email: currentUser.get('email') || '',
+                                walletAddress: currentUser.get('walletAddress') || ''
+                            };
+                            this.updateUserDataUI();
+                        }
+                    } else {
+                        this.userData = {
+                            objectId: 'user123',
+                            username: 'GrudgeWarlord_42',
+                            email: 'warlord@example.com',
+                            walletAddress: walletAddress
+                        };
+                        this.updateUserDataUI();
+                    }
+                }
+
+                updateUserDataUI() {
+                    this.usernameInput.value = this.userData.username;
+                    this.emailInput.value = this.userData.email;
+                    this.walletInput.value = this.userData.walletAddress;
+                    document.getElementById('username-display').textContent = this.userData.username || 'Not logged in';
+                }
+
+                openProfile(tab = 'account') {
+                    this.profileModalEl.style.display = 'flex';
+                    this.switchTab(document.querySelector(`.profile-tab[data-tab="${tab}"]`));
+                }
+
+                closeProfile() {
+                    this.profileModalEl.style.display = 'none';
+                }
+
+                switchTab(clickedTab) {
+                    const tabName = clickedTab.getAttribute('data-tab');
+                    this.profileTabs.forEach(tab => tab.classList.remove('active'));
+                    clickedTab.classList.add('active');
+                    this.profileContents.forEach(content => {
+                        content.classList.toggle('active', content.getAttribute('data-tab') === tabName);
+                    });
+                }
+
+                selectAiOption(option) {
+                    this.aiOption1.classList.remove('active');
+                    this.aiOption2.classList.remove('active');
+                    option.classList.add('active');
+                    const selectedImage = option.getAttribute('data-image');
+                    if (this.onAiChange) {
+                        this.onAiChange(selectedImage);
+                    }
+                    this.saveAiPreference(selectedImage);
+                }
+
+                async saveAiPreference(imageUrl) {
+                    if (window.Parse && this.userData.objectId) {
+                        try {
+                            const currentUser = Parse.User.current();
+                            if (currentUser) {
+                                currentUser.set('aiAssistant', imageUrl);
+                                await currentUser.save();
+                            }
+                        } catch (error) {
+                            console.error('Error saving AI preference:', error);
+                        }
+                    }
+                }
+
+                async updateProfile() {
+                    const username = this.usernameInput.value.trim();
+                    const email = this.emailInput.value.trim();
+                    if (!username || !email) {
+                        alert('Username and email are required');
+                        return;
+                    }
+                    if (window.Parse) {
+                        try {
+                            const currentUser = Parse.User.current();
+                            if (currentUser) {
+                                currentUser.set('username', username);
+                                currentUser.set('email', email);
+                                await currentUser.save();
+                                this.userData.username = username;
+                                this.userData.email = email;
+                                alert('Profile updated successfully');
+                            }
+                        } catch (error) {
+                            console.error('Error updating profile:', error);
+                            alert('Error updating profile: ' + error.message);
+                        }
+                    } else {
+                        this.userData.username = username;
+                        this.userData.email = email;
+                        alert('Profile updated successfully (demo mode)');
+                    }
+                    this.updateUserDataUI();
+                }
+
+                createNewMessage() {
+                    alert('New message feature would open here');
+                }
+
+                buyGbux() {
+                    alert('GBUX purchase feature would open here');
+                }
+
+                transferGbux() {
+                    alert('GBUX transfer feature would open here');
+                }
+
+                viewFullHistory() {
+                    alert('Full transaction history would open here');
+                }
+
+                getSelectedAI() {
+                    return this.aiOption1.classList.contains('active') ? this.aiOption1.getAttribute('data-image') : this.aiOption2.getAttribute('data-image');
+                }
+            }
+
+            // AI Assistant Implementation
+            class GrudgeAssistant {
+                constructor(options = {}) {
+                    this.assistantEl = aiAssistant;
+                    this.bubbleEl = aiBubble;
+                    this.chatPanelEl = chatPanel;
+                    this.closeChatBtn = closeChatBtn;
+                    this.chatContentEl = chatContent;
+                    this.chatInputEl = chatInput;
+                    this.sendChatBtn = sendChatBtn;
+                    this.apiKey = options.apiKey || '';
+                    this.characterImage = options.characterImage || 'https://i.imgur.com/klAa6aX.png';
+                    this.bubbleFrequency = options.bubbleFrequency || 3600000;
+                    this.openAiEndpoint = options.openAiEndpoint || 'https://api.openai.com/v1/chat/completions';
+                    this.model = options.model || 'gpt-2.5-turbo';
+                    this.chatHistory = [];
+                    this.isShowingBubble = false;
+                    this.isPvpMode = false;
+                    this.init();
+                }
+
+                init() {
+                    this.setCharacterImage(this.characterImage);
+                    this.assistantEl.addEventListener('click', () => this.openChat());
+                    this.closeChatBtn.addEventListener('click', () => this.closeChat());
+                    this.sendChatBtn.addEventListener('click', () => this.sendMessage());
+                    this.chatInputEl.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') this.sendMessage();
+                    });
+                    this.scheduleBubble();
+                    this.schedulePeriodicMessages();
+                    setTimeout(() => this.showBubble(), 5000);
+                }
+
+                setCharacterImage(imageUrl) {
+                    this.characterImage = imageUrl;
+                    this.assistantEl.querySelector('img').src = imageUrl;
+                    document.querySelector('.ai-avatar').src = imageUrl;
+                }
+
+                showBubble(message = 'Need help? Click to chat with me!') {
+                    if (this.isPvpMode) return;
+                    this.isShowingBubble = true;
+                    this.bubbleEl.textContent = message;
+                    this.bubbleEl.classList.add('show');
+                    setTimeout(() => {
+                        this.bubbleEl.classList.remove('show');
+                        this.isShowingBubble = false;
+                    }, 5000);
+                }
+
+                scheduleBubble() {
+                    setTimeout(() => {
+                        this.showBubble();
+                        this.scheduleBubble();
+                    }, this.bubbleFrequency);
+                }
+
+                schedulePeriodicMessages() {
+                    setTimeout(() => {
+                        if (!this.isPvpMode && !this.chatPanelEl.style.display === 'flex') {
+                            const message = this.getFallbackResponse();
+                            this.showBubble(message);
+                        }
+                        this.schedulePeriodicMessages();
+                    }, Math.random() * 60000 + 60000);
+                }
+
+                openChat() {
+                    if (this.isPvpMode) return;
+                    this.chatPanelEl.style.display = 'flex';
+                    if (this.isShowingBubble) {
+                        this.bubbleEl.classList.remove('show');
+                        this.isShowingBubble = false;
+                    }
+                }
+
+                closeChat() {
+                    this.chatPanelEl.style.display = 'none';
+                }
+
+                addMessage(message, sender) {
+                    const messageEl = document.createElement('div');
+                    messageEl.className = `${sender}-message message`;
+                    messageEl.textContent = message;
+                    this.chatContentEl.appendChild(messageEl);
+                    this.chatContentEl.scrollTop = this.chatContentEl.scrollHeight;
+                    this.chatHistory.push({ role: sender === 'user' ? 'user' : 'assistant', content: message });
+                }
+
+                async sendMessage() {
+                    const message = this.chatInputEl.value.trim();
+                    if (!message) return;
+                    this.addMessage(message, 'user');
+                    this.chatInputEl.value = '';
+                    try {
+                        const response = await this.getAiResponse(message);
+                        this.addMessage(response, 'ai');
+                    } catch (error) {
+                        console.error('Error getting AI response:', error);
+                        this.addMessage('Sorry, I encountered an error. Please try again later.', 'ai');
+                    }
+                }
+
+                async getAiResponse(message) {
+                    if (this.apiKey) {
+                        try {
+                            const response = await fetch(this.openAiEndpoint, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${this.apiKey}`
+                                },
+                                body: JSON.stringify({
+                                    model: this.model,
+                                    messages: [
+                                        { role: 'system', content: 'You are a helpful assistant for the Grudge Warlords card game. Keep responses concise, under 100 words. Focus on game mechanics, card strategies, and helping new players.' },
+                                        ...this.chatHistory.slice(-5),
+                                        { role: 'user', content: message }
+                                    ],
+                                    max_tokens: 150,
+                                    temperature: 0.7
+                                })
+                            });
+                            const data = await response.json();
+                            return data.choices[0].message.content;
+                        } catch (error) {
+                            console.error('OpenAI API error:', error);
+                            return this.getFallbackResponse();
+                        }
+                    } else {
+                        return this.getFallbackResponse();
+                    }
+                }
+
+                getFallbackResponse() {
+                    const responses = [
+                        "I'm here to help you with Grudge Warlords! What would you like to know?",
+                        "Each tribe has unique abilities. Blood For Conquest excels at attack power!",
+                        "You can earn GBUX by winning matches and selling cards in the auction house.",
+                        "Try opening card packs to expand your collection and build stronger decks!",
+                        "The weekend tournament is coming up soon. Make sure your deck is ready!",
+                        "Iron Will (Silver) cards give each other +1 HP at the start of your turn.",
+                        "Tribal War (Orange) cards summon a 1/1 taunt when you have another in hand.",
+                        "Fabled (Purple) cards reduce mana cost of other Fabled cards you hold.",
+                        "Need help building a deck? Focus on synergies between cards of the same tribe."
+                    ];
+                    return responses[Math.floor(Math.random() * responses.length)];
+                }
+
+                setPvpMode(isPvp) {
+                    this.isPvpMode = isPvp;
+                    if (isPvp) {
+                        this.closeChat();
+                        this.assistantEl.style.display = 'none';
+                    } else {
+                        this.assistantEl.style.display = 'block';
+                    }
+                }
+            }
+
+            // Initialize account system and assistant
+            const grudgeAssistant = new GrudgeAssistant({
+                apiKey: '',
+                characterImage: 'https://i.imgur.com/klAa6aX.png'
+            });
+
+            const grudgeAccount = new GrudgeAccountSystem({
+                onAiChange: (imageUrl) => {
+                    grudgeAssistant.setCharacterImage(imageUrl);
+                }
+            });
+
+            // Tab navigation
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                    button.classList.add('active');
+                    const tabContent = document.getElementById(button.dataset.tab);
+                    if (tabContent) tabContent.classList.add('active');
+                    const isPvpTab = button.dataset.tab === 'pvp';
+                    grudgeAssistant.setPvpMode(isPvpTab);
+                    switch (button.dataset.tab) {
+                        case 'library': renderLibrary(); break;
+                        case 'create-card': renderCreateCard(); break;
+                        case 'build': renderBuild(); break;
+                        case 'packs': renderPacks(); break;
+                    }
+                });
+            });
+
+            // Library interactions
+            toggleOwnedButton.addEventListener('click', () => {
+                showOwnedOnly = !showOwnedOnly;
+                toggleOwnedButton.textContent = showOwnedOnly ? 'Show All Cards' : 'Show Owned Only';
+renderLibrary();
+});
+
+searchBar.addEventListener('input', () => {
+renderLibrary();
+});
+
+// PvP and PvE interactions
+startPvpButton.addEventListener('click', () => {
+pvpStatus.textContent = 'Searching for opponent...';
+pvpStatus.classList.remove('hidden');
+setTimeout(() => {
+pvpStatus.textContent = 'Opponent found! Match starting soon.';
+setTimeout(() => pvpStatus.classList.add('hidden'), 2000);
+}, 2000);
+});
+
+startPveButton.addEventListener('click', () => {
+pveStatus.textContent = 'Preparing AI opponent...';
+pveStatus.classList.remove('hidden');
+setTimeout(() => {
+pveStatus.textContent = 'AI opponent ready! Battle starting.';
+setTimeout(() => pveStatus.classList.add('hidden'), 2000);
+}, 2000);
+});
+
+// Login and sync
+loginButton.addEventListener('click', async () => {
+isOnline = true;
+await syncLocalCards();
+if (supabase) {
+const { data } = await supabase.from('players').select('gbux_balance, owned_cards').eq('wallet_address', walletAddress);
+if (data.length > 0) {
+userBalance = data[0].gbux_balance;
+ownedCards = await supabase.from('cards').select('*').in('card_id', data[0].owned_cards);
+ownedCards = ownedCards.data;
+}
+const { data: cardCount } = await supabase.from('cards').select('serial_number').order('serial_number', { ascending: false }).limit(1);
+mintedCards = cardCount[0]?.serial_number || 0;
+}
+grudgeAccount.loadUserData();
+renderLibrary();
+});
+
+// Network status
+window.addEventListener('online', () => {
+isOnline = true;
+syncLocalCards();
+});
+window.addEventListener('offline', () => {
+isOnline = false;
+});
+
+// Initialize
+ownedCards = localCards;
+userBalance = localBalance;
+packCount = localPacks;
+renderLibrary();
+});
+</script>
+
+</body>
+ </html>

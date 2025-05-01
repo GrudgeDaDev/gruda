@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Minter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Card Minter</h1>
+    </header>
+    <main>
+        <section id="minting-section">
+            <h2>Mint Your Cards</h2>
+            <form id="minting-form">
+                <label for="card-name">Card Name:</label>
+                <input type="text" id="card-name" name="card-name" required>
+                <label for="card-description">Card Description:</label>
+                <textarea id="card-description" name="card-description" required></textarea>
+                <label for="card-image">Card Image URL:</label>
+                <input type="url" id="card-image" name="card-image" required>
+                <button type="submit">Mint Card</button>
+            </form>
+        </section>
+        <section id="minted-cards">
+            <h2>Minted Cards</h2>
+            <ul id="cards-list"></ul>
+        </section>
+    </main>
+    <script src="scripts.js"></script>
+</body>
+</html>
