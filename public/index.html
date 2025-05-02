@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>grudge Warlords - Season0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/web3@1.8.0/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/parse@3.4.3/dist/parse.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/parse/dist/parse.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --card-width: 340px;
+            --card-height: 480px;
+            --card-transition-duration: 800ms;
+            --card-transition-easing: ease;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .heading-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .scene {
+            position: relative;
+            width: var(--card-width);
+            height: var(--card-height);
+            perspective: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transform-origin: center right;
+            transition: transform var(--card-transition-duration) var(--card-transition-easing);
+        }
+
+        .card.is-flipped {
+            transform: translateX(-100%) rotateY(-180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .card-face-front {
+            background-position: center;
+            background-size: cover;
+            transform: rotateY(0);
+            z-index: 2;
+        }
+
+        .card-face-back {
+            background-position: center;
+            background-size: cover;
+            transform: rotateY(180deg);
+        }
+
+        .card-content {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translatey(0px); }
+            50% { transform: translatey(-10px); }
+            100% { transform: translatey(0px); }
+        }
+
+        .glow {
+            filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.6));
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+
+        .bg-gradient {
+            background: linear-gradient(45deg, rgba(0,0,0,0.7) 0%, rgba(139,0,0,0.4) 100%);
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
+        }
+
+        .flip-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 0, 0, 0.3);
+            color: white;
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+        }
+
+        .flip-btn:hover {
+            background: rgba(255, 0, 0, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        input, select {
+            background: rgba(30, 30, 30, 0.7) !important;
+            border: 1px solid rgba(255, 0, 0, 0.3) !important;
+            color: white !important;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: rgba(255, 0, 0, 0.7) !important;
+            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.2) !important;
+        }
+
+        button {
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #300;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #600 0%, #f00 100%);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        /* 3D Card effects */
+        .card-container {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+
+        .scene-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-position: center;
+            background-size: cover;
+            background-image: url('https://i.imgur.com/CAlghbJ.jpg');
+        }
+
+        .scene-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.9) 100%);
+        }
+
+        /* Particle effect */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background-color: rgba(255, 0, 0, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Background image -->
+    <div class="scene-bg"></div>
+    <div class="scene-overlay"></div>
+
+    <!-- Main container -->
+    <div class="container mx-auto px-4 py-8 min-h-screen flex flex-col items-center justify-center">
+        <!-- Logo and title -->
+        <div class="text-center mb-12 animate-float">
+            <img src="https://i.imgur.com/OjhZdN9.png" alt="grudge Warlords" class="w-40 h-40 mx-auto glow">
+            <div class="mt-4">
+                <h1 class="text-4xl font-bold glow-text">GRUDGE WARLORDS</h1>
+                <div class="inline-block bg-red-900 text-white px-3 py-1 rounded-md text-sm mt-2">SEASON 0</div>
+            </div>
+        </div>
+
+        <!-- Season progress (always visible) -->
+        <div class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 bg-black/80 backdrop-blur-sm rounded-full px-5 py-2 text-sm flex items-center shadow-lg shadow-red-900/30">
+            <div class="w-2 h-2 rounded-full bg-red-500 mr-2 animate-pulse"></div>
+            <span class="text-white" id="season-progress">Season0: 0 / 100,000 Cards</span>
+        </div>
+
+        <!-- 3D Card Scene -->
+        <div class="scene">
+            <div class="card" id="card">
+                <!-- Front card face (Local Login) -->
+                <div class="card-face card-face-front" style="background-image: url('https://i.imgur.com/FqkZqZb.png');">
+                    <div class="card-overlay"></div>
+                    <div class="card-badge">LOCAL LOGIN</div>
+                    <div class="card-content">
+                        <div class="flex-1 flex flex-col justify-center">
+                            <div class="text-center mb-6">
+                                <h2 class="text-2xl font-bold mb-1">BATTLE AWAITS</h2>
+                                <p class="text-gray-400 text-sm">Sign in to continue your conquest</p>
+                            </div>
+                            
+                            <form id="login-form" class="space-y-4">
+                                <div class="space-y-2">
+                                    <label for="email" class="text-gray-300 block text-sm">Email</label>
+                                    <input 
+                                        type="email" 
+                                        id="email" 
+                                        placeholder="warlord@grudgestudio.com"
+                                        class="w-full px-4 py-2 rounded-md text-white"
+                                        required
+                                    >
+                                </div>
+                                
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <label for="password" class="text-gray-300 block text-sm">Password</label>
+                                        <a href="#" class="text-xs text-red-400 hover:text-red-300">Forgot?</a>
+                                    </div>
+                                    <input 
+                                        type="password" 
+                                        id="password" 
+                                        placeholder="••••••••"
+                                        class="w-full px-4 py-2 rounded-md text-white"
+                                        required
+                                    >
+                                </div>
+
+                                <input type="hidden" id="redirect-url" name="redirect-url" value="https://www.grudgeplatform.com/card-minter">
+
+                                <div class="pt-2">
+                                    <button 
+                                        type="submit"
+                                        class="w-full bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white py-2 rounded-md font-medium"
+                                    >
+                                        ENTER BATTLEFIELD
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            <div class="relative flex items-center gap-4 py-4">
+                                <div class="border-t border-zinc-800 flex-grow"></div>
+                                <span class="text-xs text-zinc-500">OR</span>
+                                <div class="border-t border-zinc-800 flex-grow"></div>
+                            </div>
+                            
+                            <button 
+                                id="discord-login"
+                                class="w-full bg-indigo-900/30 border border-indigo-800 text-white hover:bg-indigo-800/50 py-2 rounded-md font-medium flex items-center justify-center"
+                            >
+                                <!-- Discord logo -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.084.084 0 0 0-.09.036c-.242.42-.512.996-.7 1.444a16.089 16.089 0 0 0-4.854 0c-.188-.448-.464-1.025-.705-1.444a.09.09 0 0 0-.09-.036 19.03 19.03 0 0 0-4.884 1.491.075.075 0 0 0-.035.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 0 0 .031.055 19.237 19.237 0 0 0 5.786 2.925.084.084 0 0 0 .092-.028c.495-.68.94-1.396 1.321-2.146a.082.082 0 0 0-.045-.115 12.62 12.62 0 0 1-1.804-.865.083.083 0 0 1-.008-.138c.121-.09.242-.186.357-.283a.085.085 0 0 1 .085-.013c4.296 1.968 8.948 1.968 13.201 0a.085.085 0 0 1 .085.013c.116.097.237.193.358.283a.083.083 0 0 1-.007.139c-.576.337-1.178.628-1.805.865a.082.082 0 0 0-.045.115c.388.75.826 1.466 1.32 2.146a.083.083 0 0 0 .092.028 19.188 19.188 0 0 0 5.786-2.925.085.085 0 0 0 .032-.055c.5-5.177-.838-9.674-3.549-13.442a.065.065 0 0 0-.035-.027zM8.02 15.278c-1.14 0-2.08-1.049-2.08-2.337 0-1.288.918-2.337 2.08-2.337 1.168 0 2.096 1.056 2.08 2.337 0 1.288-.918 2.337-2.08 2.337zm7.683 0c-1.14 0-2.08-1.049-2.08-2.337 0-1.288.918-2.337 2.08-2.337 1.168 0 2.096 1.056 2.08 2.337 0 1.288-.918 2.337-2.08 2.337z"/>
+                                </svg>
+                                CONNECT WITH DISCORD
+                            </button>
+                        </div>
+                    </div>
+                    <button class="flip-btn" id="flip-to-back">OAuth Options →</button>
+                </div>
+                
+                <!-- Back card face (OAuth Login) -->
+                <div class="card-face card-face-back" style="background-image: url('https://i.imgur.com/o0d99bB.png');">
+                    <div class="card-overlay"></div>
+                    <div class="card-badge">OAUTH LOGIN</div>
+                    <div class="card-content">
+                        <div class="flex-1 flex flex-col justify-center">
+                            <div class="text-center mb-6">
+                                <h2 class="text-2xl font-bold mb-1">CONNECT WALLET</h2>
+                                <p class="text-gray-400 text-sm">Choose your preferred connection method</p>
+                            </div>
+                            
+                            <!-- Wallet Address Section -->
+                            <div class="mb-6">
+                                <label for="wallet-address" class="text-gray-300 block text-sm mb-2">Wallet Address</label>
+                                <div class="flex">
+                                    <input 
+                                        type="text" 
+                                        id="wallet-address" 
+                                        placeholder="0x..."
+                                        class="flex-1 px-4 py-2 rounded-l-md text-white bg-zinc-800/50 border-zinc-700"
+                                    >
+                                    <button 
+                                        id="connect-wallet"
+                                        class="bg-red-800 hover:bg-red-700 text-white px-3 py-2 rounded-r-md"
+                                    >
+                                        Connect
+                                    </button>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Use for public access and card ownership verification</p>
+                            </div>
+                            
+                            <button 
+                                id="github-login"
+                                class="w-full bg-zinc-800/70 border border-zinc-700 text-white hover:bg-zinc-700 py-2 rounded-md font-medium flex items-center justify-center mb-4"
+                            >
+                                <!-- GitHub logo -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                                </svg>
+                                CONNECT WITH GITHUB
+                            </button>
+                            
+                            <!-- Web3 wallet options -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <button 
+                                    id="metamask-login"
+                                    class="bg-zinc-800/70 border border-zinc-700 text-white hover:bg-zinc-700 py-2 px-3 rounded-md font-medium flex items-center justify-center"
+                                >
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask" class="h-5 w-5 mr-2">
+                                    METAMASK
+                                </button>
+                                <button 
+                                    id="walletconnect-login"
+                                    class="bg-zinc-800/70 border border-zinc-700 text-white hover:bg-zinc-700 py-2 px-3 rounded-md font-medium flex items-center justify-center"
+                                >
+                                    <svg width="20" height="20" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-2">
+                                        <path d="M48.0047 0C21.4935 0 0 21.4934 0 48.0047C0 74.5156 21.4935 96.0093 48.0047 96.0093C74.5155 96.0093 96.0092 74.5159 96.0092 48.0047C96.0092 21.4934 74.5155 0 48.0047 0Z" fill="white"/>
+                                        <path d="M26.1202 48.0047C26.1202 44.3231 29.1051 41.3384 32.7868 41.3384H48.0047V34.6722C48.0047 30.9906 51.0899 28.0059 54.7715 28.0059H62.8346V41.3384H54.7715V48.0047H62.8346C66.5163 48.0047 69.5009 45.0198 69.5009 41.3384V28.0059C69.5009 24.3243 66.5161 21.3396 62.8346 21.3396H54.7715C51.0899 21.3396 48.0047 18.355 48.0047 14.6734V8.00708C48.0047 4.3255 45.0198 1.34082 41.3384 1.34082C37.6568 1.34082 34.6722 4.3255 34.6722 8.00708V21.3396H26.1202C22.4386 21.3396 19.4539 24.3243 19.4539 28.0059V41.3384C19.4539 45.0198 22.4386 48.0047 26.1202 48.0047Z" fill="#3C99FC"/>
+                                        <path d="M69.9124 48.0047C69.9124 51.6863 66.9275 54.671 63.2457 54.671H48.0047V61.3372C48.0047 65.0188 45.0195 68.0035 41.3379 68.0035H33.2748V54.671H41.3379V48.0047H33.2748C29.5932 48.0047 26.6084 50.9896 26.6084 54.671V68.0035C26.6084 71.6851 29.5932 74.6698 33.2748 74.6698H41.3379C45.0195 74.6698 48.0047 77.6544 48.0047 81.336V88.0024C48.0047 91.6842 50.9896 94.6689 54.671 94.6689C58.3526 94.6689 61.3373 91.6842 61.3373 88.0024V74.6698H69.9124C73.594 74.6698 76.5786 71.6851 76.5786 68.0035V54.671C76.5786 50.9896 73.594 48.0047 69.9124 48.0047Z" fill="#3C99FC"/>
+                                    </svg>
+                                    WALLETCONNECT
+                                </button>
+                            </div>
+
+                            <div class="relative flex items-center gap-4 py-4 mt-2">
+                                <div class="border-t border-zinc-800 flex-grow"></div>
+                                <span class="text-xs text-zinc-500">COMING SOON</span>
+                                <div class="border-t border-zinc-800 flex-grow"></div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <button 
+                                    disabled
+                                    class="opacity-50 cursor-not-allowed bg-zinc-800/40 border border-zinc-800 text-gray-500 py-2 px-3 rounded-md font-medium flex items-center justify-center"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/>
+                                    </svg>
+                                    GOOGLE
+                                </button>
+                                <button 
+                                    disabled
+                                    class="opacity-50 cursor-not-allowed bg-zinc-800/40 border border-zinc-800 text-gray-500 py-2 px-3 rounded-md font-medium flex items-center justify-center"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M16.462 16.9s-1.533 1.647-2.983 1.647-1.538-.792-3.02-.792-1.872.728-3.005.832c-1.08.097-2.641-1.61-4.124-4.405-1.575-2.946-1.726-6.144.6-7.888 1.045-.777 2.304-1.194 3.525-1.194 1.175 0 2.282.802 3.021.802.733 0 2.098-.847 3.605-.72 1.1.03 2.421.53 3.278 1.493-3.2 1.745-2.603 6.474.103 10.225zM13.544 4.865c-.065 0-.133-.01-.203-.023-.777.983-1.86 1.68-3.062 1.647-.155-1.164.428-2.35 1.112-3.126.74-.84 2.027-1.426 3.09-1.47.14 1.155-.373 2.338-1.081 3.124-.388.425-.787.821-1.234.85-.2.007-.413-.028-.622-.002z"/>
+                                    </svg>
+                                    APPLE
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="flip-btn" id="flip-to-front">← Local Login</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- User dashboard (only shown when logged in) -->
+        <div id="user-dashboard" class="hidden mt-8 w-full max-w-md bg-black/70 backdrop-blur-xl rounded-lg p-6 shadow-xl shadow-red-900/20">
+            <div class="text-center mb-4">
+                <h2 class="text-xl font-bold heading-font">WELCOME, WARLORD</h2>
+                <p class="text-gray-400 text-sm" id="user-display-name">Connected</p>
+                <p class="text-red-400 text-xs mt-1 truncate max-w-full" id="wallet-display">0x</p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="bg-zinc-900/80 rounded-md p-3 text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto mb-1 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                    </svg>
+                    <div class="text-lg font-bold">0</div>
+                    <div class="text-xs text-gray-400">Packs Owned</div>
+                </div>
+                <div class="bg-zinc-900/80 rounded-md p-3 text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto mb-1 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    <div class="text-lg font-bold">0</div>
+                    <div class="text-xs text-gray-400">Cards Owned</div>
+                </div>
+            </div>
+            
+            <button 
+                id="open-packs-btn"
+                class="w-full bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white py-2 rounded-md font-medium mb-3"
+            >
+                OPEN CARD PACKS
+            </button>
+            
+            <button 
+                id="auction-house-btn"
+                class="w-full border border-red-800 text-red-500 hover:bg-red-950 py-2 rounded-md font-medium mb-3"
+            >
+                AUCTION HOUSE
+            </button>
+            
+            <button 
+                id="pvp-battle-btn"
+                class="w-full border border-indigo-800 text-indigo-500 hover:bg-indigo-950 py-2 rounded-md font-medium flex items-center justify-center"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                ENTER PVP BATTLE
+            </button>
+            
+            <div class="mt-4 flex justify-between items-center">
+                <button
+                    id="view-progress-btn"
+                    class="text-sm text-red-500 hover:text-red-400"
+                >
+                    Season Progress
+                </button>
+                
+                <button
+                    id="logout-btn"
+                    class="text-sm text-gray-500 hover:text-gray-400"
+                >
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Season progress modal (only shown when button clicked) -->
+        <div id="progress-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+            <div class="bg-black/90 rounded-lg p-6 w-full max-w-md mx-4 shadow-2xl shadow-red-900/20 border border-red-900/30">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold heading-font">SEASON0 PROGRESS</h2>
+                    <p class="text-gray-400 text-sm">Tracking card distribution</p>
+                </div>
+                
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-gray-400">Cards Minted</span>
+                            <span class="text-sm font-bold" id="cards-minted-count">0 / 100,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" id="cards-progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-zinc-900/80 rounded-md p-3 text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto mb-1 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                            </svg>
+                            <div class="text-lg font-bold" id="packs-opened-count">0</div>
+                            <div class="text-xs text-gray-400">Packs Opened</div>
+                        </div>
+                        <div class="bg-zinc-900/80 rounded-md p-3 text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto mb-1 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <div class="text-lg font-bold" id="cards-in-auction-count">0</div>
+                            <div class="text-xs text-gray-400">Cards in Auction</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-zinc-900/60 rounded-md p-4">
+                        <h3 class="font-medium mb-3 heading-font">Season0 Milestones</h3>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex items-start gap-2">
+                                <div id="milestone-1" class="w-4 h-4 rounded-full flex-shrink-0 mt-0.5 bg-zinc-700"></div>
+                                <div>
+                                    <span id="milestone-1-text" class="text-gray-400">
+                                        25,000 Cards - Special Edition Drops Unlocked
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <div id="milestone-2" class="w-4 h-4 rounded-full flex-shrink-0 mt-0.5 bg-zinc-700"></div>
+                                <div>
+                                    <span id="milestone-2-text" class="text-gray-400">
+                                        50,000 Cards - Legendary Card Rate Increased
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <div id="milestone-3" class="w-4 h-4 rounded-full flex-shrink-0 mt-0.5 bg-zinc-700"></div>
+                                <div>
+                                    <span id="milestone-3-text" class="text-gray-400">
+                                        75,000 Cards - Exclusive Tournament Access
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <div id="milestone-4" class="w-4 h-4 rounded-full flex-shrink-0 mt-0.5 bg-zinc-700"></div>
+                                <div>
+                                    <span id="milestone-4-text" class="text-gray-400">
+                                        100,000 Cards - Season0 Complete, Season1 Teaser
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-6">
+                    <button
+                        id="close-progress-btn"
+                        class="bg-red-800 hover:bg-red-700 text-white px-6 py-2 rounded-md font-medium"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Parse/Back4app initialization
+        Parse.initialize("KufWUA0fkXcnax61fjSBUvvbgR3VMnC8iVBpohiR", "tkhLbN9t0i0z31FTjYQySkrgPNgjoUWbOSQ3FWxd");
+        Parse.serverURL = "https://parseapi.back4app.com/";
+
+        // DOM elements
+        const card = document.getElementById('card');
+        const flipToBackBtn = document.getElementById('flip-to-back');
+        const flipToFrontBtn = document.getElementById('flip-to-front');
+        const loginForm = document.getElementById('login-form');
+        const discordLoginBtn = document.getElementById('discord-login');
+        const githubLoginBtn = document.getElementById('github-login');
+        const metamaskLoginBtn = document.getElementById('metamask-login');
+        const walletconnectLoginBtn = document.getElementById('walletconnect-login');
+        const connectWalletBtn = document.getElementById('connect-wallet');
+        const walletAddressInput = document.getElementById('wallet-address');
+        const userDashboard = document.getElementById('user-dashboard');
+        const userDisplayName = document.getElementById('user-display-name');
+        const walletDisplay = document.getElementById('wallet-display');
+        const openPacksBtn = document.getElementById('open-packs-btn');
+        const auctionHouseBtn = document.getElementById('auction-house-btn');
+        const pvpBattleBtn = document.getElementById('pvp-battle-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const viewProgressBtn = document.getElementById('view-progress-btn');
+        const progressModal = document.getElementById('progress-modal');
+        const closeProgressBtn = document.getElementById('close-progress-btn');
+        const seasonProgress = document.getElementById('season-progress');
+        const cardsMintedCount = document.getElementById('cards-minted-count');
+        const cardsProgressBar = document.getElementById('cards-progress-bar');
+        const packsOpenedCount = document.getElementById('packs-opened-count');
+        const cardsInAuctionCount = document.getElementById('cards-in-auction-count');
+        const milestone1 = document.getElementById('milestone-1');
+        const milestone2 = document.getElementById('milestone-2');
+        const milestone3 = document.getElementById('milestone-3');
+        const milestone4 = document.getElementById('milestone-4');
+        const milestone1Text = document.getElementById('milestone-1-text');
+        const milestone2Text = document.getElementById('milestone-2-text');
+        const milestone3Text = document.getElementById('milestone-3-text');
+        const milestone4Text = document.getElementById('milestone-4-text');
+
+        // Discord OAuth config
+        const DISCORD_CLIENT_ID = "1343652840526188564";
+        const DISCORD_REDIRECT_URI = "https://www.grudgeplatform.com/card-minter";
+        const DISCORD_SCOPES = "identify guilds guilds.join gdm.join";
+
+        // Current user state
+        let currentUser = null;
+        let currentWallet = null;
+
+        // Card state
+        let cardStats = {
+            totalCards: 0,
+            packsOpened: 0,
+            cardsInAuction: 0
+        };
+
+        // Check for existing session
+        const checkLoggedInUser = async () => {
+            try {
+                const sessionToken = localStorage.getItem('sessionToken');
+                const walletAddress = localStorage.getItem('walletAddress');
+                
+                if (sessionToken) {
+                    try {
+                        // Verify session token with Back4app
+                        const response = await fetch('https://parseapi.back4app.com/users/me', {
+                            method: 'GET',
+                            headers: {
+                                'X-Parse-Application-Id': 'KufWUA0fkXcnax61fjSBUvvbgR3VMnC8iVBpohiR',
+                                'X-Parse-REST-API-Key': 'P8ZOwgQ3DxezoZJmCXGc6h3875blssAXldE1pEqk',
+                                'X-Parse-Session-Token': sessionToken
+                            }
+                        });
+                        
+                        const data = await response.json();
+                        if (!data.error) {
+                            currentUser = data;
+                            if (walletAddress) {
+                                currentWallet = walletAddress;
+                            }
+                            showUserDashboard();
+                        }
+                    } catch (error) {
+                        console.error("Error verifying session:", error);
+                    }
+                }
+            } catch (error) {
+                console.error("Error checking logged in user:", error);
+            }
+        };
+
+        // Show user dashboard
+        const showUserDashboard = () => {
+            card.classList.add('hidden');
+            userDashboard.classList.remove('hidden');
+            
+            if (currentUser) {
+                userDisplayName.textContent = currentUser.username || currentUser.email || "Warlord";
+            }
+            
+            if (currentWallet) {
+                walletDisplay.textContent = currentWallet;
+            } else {
+                walletDisplay.textContent = "No wallet connected";
+            }
+            
+            fetchCardStats();
+        };
+
+        // Fetch card stats
+        const fetchCardStats = async () => {
+            try {
+                // Mock data for demonstration
+                // In production, replace with actual API call
+                cardStats = {
+                    totalCards: 37642,
+                    packsOpened: 5391,
+                    cardsInAuction: 987
+                };
+                
+                updateCardStatsDisplay();
+            } catch (error) {
+                console.error("Error fetching card stats:", error);
+            }
+        };
+
+        // Update card stats display
+        const updateCardStatsDisplay = () => {
+            // Update season progress indicator
+            seasonProgress.textContent = `Season0: ${cardStats.totalCards.toLocaleString()} / 100,000 Cards`;
+            
+            // Update progress modal
+            cardsMintedCount.textContent = `${cardStats.totalCards.toLocaleString()} / 100,000`;
+            const progressPercentage = Math.min((cardStats.totalCards / 100000) * 100, 100);
+            cardsProgressBar.style.width = `${progressPercentage}%`;
+            
+            packsOpenedCount.textContent = cardStats.packsOpened.toLocaleString();
+            cardsInAuctionCount.textContent = cardStats.cardsInAuction.toLocaleString();
+            
+            // Update milestones
+            if (cardStats.totalCards >= 25000) {
+                milestone1.classList.add('bg-green-500');
+                milestone1.classList.remove('bg-zinc-700');
+                milestone1Text.classList.add('text-green-400');
+                milestone1Text.classList.remove('text-gray-400');
+            }
+            
+            if (cardStats.totalCards >= 50000) {
+                milestone2.classList.add('bg-green-500');
+                milestone2.classList.remove('bg-zinc-700');
+                milestone2Text.classList.add('text-green-400');
+                milestone2Text.classList.remove('text-gray-400');
+            }
+            
+            if (cardStats.totalCards >= 75000) {
+                milestone3.classList.add('bg-green-500');
+                milestone3.classList.remove('bg-zinc-700');
+                milestone3Text.classList.add('text-green-400');
+                milestone3Text.classList.remove('text-gray-400');
+            }
+            
+            if (cardStats.totalCards >= 100000) {
+                milestone4.classList.add('bg-green-500');
+                milestone4.classList.remove('bg-zinc-700');
+                milestone4Text.classList.add('text-green-400');
+                milestone4Text.classList.remove('text-gray-400');
+            }
+        };
+
+        // Card flip handlers
+        flipToBackBtn.addEventListener('click', () => {
+            card.classList.add('is-flipped');
+        });
+
+        flipToFrontBtn.addEventListener('click', () => {
+            card.classList.remove('is-flipped');
+        });
+
+        // Login form handler
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const redirectUrl = document.getElementById('redirect-url').value;
+            
+            try {
+                // Login with Back4app
+                const user = await Parse.User.logIn(email, password);
+                
+                currentUser = {
+                    objectId: user.id,
+                    username: user.get('username'),
+                    email: user.get('email')
+                };
+                
+                localStorage.setItem('sessionToken', user.getSessionToken());
+                
+                // Redirect to card-minter
+                window.location.href = redirectUrl;
+            } catch (error) {
+                console.error("Login error:", error);
+                alert("Login failed: " + error.message);
+            }
+        });
+
+        // Discord login handler
+        discordLoginBtn.addEventListener('click', () => {
+            const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&scope=${DISCORD_SCOPES}`;
+            
+            window.location.href = discordAuthUrl;
+        });
+
+        // GitHub login handler
+        githubLoginBtn.addEventListener('click', () => {
+            // Replace with your actual GitHub OAuth URL
+            alert("GitHub OAuth integration would be implemented here");
+        });
+
+        // MetaMask login handler
+        metamaskLoginBtn.addEventListener('click', async () => {
+            if (window.ethereum) {
+                try {
+                    // Request account access
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    handleWalletConnection(accounts[0]);
+                } catch (error) {
+                    console.error("MetaMask connection error:", error);
+                    alert("Failed to connect to MetaMask: " + error.message);
+                }
+            } else {
+                alert("MetaMask is not installed. Please install it to use this feature.");
+            }
+        });
+
+        // WalletConnect login handler
+        walletconnectLoginBtn.addEventListener('click', () => {
+            alert("WalletConnect integration would be implemented here");
+        });
+
+        // Connect wallet handler
+        connectWalletBtn.addEventListener('click', () => {
+            const walletAddress = walletAddressInput.value.trim();
+            
+            if (walletAddress.startsWith('0x') && walletAddress.length === 42) {
+                handleWalletConnection(walletAddress);
+            } else {
+                alert("Please enter a valid Ethereum wallet address");
+            }
+        });
+
+        // Handle wallet connection
+        const handleWalletConnection = async (walletAddress) => {
+            try {
+                currentWallet = walletAddress;
+                localStorage.setItem('walletAddress', walletAddress);
+                
+                if (!currentUser) {
+                    // Create anonymous user session with wallet
+                    const anonymousUser = await Parse.AnonymousUtils.logIn();
+                    
+                    currentUser = {
+                        objectId: anonymousUser.id,
+                        username: `Wallet-${walletAddress.substr(2, 6)}`,
+                        isAnonymous: true
+                    };
+                    
+                    localStorage.setItem('sessionToken', anonymousUser.getSessionToken());
+                    
+                    // Associate wallet with user
+                    anonymousUser.set('walletAddress', walletAddress);
+                    await anonymousUser.save();
+                }
+                
+                // Show dashboard or redirect
+                showUserDashboard();
+            } catch (error) {
+                console.error("Wallet connection error:", error);
+                alert("Failed to connect wallet: " + error.message);
+            }
+        };
+
+        // Open packs button handler
+        openPacksBtn.addEventListener('click', () => {
+            window.location.href = "https://www.grudgeplatform.com/card-minter";
+        });
+
+        // Auction house button handler
+        auctionHouseBtn.addEventListener('click', () => {
+            window.location.href = "https://www.grudgeplatform.com/auction-house";
+        });
+
+        // PVP battle button handler
+        pvpBattleBtn.addEventListener('click', () => {
+            // Log PVP interaction
+            localStorage.setItem('pvpMode', 'true');
+            window.location.href = "https://www.grudgeplatform.com/pvp-battle";
+        });
+
+        // Logout button handler
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await Parse.User.logOut();
+                
+                localStorage.removeItem('sessionToken');
+                currentUser = null;
+                
+                // Don't remove wallet address on logout
+                
+                // Show login form
+                userDashboard.classList.add('hidden');
+                card.classList.remove('hidden');
+                card.classList.remove('is-flipped');
+            } catch (error) {
+                console.error("Logout error:", error);
+                alert("Logout failed: " + error.message);
+            }
+        });
+
+        // View progress button handler
+        viewProgressBtn.addEventListener('click', () => {
+            progressModal.classList.remove('hidden');
+        });
+
+        // Close progress button handler
+        closeProgressBtn.addEventListener('click', () => {
+            progressModal.classList.add('hidden');
+        });
+
+        // Close modal when clicking outside
+        progressModal.addEventListener('click', (e) => {
+            if (e.target === progressModal) {
+                progressModal.classList.add('hidden');
+            }
+        });
+
+        // Check URL for authentication code (OAuth callback)
+        const checkForAuthCode = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            
+            if (code) {
+                // Handle OAuth callback
+                // In production, send this code to your backend for verification
+                console.log("Received auth code:", code);
+                
+                // Mock successful authentication
+                alert("OAuth authentication successful! Code: " + code);
+                
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        };
+
+        // Create particle effect
+        const createParticles = () => {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size (pixels)
+                const size = Math.random() * 3 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random opacity
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+                
+                // Animation
+                particle.style.animation = `float ${Math.random() * 10 + 10}s linear infinite`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        };
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            checkLoggedInUser();
+            checkForAuthCode();
+            fetchCardStats();
+        });
+
+        // Redirect to card-minter
+        window.location.href = "https://www.grudgeplatform.com/card-minter";
+    </script>
+</body>
+</html>
