@@ -1,40 +1,1252 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus season0 Card Viewer</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <h1>Nexus season0 Card Viewer</h1>
-    </header>
-    <main>
-        <section id="minting">
-            <h2>Mint Your Cards</h2>
-            <button id="mintButton">Mint 3 Cards</button>
-            <div id="mintingResult"></div>
-        </section>
-    </main>
-    <script src="scripts.js"></script>
+    <title>Nexus Season 0 Card Viewer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <script>
-        document.getElementById('mintButton').addEventListener('click', async () => {
-            const response = await fetch('/api/cards/mint', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-parse-session-token': 'YOUR_SESSION_TOKEN'
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'grudge-dark': '#0f172a',
+                        'grudge-primary': '#1e293b',
+                        'grudge-accent': '#10b981',
+                        'ethereal-glow': '#10b981',
+                        'tribe-silver': '#C0C0C0',
+                        'tribe-red': '#FF0000',
+                        'tribe-purple': '#800080',
+                        'tribe-orange': '#FFA500',
+                        'tribe-signature': '#00FF00',
+                        'rarity-common': '#808080',
+                        'rarity-uncommon': '#00FF00',
+                        'rarity-rare': '#0000FF',
+                        'rarity-epic': '#800080',
+                        'rarity-legendary': '#008080',
+                        'rarity-signature': '#FFD700'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .card-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 3 / 4;
+            z-index: 100;
+        }
+
+        .hue-change {
+            animation: hueShift 5s infinite ease-in-out;
+            opacity: 0.7;
+        }
+
+        @keyframes hueShift {
+
+            0%,
+            100% {
+                filter: hue-rotate(0deg);
+            }
+
+            50% {
+                filter: hue-rotate(60deg);
+            }
+        }
+
+        .blood-drops {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 45%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .blood-drop {
+            position: absolute;
+            width: 15px;
+            height: 32px;
+            background: #8B0000;
+            border-radius: 50%;
+            animation: bloodDrip 1.5s infinite ease-in-out;
+            animation-delay: calc(6s * var(--i));
+        }
+
+        @keyframes bloodDrip {
+            0% {
+                transform: translateY(-100%);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+        }
+
+        .card-bubble {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9rem;
+            z-index: 100;
+        }
+
+        .info-panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 20;
+        }
+
+        .text-content {
+            position: absolute;
+            text-align: center;
+            z-index: 25;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            font-family: 'Cinzel', serif;
+        }
+
+        .ability-icons {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .rarity-glow {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .rarity-glow:hover {
+            transform: scale(1.1);
+        }
+
+        .modal-content {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-popout {
+            animation: bounce 0.5s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: scale(0.8);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .settings-panel {
+            max-height: 55vh;
+            overflow-y: auto;
+            background-color: #1e293b;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .color-picker {
+            width: 100%;
+            height: 2rem;
+        }
+
+        .bright-modal {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            padding: 1.5rem;
+            max-width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .close-x {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            font-size: 1.5rem;
+            color: #000000;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-grudge-dark text-white">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8">
+            <img src="https://i.imgur.com/qdcHcAl.png" alt="Nexus Season 0 Banner"
+                class="w-full max-w-4xl mx-auto mb-4">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl sm:text-3xl font-bold text-ethereal-glow font-cinzel">Nexus Season 0 Card Viewer
+                </h1>
+                <div class="flex gap-4">
+                    <button id="buy-packs-btn"
+                        class="bg-grudge-accent hover:bg-opacity-80 text-white px-4 py-2 rounded">Buy Packs</button>
+                    <button id="mint-btn" class="bg-grudge-accent hover:bg-opacity-80 text-white px-4 py-2 rounded">Mint
+                        Random Card</button>
+                    <button id="toggle-settings"
+                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Toggle Settings</button>
+                </div>
+            </div>
+            <div id="settings-panel" class="settings-panel hidden">
+                <h2 class="text-xl font-bold text-ethereal-glow mb-4 font-cinzel">Settings</h2>
+                <div class="mb-4">
+                    <label for="component-select" class="block text-sm font-medium">Select Component</label>
+                    <select id="component-select" class="w-full bg-gray-700 text-white p-2 rounded">
+                        <option value="background">Background</option>
+                        <option value="animation">Animation</option>
+                        <option value="minion-image">Minion Image</option>
+                        <option value="info-panel">Info Panel</option>
+                        <option value="text-content">Text Content</option>
+                        <option value="cost-bubble">Cost Bubble</option>
+                        <option value="attack-bubble">Attack Bubble</option>
+                        <option value="health-bubble">Health Bubble</option>
+                        <option value="season-badge">Season 0 Badge</option>
+                        <option value="uuid">UUID</option>
+                        <option value="emblem">Season Emblem</option>
+                        <option value="rare-trait">Rare Trait</option>
+                        <option value="ability-stealth">Ability: Stealth</option>
+                        <option value="ability-taunt">Ability: Taunt</option>
+                        <option value="ability-haste">Ability: Haste</option>
+                        <option value="ability-healOnPlay">Ability: Heal on Play</option>
+                        <option value="ability-goldshield">Ability: Gold Shield</option>
+                        <option value="ability-doubleStrike">Ability: Double Strike</option>
+                        <option value="ability-allyboost">Ability: Ally Boost</option>
+                    </select>
+                </div>
+                <div id="controls" class="space-y-4"></div>
+                <div class="mt-4 flex gap-4">
+                    <button id="reset-btn"
+                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Reset</button>
+                    <button id="save-btn" class="bg-grudge-accent hover:bg-opacity-80 text-white px-4 py-2 rounded">Save
+                        Settings</button>
+                </div>
+            </div>
+        </header>
+
+        <div id="card-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+        </div>
+        
+        <div id="buy-packs-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden">
+            <div class="bright-modal">
+                <button class="close-x" id="close-buy-packs">✕</button>
+                <h2 class="text-2xl font-bold text-black mb-4 font-cinzel">Buy Packs</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-black">Starter Pack (5 cards, 10 GBUX)</span>
+                        <button class="buy-pack-btn bg-grudge-accent hover:bg-opacity-80 text-white px-4 py-2 rounded"
+                            data-pack="starter">Buy</button>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-black">Premium Pack (10 cards, 50 GBUX)</span>
+                        <button class="buy-pack-btn bg-grudge-accent hover:bg-opacity-80 text-white px-4 py-2 rounded"
+                            data-pack="premium">Buy</button>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-black">Legendary Pack (3 cards, 100 GBUX)</span>
+                        <button class="buy-pack-btn bg-grudge-accent hover:bg-opacity-80 text-white px-4 py-2 rounded"
+                            data-pack="legendary">Buy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="mint-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden">
+            <div class="bright-modal">
+                <button class="close-x" id="close-modal">✕</button>
+                <h2 class="text-2xl font-bold text-black mb-4 font-cinzel">Minted Card</h2>
+                <div id="minted-card" class="flex flex-wrap justify-center gap-4"></div>
+                <p id="mint-count" class="text-center mt-2 text-black"></p>
+            </div>
+        </div>
+
+        <div id="info-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+            <div class="relative bg-grudge-primary p-4 rounded-lg max-w-md w-full modal-content">
+                <div id="info-background" class="absolute inset-0 w-full h-full object-cover opacity-50 z-10"></div>
+                <div id="info-card" class="relative flex justify-center mb-4 z-20 card-popout"></div>
+                <div id="info-content" class="relative text-white z-20 font-cinzel"></div>
+                <button id="close-info-modal"
+                    class="mt-4 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded z-20">Close</button>
+            </div>
+        </div>
+
+        <script>
+            const infoModal = document.getElementById('info-modal');
+            const closeInfoModalButton = document.getElementById('close-info-modal');
+
+            // Function to show the modal
+            function showInfoModal() {
+                infoModal.classList.remove('hidden');
+                infoModal.classList.add('z-50'); // Bring to the front
+            }
+
+            // Function to hide the modal
+            function closeInfoModal() {
+                infoModal.classList.add('hidden');
+                infoModal.classList.remove('z-50');
+            }
+
+            // Attach event listener to the close button
+            closeInfoModalButton.addEventListener('click', closeInfoModal);
+        </script>
+    </div>
+
+    <script>
+        const tribes = {
+            silver: {
+                name: 'Iron Will',
+                background: 'https://i.imgur.com/QPQXtX5.png',
+                animation: 'hue-change',
+                abilities: {
+                    allyboost: 'https://i.imgur.com/a3CzNJ0.png',
+                    taunt: 'https://i.imgur.com/WAzuv7r.png',
+                    haste: 'https://i.imgur.com/rTCkU7a.png',
+                    healOnPlay: 'https://i.imgur.com/jUIOb9F.png',
+                    goldshield: 'https://i.imgur.com/IfGIBpr.png',
+                    doubleStrike: 'https://i.imgur.com/3aaDfMe.png',
+                    stealth: 'https://i.imgur.com/rTCkU7a.png'
                 },
-                body: JSON.stringify({
-                    userId: 'YOUR_USER_ID',
-                    cardId: 'YOUR_CARD_ID',
-                    gbuxCost: 10
-                })
+                rareTraits: {
+                    life: 'https://i.imgur.com/t5mq84x.png',
+                    fire: 'https://i.imgur.com/VJeVEqw.png',
+                    foil: 'https://i.imgur.com/iA0cqGn.png'
+                },
+                textColor: 'text-orange-500',
+                infoPanel: 'https://i.imgur.com/o5Q5RDs.png',
+                emblem: 'https://i.imgur.com/SRoq392.png',
+                borderColor: '#C0C0C0',
+                badgeColor: '#C0C0C0',
+                probability: 0.40,
+                uiBackground: 'https://i.imgur.com/HxZVpEP.png',
+                upgrade: 'Each Iron Will minion gains +1 HP at turn start if multiple on field',
+                spell: 'Plays 1/1 Grudge'
+            },
+            red: {
+                name: 'Blood For Conquest',
+                background: 'https://i.imgur.com/FqkZqZb.png',
+                animation: 'blood-drops',
+                animationImage: 'https://i.imgur.com/AaVIUKR.png',
+                abilities: {
+                    allyboost: 'https://i.imgur.com/a3CzNJ0.png',
+                    taunt: 'https://i.imgur.com/WAxuv7r.png',
+                    haste: 'https://i.imgur.com/rTCkU7a.png',
+                    healOnPlay: 'https://i.imgur.com/jUIOb9F.png',
+                    goldshield: 'https://i.imgur.com/IfGIBpr.png',
+                    doubleStrike: 'https://i.imgur.com/3aaDfMe.png',
+                    stealth: 'https://i.imgur.com/rTCkU7a.png'
+                },
+                rareTraits: {
+                    life: 'https://i.imgur.com/t5mq84x.png',
+                    fire: 'https://i.imgur.com/VJeVEqw.png',
+                    foil: 'https://i.imgur.com/iA0cqGn.png'
+                },
+                textColor: 'text-black',
+                infoPanel: 'https://i.imgur.com/o5Q5RDs.png',
+                emblem: 'https://i.imgur.com/SRoq392.png',
+                borderColor: '#FF0000',
+                badgeColor: '#FF0000',
+                probability: 0.10,
+                uiBackground: 'https://i.imgur.com/sZEdhnc.png',
+                upgrade: '+1 Attack to existing Red minions on summon (this turn only)',
+                spell: 'Give all Grudges +1/+0'
+            },
+            purple: {
+                name: 'Fabled',
+                background: 'https://i.imgur.com/G0hXKXn.png',
+                animation: 'static-image',
+                animationImage: 'https://i.imgur.com/cXhb3ym.jpeg',
+                abilities: {
+                    allyboost: 'https://i.imgur.com/a3CzNJ0.png',
+                    taunt: 'https://i.imgur.com/WAzuv7r.png',
+                    haste: 'https://i.imgur.com/rTCkU7a.png',
+                    healOnPlay: 'https://i.imgur.com/jUIOb9F.png',
+                    goldshield: 'https://i.imgur.com/IfGIBpr.png',
+                    doubleStrike: 'https://i.imgur.com/3aaDfMe.png',
+                    stealth: 'https://i.imgur.com/rTCkU7a.png'
+                },
+                rareTraits: {
+                    life: 'https://i.imgur.com/t5mq84x.png',
+                    fire: 'https://i.imgur.com/VJeVEqw.png',
+                    foil: 'https://i.imgur.com/iA0cqGn.png'
+                },
+                textColor: 'text-green-500',
+                infoPanel: 'https://i.imgur.com/cBOudVO.png',
+                emblem: 'https://i.imgur.com/SRoq392.png',
+                borderColor: '#800080',
+                badgeColor: '#800080',
+                probability: 0.15,
+                uiBackground: 'https://i.imgur.com/Jvy5pNT.png',
+                upgrade: 'Each Fabled reduces mana cost of other Fabled cards by 1 (min 0)',
+                spell: 'Give all Grudges +0/+1'
+            },
+            orange: {
+                name: 'Tribal War',
+                background: 'https://i.imgur.com/yPR4E8e.png',
+                animation: 'minion-image',
+                animationImage: 'https://i.imgur.com/bG2yiT1.png',
+                abilities: {
+                    allyboost: 'https://i.imgur.com/a3CzNJ0.png',
+                    taunt: 'https://i.imgur.com/WAzuv7r.png',
+                    haste: 'https://i.imgur.com/rTCkU7a.png',
+                    healOnPlay: 'https://i.imgur.com/jUIOb9F.png',
+                    goldshield: 'https://i.imgur.com/IfGIBpr.png',
+                    doubleStrike: 'https://i.imgur.com/3aaDfMe.png',
+                    stealth: 'https://i.imgur.com/rTCkU7a.png'
+                },
+                rareTraits: {
+                    life: 'https://i.imgur.com/t5mq84x.png',
+                    fire: 'https://i.imgur.com/VJeVEqw.png',
+                    foil: 'https://i.imgur.com/iA0cqGn.png'
+                },
+                textColor: 'text-black',
+                infoPanel: 'https://i.imgur.com/QOhedad.png',
+                emblem: 'https://i.imgur.com/SRoq392.png',
+                borderColor: '#FFA500',
+                badgeColor: '#FFA500',
+                probability: 0.35,
+                uiBackground: 'https://i.imgur.com/nYRG2sj.png',
+                upgrade: 'Spawns 1/1 Taunt minion (https://i.imgur.com/bG2yiT1.png) on play',
+                spell: 'Heal player for 1 Health'
+            },
+            signature: {
+                name: 'Ethereal Signature',
+                background: 'https://i.imgur.com/o0d99bB.png',
+                animation: 'static-image',
+                animationImage: 'https://i.imgur.com/48to9zn.png',
+                abilities: {
+                    allyboost: 'https://i.imgur.com/a3CzNJ0.png',
+                    taunt: 'https://i.imgur.com/WAzuv7r.png',
+                    haste: 'https://i.imgur.com/rTCkU7a.png',
+                    healOnPlay: 'https://i.imgur.com/jUIOb9F.png',
+                    goldshield: 'https://i.imgur.com/IfGIBpr.png',
+                    doubleStrike: 'https://i.imgur.com/3aaDfMe.png',
+                    stealth: 'https://i.imgur.com/rTCkU7a.png'
+                },
+                rareTraits: {
+                    life: 'https://i.imgur.com/t5mq84x.png',
+                    fire: 'https://i.imgur.com/VJeVEqw.png',
+                    foil: 'https://i.imgur.com/iA0cqGn.png'
+                },
+                textColor: 'text-yellow-400',
+                infoPanel: 'https://i.imgur.com/ZvA68iH.png',
+                emblem: 'https://i.imgur.com/SRoq392.png',
+                middleEmblem: 'https://i.imgur.com/48to9zn.png',
+                borderColor: '#FFD700',
+                badgeColor: '#00FF00',
+                probability: 0.02,
+                uiBackground: 'https://i.imgur.com/nYRG2sj.png',
+                upgrade: 'One-of-one, -1 mana cost, +2/+2, max 1 on field, max 3 in deck',
+                spell: 'Half cost of normal spells'
+            }
+        };
+
+        const heroCardIds = ['21', '55', '56', '52', '80', '92'];
+        let totalMinted = 0;
+        const maxMints = 100000;
+
+        const defaultSettings = {
+            background: { x: 0, y: -5, width: 105, height: 110, zIndex: 6, opacity: 1, borderWidth: 0, borderColor: '#000000', rotation: 0, glowIntensity: 0, glowColor: '#000000', animationDuration: 5, animationDelay: 0 },
+            animation: { x: 0, y: -11, width: 100, height: 105, zIndex: 12, opacity: 0.7, borderWidth: 0, borderColor: '#000000', rotation: 0, glowIntensity: 0, glowColor: '#000000', animationDuration: 10, animationDelay: 0 },
+            'minion-image': { x: 3, y: -13, width: 105, height: 119, zIndex: 25, opacity: 1, borderWidth: 0, borderColor: '#000000', rotation: 0, glowIntensity: 0, glowColor: '#000000' },
+            'info-panel': { x: 0, y: 77, width: 106, height: 21, zIndex: 38, opacity: 1, borderWidth: 1.4, borderColor: '#090101', rotation: 0, glowIntensity: 0, glowColor: '#000000' },
+            'text-content': { x: 22, y: 80, width: 51, height: 34, zIndex: 40, opacity: 1, fontSize: 1.31, borderWidth: 0, borderColor: '#000000', rotation: 0, glowIntensity: 0, glowColor: '#000000', textAlign: 'center', lineSpacing: 1.1, letterSpacing: 0 },
+            'cost-bubble': { x: 86, y: 1, width: 10, height: 8, zIndex: 100, opacity: 1, borderWidth: 0.8, borderColor: '#69a6f7', rotation: 0, glowIntensity: 20, glowColor: '#08fdf8', backgroundColor: '#0000FF', color: '#cb48e5' },
+            'attack-bubble': { x: 8, y: 87, width: 15, height: 11, zIndex: 100, opacity: 1, borderWidth: 0, borderColor: '#FFFFFF', rotation: 0, glowIntensity: 20, glowColor: '#ff0000', backgroundColor: '#FFFF00', color: '#000000' },
+            'health-bubble': { x: 77, y: 87, width: 15, height: 11, zIndex: 100, opacity: 1, borderWidth: 0, borderColor: '#FFFFFF', rotation: 0, glowIntensity: 20, glowColor: '#ff0000', backgroundColor: '#FF0000', color: '#000000' },
+            'season-badge': { x: 0, y: 72, width: 100, height: 5, zIndex: 100, opacity: 1, borderWidth: 1.2, borderColor: '#000000', rotation: 0, glowIntensity: 20, glowColor: '#61ff81' },
+            uuid: { x: 0, y: 15, width: 100, height: 5, zIndex: 20, opacity: 1, borderWidth: 0, borderColor: '#000000', rotation: 0, glowIntensity: 0, glowColor: '#000000' },
+            emblem: { x: 0, y: 57, width: 39, height: 15, zIndex: 50, opacity: 1, borderWidth: 0, borderColor: '#000000', rotation: 0, glowIntensity: 0, glowColor: '#000000' },
+            'rare-trait': { x: -1, y: -1, width: 113, height: 99, zIndex: 37, opacity: 0.36, borderWidth: 0, borderColor: '#ffae00', rotation: 0, glowIntensity: 20, glowColor: '#000000' },
+            'ability-stealth': { x: 63, y: -44, width: 121, height: 200, zIndex: 90, opacity: 0.54, borderWidth: 0, borderColor: '#ededed', rotation: 0, glowIntensity: 0, glowColor: '#fcfcfc', iconSize: 5.3 },
+            'ability-taunt': { x: 15, y: 18, width: 24, height: 35, zIndex: 94, opacity: 1, borderWidth: 0, borderColor: '#000000', rotation: 0, glowIntensity: 0, glowColor: '#000000', iconSize: 10 },
+            'ability-haste': { x: 10, y: 80, width: 10, height: 10, zIndex: 90, opacity: 1, borderWidth: 0, borderColor: '#000000', rotation: 0, glowIntensity: 0, glowColor: '#000000', iconSize: 9.9 },
+            'ability-healOnPlay': { x: 10, y: 80, width: 10, height: 10, zIndex: 90, opacity: 1, borderWidth: 0, borderColor: '#000000', rotation: 0, glowIntensity: 0, glowColor: '#000000', iconSize: 1 },
+            'ability-goldshield': { x: 10, y: 114, width: 27, height: 26, zIndex: 90, opacity: 1, borderWidth: 0, borderColor: '#000000', rotation: 0, glowIntensity: 0, glowColor: '#000000', iconSize: 9.5 },
+            'ability-doubleStrike': { x: 22, y: 80, width: 10, height: 19, zIndex: 90, opacity: 1, borderWidth: 0, borderColor: '#000000', rotation: 0, glowIntensity: 0, glowColor: '#000000', iconSize: 9.7 },
+            'ability-allyboost': { x: 10, y: 80, width: 36, height: 10, zIndex: 90, opacity: 1, borderWidth: 0, borderColor: '#000000', rotation: 0, glowIntensity: 0, glowColor: '#000000', iconSize: 9.5 }
+        };
+
+        let currentSettings = JSON.parse(JSON.stringify(defaultSettings));
+
+        const csvData = `cardId,name,type,image,attack,health,cost,abilities,sub_type,flavor_text,rarity
+1,Stealth Drone,Minion,https://i.imgur.com/nJMY8NA.png,1,1,1,Stealth,Ship,Quick scouting unit cloaked in shadow.,Common
+2,Cowardly Priest,Minion,https://i.imgur.com/tjWUZus.png,1,1,1,Battlecry: Restore 1 Health to your hero.,Crusade,His prayers heal, though his courage wanes.,Common
+3,Starborn Esper,Minion,https://i.imgur.com/dshnei4.png,1,2,1,,Lore,A fleeting spark of cosmic wonder.,Common
+4,Arcane Archer,Minion,https://i.imgur.com/dyPYSgc.png,2,3,2,Battlecry: Draw a card.,Lore,She channels the mysteries of the arcane.,Uncommon
+5,Alpha Skiff,Minion,https://i.imgur.com/z1fbkXx.png,2,1,2,Haste,Ship,Swift and lethal, it strikes from the void.,Common
+6,Orcish Sniper,Spell,https://i.imgur.com/nlkfMpI.png,0,0,2,Deal 1 damage to all enemies.,Legion,Arrows rain from the shadows.,Common
+7,Mace Assassin,Minion,https://i.imgur.com/lwTIb66.png,4,2,3,Stealth,Crusade,His mace delivers justice in silence.,Uncommon
+8,Swarm Legion,Minion,https://i.imgur.com/Kr5SzLh.png,3,3,3,Battlecry: Summon a 1/1 Grudge with Taunt.,Legion,A horde driven by relentless fury.,Common
+9,Frozen Phantom,Minion,https://i.imgur.com/zA4lDwj.png,2,3,3,Taunt,Legion,A ghostly sentinel, barring the enemy’s path.,Common
+10,Crimson Shade,Minion,https://i.imgur.com/3aXjZ5b.png,2,3,3,Stealth,Elf,Burns with crimson energy.,Common
+11,Ruff Worker,Minion,https://i.imgur.com/d1GQxLH.png,2,3,3,Battlecry: Give a friendly minion +1 Health.,Crusade,His labor strengthens the righteous.,Common
+12,Luminous Watcher,Minion,https://i.imgur.com/wUHrPRU.png,2,3,3,At the start of your turn: Restore 1 Health to all friendly minions.,Legion,He watches those that watch.,Rare
+13,Rolling Thalar,Minion,https://i.imgur.com/XcvBmCy.png,2,3,3,Battlecry: Give all friendly minions +1 Attack this turn.,Elf,A monk’s whisper ignited his spirit.,Rare
+14,Battle Commander,Minion,https://i.imgur.com/e1y365m.png,2,4,3,Taunt,Crusade,Leads the charge with unbreakable resolve.,Common
+15,Night Wraith,Minion,https://i.imgur.com/SuhuNa6.png,2,3,4,Stealth,Legion,Strikes from the shadows.,Uncommon
+16,Night Lord,Minion,https://i.imgur.com/45Nkl3W.png,4,3,4,Battlecry: Give a friendly minion Stealth.,Elf,Roams the shadows, cloaking allies.,Rare
+17,Gei-Eye,Minion,https://i.imgur.com/X18XmtN.png,3,3,4,Haste,Legion,Blind but swift, his strikes are unerring.,Uncommon
+18,Salvation's Stalker,Minion,https://i.imgur.com/WcoUO2G.png,2,2,4,Battlecry: Summon a 1/1 Grudge with Taunt.,Crusade,Seeks redemption in the chaos of war.,Common
+19,Storm Cavalier,Minion,https://i.imgur.com/Sb1Ev9O.png,3,4,4,Battlecry: Deal 2 damage to an enemy minion.,Crusade,His lance rides the storm’s fury.,Rare
+20,Flame Charger,Minion,https://i.imgur.com/dIIDbac.png,2,4,4,Double Strike,Legion,Charges with fiery speed.,Rare
+21,X3rror,Hero,https://i.imgur.com/4Nw3IQv.png,3,4,4,Battlecry: Summon two 1/1 Grudges with Taunt.,Elf,A glitch in Alvon’s fate, sowing chaos.,Legendary
+22,Beta Cruiser,Minion,https://i.imgur.com/grlVpW6.png,3,3,3,Battlecry: Deal 2 damage to an enemy minion.,Ship,Master of deadly precision strikes.,Uncommon
+23,Enigmatic Warrior,Minion,https://i.imgur.com/JwcxWth.png,4,3,4,,Legion,Mysterious combatant with hidden motives.,Common
+24,Barrier Vessel,Minion,https://i.imgur.com/Lajvj8w.png,0,7,4,At the start of your turn: Gain +1 Attack.,Crusade,Unyielding defense that grows stronger.,Uncommon
+25,Void Sorcerer,Minion,https://i.imgur.com/MXz3jc3.png,3,4,5,Battlecry: Deal 3 damage to a random enemy minion.,Legion,Casts dark magic from the abyss.,Rare
+26,Light Mage,Minion,https://i.imgur.com/CKgcfXb.png,3,4,5,At the start of your turn: Restore 1 Health to all friendly minions.,Elf,Shields with radiant magic.,Rare
+27,Time Caster,Minion,https://i.imgur.com/x4Ljnll.png,5,4,5,Battlecry: Return a friendly minion to your hand.,Ship,Bends time to reshape the battlefield.,Rare
+28,Radiant Paladin,Minion,https://i.imgur.com/d5Q9KNl.png,5,4,5,Taunt,Crusade,Shines with radiant power.,Uncommon
+29,Vitality Totem,Minion,https://i.imgur.com/IQrV3et.png,3,5,5,Battlecry: Restore 2 Health to all friendly characters.,Elf,Heals wounds with gentle touch.,Uncommon
+30,Ironclad Sufferer,Minion,https://i.imgur.com/5j4Sc0m.png,4,4,5,Taunt,Legion,Heavy armored enforcer enduring pain.,Common
+31,Overlord Dragon,Minion,https://i.imgur.com/2goA55f.png,4,4,5,Battlecry: Deal 2 damage to all enemy minions.,Legion,Calls lightning from stormy skies.,Common
+32,Cerb,Minion,https://i.imgur.com/RGIuubn.png,3,5,5,Haste,Celestial,Speaks all languages with ease.,Common
+33,Abyssal Keeper,Minion,https://i.imgur.com/KaUDhZt.png,5,5,5,Taunt,Legion,Heals with dark energy.,Rare
+34,Arcane Missile,Spell,https://i.imgur.com/JuxTEX9.png,0,0,1,Deal 3 damage randomly split among enemy characters.,Spell,Bolts of arcane energy seek their mark.,Common
+35,Shadow Strike,Minion,https://i.imgur.com/cOAKCRP.png,4,4,4,Battlecry: Deal 4 damage to an enemy minion.,Legion,A blade cloaked in darkness, striking true.,Uncommon
+36,Green Doctor,Minion,https://i.imgur.com/xKQM1BX.png,3,3,5,Taunt. Battlecry: Restore 6 Health to a friendly character.,Crusade,His remedies mend the gravest wounds.,Epic
+37,Mind Control,Spell,https://i.imgur.com/IIz6wjR.png,0,0,8,Take control of an enemy minion.,Spell,A whisper that bends the strongest wills.,Common
+38,Starship RiVI,Minion,https://i.imgur.com/SpwgvuM.png,3,3,6,Stealth. Battlecry: Summon two 1/1 Grudges with Taunt.,Ship,Communicates with the dead.,Epic
+39,Star Hut,Minion,https://i.imgur.com/lszPOCd.png,0,4,4,Taunt. At the start of your turn: Restore 1 Health to all friendly minions.,Ship,Predicts enemy moves with foresight.,Uncommon
+40,Engineer Prime,Minion,https://i.imgur.com/QShonG5.png,4,4,6,Battlecry: Summon two 2/2 Grudges with Taunt.,Crusade,Fortifies the front lines with precision.,Rare
+41,Starship Beta,Minion,https://i.imgur.com/BSurWbZ.png,3,3,4,Battlecry: Deal 2 damage to an enemy minion.,Ship,Deals precise strikes to fortifications.,Uncommon
+42,Starship Gamma,Minion,https://i.imgur.com/5PSOVVc.png,2,4,4,At the start of your turn: Restore 1 Health to all friendly minions.,Ship,Heals allies with cosmic energy.,Common
+43,Star Cruiser,Minion,https://i.imgur.com/0iNkSRU.png,6,5,7,Battlecry: Deal 3 damage to all enemy minions.,Ship,A juggernaut that crushes resistance.,Epic
+44,Heat Seeker,Spell,https://i.imgur.com/GBsrUb1.png,0,0,2,Deal 3 damage to a target minion.,Spell,Tracks prey across the battlefield.,Common
+45,Spirit Of Grudge,Minion,https://i.imgur.com/KqSF1B2.png,3,3,3,,Legion,Grants Undead strength that endures.,Common
+46,The Knight's Helper,Minion,https://i.imgur.com/0XcU175.png,3,3,3,Battlecry: Give a friendly minion +1 Attack.,Crusade,Grants Human loyalty to the cause.,Common
+47,Groad,Minion,https://i.imgur.com/WYSsqMY.png,4,2,3,Taunt,Legion,Grants Orc ferocity in battle.,Common
+48,Shelenif,Minion,https://i.imgur.com/6CXJn5s.png,2,4,3,,Elf,Grants Elf grace and precision.,Common
+49,Druu h'Karno,Minion,https://i.imgur.com/3NbOaQP.png,3,3,3,Battlecry: Deal 1 damage to all enemy minions.,Legion,Grants Dwarf resilience in combat.,Uncommon
+50,Kagnoat,Minion,https://i.imgur.com/a8pRbUI.png,4,3,3,Taunt,Crusade,Grants Barbarian might and fury.,Common
+51,Sly Skuller,Minion,https://i.imgur.com/0isS1vU.png,2,3,2,Poison Touch,Legion,Swift skeletal fighter with venomous strikes.,Uncommon
+52,Sleeping Dragon,Hero,https://i.imgur.com/T1O3w1g.png,4,3,4,Battlecry: Deal 3 damage to all enemy minions.,Legion,Alvon’s guardian, awakened to protect.,Legendary
+53,Tar-Gan,Minion,https://i.imgur.com/iCnwBhv.png,2,2,2,Stealth,Legion,Stealthy orc scout with deadly aim.,Common
+54,Barbarian Mace,Minion,https://i.imgur.com/3SkE6VG.png,4,2,3,,Crusade,Barbarian wielding a heavy mace.,Common
+55,The Breaker of Alvon,Hero,https://i.imgur.com/0sEB7lc.png,3,4,4,Gold Shield. Battlecry: Deal 3 damage to an enemy minion.,Crusade,Alvon’s warrior, shattering chains.,Legendary
+56,The Beloved of Alvon,Hero,https://i.imgur.com/ZHEyuU8.png,3,5,4,Battlecry: Restore 5 Health to all friendly characters.,Crusade,Alvon’s heart, mending the broken.,Legendary
+57,Rilen LongBow,Minion,https://i.imgur.com/ydKwqEy.png,3,2,3,Battlecry: Deal 1 damage to an enemy.,Elf,Precise elf archer with deadly aim.,Common
+58,Great Grunt,Minion,https://i.imgur.com/mQFU119.png,5,5,6,Gold Shield,Crusade,Armored knight with divine strength.,Epic
+59,Dawned Knight,Minion,https://i.imgur.com/nDkKg5i.png,4,5,5,Taunt,Crusade,Heavily armored dwarf knight.,Uncommon
+60,Yorda,Minion,https://i.imgur.com/UvZsOLQ.png,5,4,6,Battlecry: Give all friendly minions +1 Attack.,Crusade,Bats with thunderous force.,Common
+61,Proud Spellbinder,Minion,https://i.imgur.com/xW35xEX.png,3,3,4,Battlecry: Draw a Spell card.,Crusade,Casts arcane spells with mastery.,Uncommon
+62,Calvin,Minion,https://i.imgur.com/mHO0KZa.png,4,4,4,Haste,Crusade,Glides with icy magic.,Epic
+63,Uneasy Tombs,Minion,https://i.imgur.com/7TXqqHZ.png,3,3,3,Battlecry: Summon a 1/1 Grudge with Taunt.,Legion,Undead soldier with enduring spirit.,Common
+64,Gabsiona Federi,Minion,https://i.imgur.com/qi0ebX7.png,3,3,4,Taunt,Crusade,Human wizard casting powerful spells.,Common
+65,Sergeant of the Mace,Minion,https://i.imgur.com/1W6WH38.png,3,2,3,Battlecry: Deal 2 damage to all enemy minions.,Crusade,Human archer with deadly precision.,Common
+66,Clever Neve,Minion,https://i.imgur.com/RHdJFRv.png,2,4,3,Battlecry: Draw a card.,Elf,Undead warrior with cunning tactics.,Uncommon
+67,Double Shot,Minion,https://i.imgur.com/itUYjDf.png,3,2,3,Battlecry: Deal 2 damage to an enemy minion.,Crusade,Undead archer with ghostly arrows.,Common
+68,Wise Stien,Minion,https://i.imgur.com/UWivjA4.png,2,3,3,,Crusade,Explosive barrel used as a weapon.,Common
+69,Gorgoz,Minion,https://i.imgur.com/cCtGqVi.png,3,2,3,Battlecry: Deal 2 damage to an enemy.,Legion,Orc archer with a heavy bow.,Common
+70,Matra Healer,Minion,https://i.imgur.com/0pEl5QA.png,2,4,4,Battlecry: Restore 4 Health to a friendly minion.,Elf,Heals allies with divine light.,Uncommon
+71,Arturo of the South,Minion,https://i.imgur.com/TmWcZRr.png,5,5,6,Battlecry: Deal 3 damage to an enemy minion.,Crusade,Protects with holy power.,Common
+72,Gruuubk,Minion,https://i.imgur.com/OMos5zZ.png,5,4,5,Taunt,Legion,Heavy orc with a massive axe.,Uncommon
+73,Champion of Hope,Minion,https://i.imgur.com/dhHC7K5.png,4,5,5,Taunt. Battlecry: Restore 5 Health to all friendly characters.,Crusade,Heavily armored human warrior.,Common
+74,Hope's Demand,Minion,https://i.imgur.com/7VqdkUB.png,4,5,5,Battlecry: Give all friendly minions +1/+1.,Crusade,Undead giant with a spiked club.,Uncommon
+75,WareTree,Minion,https://i.imgur.com/gA5V2vd.png,3,6,5,Taunt,Elf,Living tree that attacks with roots.,Uncommon
+76,Small Troll,Minion,https://i.imgur.com/ep8ADev.png,3,3,3,,Legion,Small troll with regenerative powers.,Common
+77,John Wayne: Captain,Minion,https://i.imgur.com/V72hBmF.png,4,5,5,Battlecry: Deal 2 damage to all enemy minions. Stealth.,Ship,Commands the skies with grit and guile.,Epic
+78,Dwarf Enforcer,Minion,https://i.imgur.com/jTJc7XE.png,4,6,5,Taunt,Crusade,Heavy dwarf with a warhammer.,Uncommon
+79,Scourge,Minion,https://i.imgur.com/2WUEurF.png,2,2,2,Battlecry: Deal 2 damage to all enemy minions.,Legion,Dark familiar that boosts spells.,Epic
+80,Faith Bearer,Hero,https://i.imgur.com/oXH8vh7.png,5,5,6,Battlecry: Give all friendly minions Gold Shield.,Crusade,Alvon’s priest, uniting its champions.,Legendary
+81,Glorified Ending,Spell,https://i.imgur.com/E1q4QX0.png,0,0,5,Destroy an enemy minion.,Spell,A fiery judgment upon the battlefield.,Uncommon
+82,Clasmic Bolt,Spell,https://i.imgur.com/4zdaQ55.png,0,0,4,Deal 5 damage to all enemy characters.,Spell,A surge of energy that scorches foes.,Rare
+83,Spell Hammer,Spell,https://i.imgur.com/wOfSH4s.png,0,0,3,Deal 3 damage to a random enemy and draw a card.,Spell,A mystic strike that fuels sorcery.,Common
+84,Swirling Storm,Spell,https://i.imgur.com/laUgc5E.png,0,0,5,Deal 4 damage to all enemy minions.,Spell,A tempest that tears through ranks.,Epic
+85,Fireball,Spell,https://i.imgur.com/46zVuKY.png,0,0,4,Deal 6 damage to a target.,Spell,A blazing orb of destruction.,Rare
+86,Swipe of the Mage,Spell,https://i.imgur.com/uA5Kpet.png,0,0,4,Take control of an enemy minion with 3 or less Attack.,Spell,A flick of the wrist weakens foes.,Rare
+87,Forged Weapons,Spell,https://i.imgur.com/nffwcar.png,0,0,2,Give all friendly minions +2 Attack this turn.,Spell,Fresh from the forge, blades thirst for battle.,Common
+88,Special Noise!,Spell,https://i.imgur.com/WBjYFlN.png,0,0,2,Give friendly minions +2 Health and deal 2 damage to all enemy minions.,Spell,A discordant cry that bolsters allies.,Epic
+89,Book,Spell,https://i.imgur.com/53eid0D.png,0,0,1,Draw 2 cards.,Spell,Ancient pages hold forgotten secrets.,Common
+90,Light,Spell,https://i.imgur.com/ymZEywJ.png,0,0,2,Restore 4 Health to a friendly character.,Spell,A radiant glow that mends the broken.,Common
+91,Meat!,Spell,https://i.imgur.com/w4XUbaI.png,0,0,4,Restore 6 Health to a friendly character.,Spell,A feast that fuels enduring strength.,Uncommon
+92,Brothers Keeper,Hero,https://i.imgur.com/MzrTJXw.png,0,0,7,Deal 7 damage to all enemy minions.,Spell,Alvon’s vow, a shield for its champions.,Legendary
+93,Mystic Green,Spell,https://i.imgur.com/MAkqPa3.png,0,0,5,Restore 5 Health to all friendly characters.,Spell,A verdant surge that renews life.,Rare
+94,Skull Magic,Spell,https://i.imgur.com/aZWMBoG.png,0,0,6,Deal 6 damage to a target and summon a 2/2 Grudge.,Spell,Dark sorcery that binds death to life.,Rare
+95,Green Skull Magic,Spell,https://i.imgur.com/VYlB95f.png,0,0,6,Deal 5 damage to a target and restore 5 Health to your hero.,Spell,A twisted spell that takes and gives.,Rare
+96,Small Building,Minion,https://i.imgur.com/LouhX6b.png,0,5,3,Taunt. At the start of your turn: Gain +1 Attack.,Crusade,Defensive structure for enduring battles.,Common
+97,Summoning Tower,Minion,https://i.imgur.com/VcPwEZm.png,2,4,4,At the end of your turn: Give all friendly minions +1 Attack.,Crusade,Summons spirits to guard the field.,Common
+98,Armory,Minion,https://i.imgur.com/YTGTyN1.png,0,6,5,At the end of your turn: Give all friendly minions +1 Health.,Crusade,Forges weapons to empower allies.,Epic
+99,Hero Hall,Minion,https://i.imgur.com/6B4ZbFt.png,0,7,7,At the end of your turn: Give all friendly minions +1 Attack and summon a 1/1 Grudge with Taunt.,Crusade,Boosts heroes with legendary might.,Common
+100,Farm,Minion,https://i.imgur.com/KcD3SYv.png,0,4,3,At the end of your turn: Give all friendly minions +1 Health.,Crusade,Nourishes warriors with vital strength.,Common
+101,Grudge,StarterM,https://i.imgur.com/sUjTI8c.png,2,2,3,,StarterM,A restless spirit, bound to serve any master.,Common
+102,Sling Shot,StarterM,https://i.imgur.com/901uCC6.png,1,1,2,,StarterM,A simple weapon, deadly in skilled hands.,Common`;
+
+        function parseCSV(csv) {
+            const lines = csv.split('\n');
+            const headers = lines[0].split(',');
+            const cards = [];
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (line) {
+                    const values = line.split(',');
+                    const card = {};
+                    headers.forEach((header, index) => {
+                        card[header.trim()] = values[index] ? values[index].trim() : '';
+                    });
+                    cards.push(card);
+                }
+            }
+            return cards;
+        }
+
+        const cards = parseCSV(csvData);
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
             });
-            const result = await response.json();
-            document.getElementById('mintingResult').innerText = JSON.stringify(result, null, 2);
+        }
+
+        function generateSerialNumber() {
+            return totalMinted + 1;
+        }
+
+        function generatePlayerName() {
+            const names = ['Player123', 'NexusHero', 'CardMaster', 'GrudgeKing', 'EtherealSage'];
+            return names[Math.floor(Math.random() * names.length)];
+        }
+
+        function rollTribe(packType) {
+            const rand = Math.random();
+            let probabilities = {
+                silver: 0.40,
+                orange: 0.35,
+                purple: 0.15,
+                red: 0.10,
+                signature: 0.02
+            };
+            if (packType === 'premium') {
+                probabilities = {
+                    silver: 0.30,
+                    orange: 0.30,
+                    purple: 0.20,
+                    red: 0.15,
+                    signature: 0.05
+                };
+            } else if (packType === 'legendary') {
+                probabilities = {
+                    silver: 0.20,
+                    orange: 0.20,
+                    purple: 0.20,
+                    red: 0.20,
+                    signature: 0.20
+                };
+            }
+            let cumulative = 0;
+            if (rand < 0.01) return 'hero';
+            for (const tribe in probabilities) {
+                cumulative += probabilities[tribe];
+                if (rand < cumulative) return tribe;
+            }
+            return 'silver';
+        }
+
+        function rollAbility() {
+            const abilities = ['Haste', 'Ally Boost', 'Double Strike', 'Stealth', 'Gold Shield', 'Taunt'];
+            const rand = Math.random();
+            for (let i = 0; i < abilities.length; i++) {
+                if (rand < (i + 1) * 0.05) return abilities[i];
+            }
+            return null;
+        }
+
+        function rollRareTrait(packType) {
+            const chance = packType === 'legendary' ? 0.20 : packType === 'premium' ? 0.10 : 0.05;
+            if (Math.random() < chance) {
+                const traits = ['life', 'fire', 'foil'];
+                return traits[Math.floor(Math.random() * traits.length)];
+            }
+            return null;
+        }
+
+        function getAbilityIcons(effect, tribe, isRender = false) {
+            if (!effect) {
+                if (isRender) {
+                    return document.createElement('div');
+                }
+                return '';
+            }
+            effect = effect.toLowerCase();
+            const abilities = tribes[tribe].abilities;
+            let icons = [];
+            if (effect.includes('double strike')) {
+                icons.push({ type: 'doubleStrike', src: abilities.doubleStrike });
+                icons.push({ type: 'doubleStrike', src: abilities.doubleStrike });
+            }
+            if (effect.includes('ally boost') || effect.includes('give all friendly minions') || effect.includes('gains +1 atk all allied')) {
+                icons.push({ type: 'allyboost', src: abilities.allyboost });
+            }
+            if (effect.includes('haste')) {
+                icons.push({ type: 'haste', src: abilities.haste });
+            }
+            if (effect.includes('heal') || effect.includes('restore')) {
+                icons.push({ type: 'healOnPlay', src: abilities.healOnPlay });
+            }
+            if (effect.includes('gold shield')) {
+                icons.push({ type: 'goldshield', src: abilities.goldshield });
+            }
+            if (effect.includes('taunt')) {
+                icons.push({ type: 'taunt', src: abilities.taunt });
+            }
+            if (effect.includes('stealth')) {
+                icons.push({ type: 'stealth', src: abilities.stealth });
+            }
+            if (isRender) {
+                const div = document.createElement('div');
+                div.className = 'ability-icons';
+                icons.forEach((icon, index) => {
+                    const img = document.createElement('img');
+                    img.src = icon.src;
+                    img.className = 'ability-icon';
+                    img.id = `ability-${icon.type}-${index}`;
+                    div.appendChild(img);
+                });
+                return div;
+            }
+            return icons.map(icon => `<img src="${icon.src}" alt="${icon.type}" class="ability-icon">`).join('');
+        }
+
+        function getRarityGlow(rarity, tribe) {
+            if (tribe === 'signature') return 'rarity-signature';
+            switch (rarity.toLowerCase()) {
+                case 'common': return 'rarity-common';
+                case 'uncommon': return 'rarity-uncommon';
+                case 'rare': return 'rarity-rare';
+                case 'epic': return 'rarity-epic';
+                case 'legendary': return 'rarity-legendary';
+                default: return 'rarity-common';
+            }
+        }
+
+        function applyStyles(element, settings, isText = false, isIcons = false) {
+            if (!element || !settings) return;
+            element.style.left = `${settings.x}%`;
+            element.style.top = `${settings.y}%`;
+            element.style.width = `${settings.width}%`;
+            element.style.height = `${settings.height}%`;
+            element.style.zIndex = settings.zIndex;
+            element.style.opacity = settings.opacity;
+            element.style.transform = `rotate(${settings.rotation}deg)`;
+            element.style.border = `${settings.borderWidth}px solid ${settings.borderColor}`;
+            element.style.boxShadow = `0 0 ${settings.glowIntensity}px ${settings.glowColor}`;
+            if (settings.color) {
+                element.style.color = settings.color;
+            }
+            if (isText) {
+                element.style.textAlign = settings.textAlign;
+                element.style.lineHeight = `${settings.lineSpacing}em`;
+                element.style.letterSpacing = `${settings.letterSpacing}px`;
+                element.style.fontSize = `${settings.fontSize}rem`;
+            } else if (element.classList.contains('card-bubble')) {
+                element.style.borderWidth = `${settings.borderWidth}px`;
+                element.style.backgroundColor = settings.backgroundColor;
+            } else if (isIcons) {
+                const icons = element.querySelectorAll('img');
+                icons.forEach(icon => {
+                    const abilityType = icon.id.split('-')[1];
+                    const settingsKey = `ability-${abilityType}`;
+                    const iconSettings = currentSettings[settingsKey] || defaultSettings['ability-stealth'];
+                    icon.style.width = `${iconSettings.iconSize * 20}px`;
+                    icon.style.height = `${iconSettings.iconSize * 20}px`;
+                });
+            }
+            if (settings.animationDuration && element.classList.contains('blood-drops')) {
+                const drops = element.querySelectorAll('.blood-drop');
+                drops.forEach(drop => {
+                    drop.style.animationDuration = `${settings.animationDuration}s`;
+                    drop.style.animationDelay = `calc(${settings.animationDelay}s * var(--i))`;
+                });
+            } else if (settings.animationDuration && element.classList.contains('hue-change')) {
+                element.style.animationDuration = `${settings.animationDuration}s`;
+            }
+        }
+
+        function updateControls() {
+            const controlsDiv = document.getElementById('controls');
+            controlsDiv.innerHTML = '';
+            const settings = currentSettings[selectedComponent];
+            const controls = [
+                { label: 'X Position', id: 'x', min: -50, max: 150, value: settings.x, step: 1 },
+                { label: 'Y Position', id: 'y', min: -50, max: 150, value: settings.y, step: 1 },
+                { label: 'Width', id: 'width', min: 10, max: 200, value: settings.width, step: 1 },
+                { label: 'Height', id: 'height', min: 10, max: 200, value: settings.height, step: 1 },
+                { label: 'Z-Index', id: 'zIndex', min: 0, max: 100, value: settings.zIndex, step: 1 },
+                { label: 'Opacity', id: 'opacity', min: 0, max: 1, value: settings.opacity, step: 0.01 },
+                { label: 'Border Width', id: 'borderWidth', min: 0, max: 10, value: settings.borderWidth, step: 0.1 },
+                { label: 'Border Color', id: 'borderColor', type: 'color', value: settings.borderColor },
+                { label: 'Rotation', id: 'rotation', min: 0, max: 360, value: settings.rotation, step: 1 },
+                { label: 'Glow Intensity', id: 'glowIntensity', min: 0, max: 20, value: settings.glowIntensity, step: 1 },
+                { label: 'Glow Color', id: 'glowColor', type: 'color', value: settings.glowColor }
+            ];
+            if (['cost-bubble', 'attack-bubble', 'health-bubble', 'season-badge'].includes(selectedComponent)) {
+                controls.push({ label: 'Background Color', id: 'backgroundColor', type: 'color', value: settings.backgroundColor || '#000000' });
+            }
+            if (['cost-bubble', 'attack-bubble', 'health-bubble'].includes(selectedComponent)) {
+                controls.push({ label: 'Text Color', id: 'color', type: 'color', value: settings.color || '#000000' });
+            }
+            if (selectedComponent === 'text-content') {
+                controls.push(
+                    { label: 'Font Size', id: 'fontSize', min: 0.4, max: 2, value: settings.fontSize, step: 0.01 },
+                    { label: 'Text Align', id: 'textAlign', type: 'select', options: ['left', 'center', 'right'], value: settings.textAlign },
+                    { label: 'Line Spacing', id: 'lineSpacing', min: 0.8, max: 2, value: settings.lineSpacing, step: 0.1 },
+                    { label: 'Letter Spacing', id: 'letterSpacing', min: -2, max: 5, value: settings.letterSpacing, step: 0.1 }
+                );
+            }
+            if (selectedComponent.startsWith('ability-')) {
+                controls.push({ label: 'Icon Size', id: 'iconSize', min: 0.5, max: 10, value: settings.iconSize, step: 0.1 });
+            }
+            if (['background', 'animation'].includes(selectedComponent)) {
+                controls.push(
+                    { label: 'Animation Duration', id: 'animationDuration', min: 0, max: 10, value: settings.animationDuration, step: 0.1 },
+                    { label: 'Animation Delay', id: 'animationDelay', min: 0, max: 10, value: settings.animationDelay, step: 0.1 }
+                );
+            }
+            controls.forEach(control => {
+                const div = document.createElement('div');
+                if (control.type === 'color') {
+                    div.innerHTML = `
+                        <label for="${control.id}" class="block text-sm font-medium">${control.label}</label>
+                        <input type="color" id="${control.id}" value="${control.value}" class="color-picker">
+                    `;
+                    const input = div.querySelector(`#${control.id}`);
+                    input.addEventListener('input', () => {
+                        currentSettings[selectedComponent][control.id] = input.value;
+                        loadCards();
+                    });
+                } else if (control.type === 'select') {
+                    let options = control.options.map(opt => `<option value="${opt}" ${opt === control.value ? 'selected' : ''}>${opt}</option>`).join('');
+                    div.innerHTML = `
+                        <label for="${control.id}" class="block text-sm font-medium">${control.label}</label>
+                        <select id="${control.id}" class="w-full bg-gray-700 text-white p-2 rounded">${options}</select>
+                    `;
+                    const select = div.querySelector(`#${control.id}`);
+                    select.addEventListener('change', () => {
+                        currentSettings[selectedComponent][control.id] = select.value;
+                        loadCards();
+                    });
+                } else {
+                    div.innerHTML = `
+                        <label for="${control.id}" class="block text-sm font-medium">${control.label}</label>
+                        <input type="range" id="${control.id}" min="${control.min}" max="${control.max}" value="${control.value}" step="${control.step}" class="w-full">
+                        <input type="number" id="${control.id}-number" value="${control.value}" step="${control.step}" class="w-20 bg-gray-700 text-white p-1 rounded">
+                    `;
+                    const range = div.querySelector(`#${control.id}`);
+                    const number = div.querySelector(`#${control.id}-number`);
+                    range.addEventListener('input', () => {
+                        currentSettings[selectedComponent][control.id] = parseFloat(range.value);
+                        number.value = range.value;
+                        loadCards();
+                    });
+                    number.addEventListener('input', () => {
+                        currentSettings[selectedComponent][control.id] = parseFloat(number.value);
+                        range.value = number.value;
+                        loadCards();
+                    });
+                }
+                controlsDiv.appendChild(div);
+            });
+        }
+
+        let selectedComponent = 'background';
+        document.getElementById('component-select').addEventListener('change', (e) => {
+            selectedComponent = e.target.value;
+            updateControls();
         });
+
+        document.getElementById('toggle-settings').addEventListener('click', () => {
+            const panel = document.getElementById('settings-panel');
+            panel.classList.toggle('hidden');
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            currentSettings = JSON.parse(JSON.stringify(defaultSettings));
+            updateControls();
+            loadCards();
+        });
+
+        document.getElementById('save-btn').addEventListener('click', () => {
+            let notepadContent = `# Nexus Season 0 Card Settings\n# Card: All 102 Pre-Built Cards\n\n`;
+            for (const [component, settings] of Object.entries(currentSettings)) {
+                notepadContent += `## ${component.replace(/-/g, ' ').toUpperCase()}\n`;
+                for (const [key, value] of Object.entries(settings)) {
+                    notepadContent += `${key}: ${value}\n`;
+                }
+                notepadContent += `\n`;
+            }
+            const blob = new Blob([notepadContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'card_settings.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        function renderCard(card, tribe, isMinted = false, rareTrait = null, additionalAbility = null, isPopout = false, serialNumber = null) {
+            const isHero = tribe === 'hero' || heroCardIds.includes(card.cardId);
+            const tribeKey = isHero ? 'silver' : tribe;
+            const tribeInfo = tribes[tribeKey];
+            let modifiedCard = { ...card };
+
+            // Apply tribe-specific upgrades
+            if (tribeKey === 'signature') {
+                modifiedCard.cost = Math.max(0, parseInt(card.cost) - 1);
+                if (card.type.toLowerCase() === 'minion') {
+                    modifiedCard.attack = parseInt(card.attack) + 2;
+                    modifiedCard.health = parseInt(card.health) + 2;
+                }
+            }
+            if (rareTrait === 'life') {
+                modifiedCard.health = parseInt(card.health) + 1;
+            } else if (rareTrait === 'fire') {
+                modifiedCard.attack = parseInt(card.attack) + 1;
+            }
+
+            const cardElement = document.createElement('div');
+            cardElement.className = `card-container border-4 rounded-lg overflow-hidden ${isPopout ? 'w-64' : ''}`;
+            cardElement.style.borderColor = tribeInfo.borderColor;
+            applyStyles(cardElement, currentSettings.background);
+
+            // Background
+            const background = document.createElement('img');
+            background.src = tribeInfo.background;
+            background.className = 'absolute w-full h-full object-cover';
+            background.id = 'background';
+            applyStyles(background, currentSettings.background);
+            cardElement.appendChild(background);
+
+            // Animation
+            if (tribeInfo.animation === 'minion-image') {
+                const minionImg = document.createElement('img');
+                minionImg.src = tribeInfo.animationImage;
+                minionImg.className = 'absolute w-full h-full object-contain';
+                minionImg.id = 'animation';
+                applyStyles(minionImg, currentSettings.animation);
+                cardElement.appendChild(minionImg);
+            } else if (tribeInfo.animation === 'blood-drops') {
+                const dropsContainer = document.createElement('div');
+                dropsContainer.className = 'blood-drops';
+                dropsContainer.id = 'animation';
+                for (let i = 0; i < 2; i++) {
+                    const drop = document.createElement('div');
+                    drop.className = 'blood-drop';
+                    drop.style.left = `${Math.random() * 100}%`;
+                    drop.style.setProperty('--i', i);
+                    dropsContainer.appendChild(drop);
+                }
+                applyStyles(dropsContainer, currentSettings.animation);
+                cardElement.appendChild(dropsContainer);
+            } else if (tribeInfo.animation === 'static-image') {
+                const animationDiv = document.createElement('div');
+                animationDiv.className = 'absolute';
+                animationDiv.id = 'animation';
+                animationDiv.style.backgroundImage = `url(${tribeInfo.animationImage})`;
+                animationDiv.style.backgroundSize = 'cover';
+                animationDiv.style.opacity = tribeKey === 'purple' ? 0.3 : 1;
+                applyStyles(animationDiv, currentSettings.animation);
+                cardElement.appendChild(animationDiv);
+            } else if (tribeInfo.animation === 'hue-change') {
+                const animationDiv = document.createElement('div');
+                animationDiv.className = 'absolute hue-change';
+                animationDiv.id = 'animation';
+                applyStyles(animationDiv, currentSettings.animation);
+                cardElement.appendChild(animationDiv);
+            }
+
+            if (!isPopout) {
+                // UUID
+                const uuid = generateUUID();
+                const uuidDiv = document.createElement('div');
+                uuidDiv.className = 'absolute text-center text-xs';
+                uuidDiv.id = 'uuid';
+                uuidDiv.textContent = uuid;
+                applyStyles(uuidDiv, currentSettings.uuid);
+                cardElement.appendChild(uuidDiv);
+
+                // Season Emblem
+                const emblem = document.createElement('img');
+                emblem.src = tribeInfo.emblem;
+                emblem.className = 'absolute';
+                emblem.id = 'emblem';
+                applyStyles(emblem, currentSettings.emblem);
+                cardElement.appendChild(emblem);
+
+                // Middle Emblem for Ethereal Signature
+                if (tribeKey === 'signature' && tribeInfo.middleEmblem) {
+                    const middleEmblem = document.createElement('img');
+                    middleEmblem.src = tribeInfo.middleEmblem;
+                    middleEmblem.className = 'absolute';
+                    middleEmblem.id = 'middle-embleblem';
+                    middleEmblem.style.zIndex = 20;
+                    applyStyles(middleEmblem, { ...currentSettings.emblem, x: 42.5, y: 42.5, width: 15, height: 15 });
+                    cardElement.appendChild(middleEmblem);
+                }
+
+                // Rare Trait
+                if (isMinted && rareTrait) {
+                    const rareTraitImg = document.createElement('img');
+                    rareTraitImg.src = tribeInfo.rareTraits[rareTrait];
+                    rareTraitImg.className = 'absolute';
+                    rareTraitImg.id = 'rare-trait';
+                    applyStyles(rareTraitImg, currentSettings['rare-trait']);
+                    cardElement.appendChild(rareTraitImg);
+                }
+            }
+
+            // Minion Image
+            const minionImg = document.createElement('img');
+            minionImg.src = modifiedCard.image || 'https://via.placeholder.com/150';
+            minionImg.className = `absolute left-0 w-full object-contain`;
+            minionImg.id = 'minion-image';
+            applyStyles(minionImg, currentSettings['minion-image']);
+            cardElement.appendChild(minionImg);
+
+            if (!isPopout) {
+                // Season 0 Badge
+                const playerName = generatePlayerName();
+                const seasonTag = document.createElement('div');
+                seasonTag.className = `absolute left-0 w-full text-center text-xs rarity-glow`;
+                seasonTag.id = 'season-badge';
+                seasonTag.style.boxShadow = `0 0 ${currentSettings['season-badge'].glowIntensity}px ${currentSettings['season-badge'].glowColor}`;
+                seasonTag.style.backgroundColor = tribeInfo.badgeColor;
+                seasonTag.textContent = 'Season 0';
+                seasonTag.addEventListener('click', () => {
+                    const infoModal = document.getElementById('info-modal');
+                    const infoBackground = document.getElementById('info-background');
+                    const infoContent = document.getElementById('info-content');
+                    const infoCard = document.getElementById('info-card');
+                    infoBackground.src = tribeInfo.uiBackground;
+                    infoContent.innerHTML = `
+                        <p><strong>Serial Number:</strong> ${serialNumber || Math.floor(Math.random() * 100000) + 1}</p>
+                        <p><strong>Crypto Hash:</strong> ${uuid}</p>
+                        <p><strong>Owner:</strong> ${playerName}</p>
+                        <p><strong>Tribe:</strong> ${tribeInfo.name}</p>
+                        <p><strong>Upgrade:</strong> ${tribeInfo.upgrade}</p>
+                    `;
+                    infoCard.innerHTML = '';
+                    const popoutCard = renderCard(card, tribe, isMinted, rareTrait, additionalAbility, true, serialNumber);
+                    infoCard.appendChild(popoutCard);
+                    infoModal.classList.remove('hidden');
+                });
+                applyStyles(seasonTag, currentSettings['season-badge']);
+                cardElement.appendChild(seasonTag);
+
+                // Info Panel
+                const infoPanel = document.createElement('img');
+                infoPanel.src = tribeInfo.infoPanel;
+                infoPanel.className = 'info-panel';
+                infoPanel.id = 'info-panel';
+                applyStyles(infoPanel, currentSettings['info-panel']);
+                cardElement.appendChild(infoPanel);
+
+                // Text
+                const textDiv = document.createElement('div');
+                textDiv.className = `text-content ${tribeInfo.textColor}`;
+                textDiv.id = 'text-content';
+                textDiv.innerHTML = `
+                    <h3 class="font-bold">${modifiedCard.name}</h3>
+                    <p class="italic">${modifiedCard.flavor_text}</p>
+                `;
+                applyStyles(textDiv, currentSettings['text-content'], true);
+                cardElement.appendChild(textDiv);
+
+                // Ability Icons
+                const abilityIcons = getAbilityIcons(modifiedCard.abilities + (additionalAbility ? `, ${additionalAbility}` : ''), tribeKey, true);
+                abilityIcons.className = 'ability-icons absolute';
+                abilityIcons.id = 'ability-icons';
+                if (abilityIcons.children.length > 0) {
+                    applyStyles(abilityIcons, currentSettings['ability-stealth'], false, true);
+                    cardElement.appendChild(abilityIcons);
+                }
+
+                // Cost Bubble
+                const costDiv = document.createElement('div');
+                costDiv.className = 'absolute card-bubble';
+                costDiv.id = 'cost-bubble';
+                costDiv.textContent = modifiedCard.cost;
+                applyStyles(costDiv, currentSettings['cost-bubble']);
+                cardElement.appendChild(costDiv);
+
+                // Attack and Health (Minions only)
+                if (modifiedCard.type.toLowerCase() === 'minion') {
+                    const attackDiv = document.createElement('div');
+                    attackDiv.className = 'absolute card-bubble';
+                    attackDiv.id = 'attack-bubble';
+                    attackDiv.textContent = modifiedCard.attack;
+                    applyStyles(attackDiv, currentSettings['attack-bubble']);
+                    cardElement.appendChild(attackDiv);
+
+                    const healthDiv = document.createElement('div');
+                    healthDiv.className = 'absolute card-bubble';
+                    healthDiv.id = 'health-bubble';
+                    healthDiv.textContent = modifiedCard.health;
+                    applyStyles(healthDiv, currentSettings['health-bubble']);
+                    cardElement.appendChild(healthDiv);
+                }
+            }
+
+            return cardElement;
+        }
+
+        function loadCards() {
+            const container = document.getElementById('card-container');
+            container.innerHTML = '';
+            cards.forEach(card => {
+                const tribe = rollTribe('starter');
+                const cardElement = renderCard(card, tribe);
+                container.appendChild(cardElement);
+            });
+        }
+
+        document.getElementById('buy-packs-btn').addEventListener('click', () => {
+            document.getElementById('buy-packs-modal').classList.remove('hidden');
+        });
+
+        document.getElementById('close-buy-packs').addEventListener('click', () => {
+            document.getElementById('buy-packs-modal').classList.add('hidden');
+        });
+
+        document.querySelectorAll('.buy-pack-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                if (totalMinted >= maxMints) {
+                    alert('Minting limit of 100,000 cards reached!');
+                    return;
+                }
+                const packType = btn.dataset.pack;
+                const packSizes = { starter: 5, premium: 10, legendary: 3 };
+                const packSize = packSizes[packType];
+                const mintedCards = [];
+                for (let i = 0; i < packSize && totalMinted < maxMints; i++) {
+                    const randomIndex = Math.floor(Math.random() * cards.length);
+                    const card = cards[randomIndex];
+                    const tribe = rollTribe(packType);
+                    const rareTrait = rollRareTrait(packType);
+                    const additionalAbility = rollAbility();
+                    const serialNumber = generateSerialNumber();
+                    mintedCards.push({ card, tribe, rareTrait, additionalAbility, serialNumber });
+                    totalMinted++;
+                    try {
+                        await fetch('/api/mint', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                cardId: card.cardId,
+                                tribe: tribe,
+                                serialNumber: serialNumber,
+                                owner: generatePlayerName(),
+                                rareTrait: rareTrait,
+                                additionalAbility: additionalAbility
+                            })
+                        });
+                    } catch (e) {
+                        console.log('Nexus API simulation:', e);
+                    }
+                }
+                const mintedCardContainer = document.getElementById('minted-card');
+                mintedCardContainer.innerHTML = '';
+                mintedCards.forEach(({ card, tribe, rareTrait, additionalAbility, serialNumber }) => {
+                    const cardElement = renderCard(card, tribe, true, rareTrait, additionalAbility, false, serialNumber);
+                    cardElement.style.width = '150px';
+                    mintedCardContainer.appendChild(cardElement);
+                });
+                document.getElementById('mint-count').textContent = `Minted: ${totalMinted} of ${maxMints}`;
+                document.getElementById('buy-packs-modal').classList.add('hidden');
+                document.getElementById('mint-modal').classList.remove('hidden');
+            });
+        });
+
+        document.getElementById('mint-btn').addEventListener('click', async () => {
+            if (totalMinted >= maxMints) {
+                alert('Minting limit of 100,000 cards reached!');
+                return;
+            }
+            const randomIndex = Math.floor(Math.random() * cards.length);
+            const card = cards[randomIndex];
+            const tribe = rollTribe('starter');
+            const rareTrait = rollRareTrait('starter');
+            const additionalAbility = rollAbility();
+            const serialNumber = generateSerialNumber();
+            const cardElement = renderCard(card, tribe, true, rareTrait, additionalAbility, false, serialNumber);
+            const mintedCardContainer = document.getElementById('minted-card');
+            mintedCardContainer.innerHTML = '';
+            mintedCardContainer.appendChild(cardElement);
+            totalMinted++;
+            try {
+                await fetch('/api/mint', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        cardId: card.cardId,
+                        tribe: tribe,
+                        serialNumber: serialNumber,
+                        owner: generatePlayerName(),
+                        rareTrait: rareTrait,
+                        additionalAbility: additionalAbility
+                    })
+                });
+            } catch (e) {
+                console.log('Nexus API simulation:', e);
+            }
+            document.getElementById('mint-count').textContent = `Minted: ${totalMinted} of ${maxMints}`;
+            document.getElementById('mint-modal').classList.remove('hidden');
+        });
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('mint-modal').classList.add('hidden');
+        });
+
+        document.getElementById('close-info-modal').addEventListener('click', () => {
+            document.getElementById('info-modal').classList.add('hidden');
+        });
+
+        window.onload = function () {
+            updateControls();
+            loadCards();
+        };
     </script>
 </body>
+
 </html>
